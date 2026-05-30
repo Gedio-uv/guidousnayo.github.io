@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Motion — Guido Usnayo Vidaurre</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0a0a0a;
+      --white: #fafafa;
+      --gray: #6b6b6b;
+      --light-gray: #e8e8e8;
+      --accent: #1a46ff;
+      --font: 'Inter', -apple-system, sans-serif;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      background: var(--white);
+      color: var(--black);
+      font-family: var(--font);
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      background: rgba(250,250,250,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s;
+    }
+    nav.scrolled { border-bottom-color: var(--light-gray); }
+    .nav-name { font-size: 0.875rem; font-weight: 400; color: var(--black); text-decoration: none; }
+    .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+    .nav-links a { font-size: 0.8rem; color: var(--gray); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--black); }
+    .nav-links a.active { color: var(--black); font-weight: 500; }
+    .nav-divider { width: 1px; height: 12px; background: var(--light-gray); }
+
+    /* HEADER */
+    .page-header {
+      padding: 120px 40px 64px;
+      border-bottom: 1px solid var(--light-gray);
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards 0.1s;
+    }
+
+    .page-label {
+      font-size: 0.7rem; font-weight: 500; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 16px; display: block;
+    }
+
+    .page-title {
+      font-size: clamp(2.2rem, 4vw, 3.5rem); font-weight: 600;
+      letter-spacing: -0.03em; line-height: 1.05; color: var(--black);
+      margin-bottom: 16px;
+    }
+
+    .page-desc {
+      font-size: 1rem; color: var(--gray); line-height: 1.65;
+      max-width: 600px;
+    }
+
+    .page-meta {
+      display: flex; gap: 32px; margin-top: 32px;
+    }
+
+    .page-meta-item {
+      font-size: 0.8rem; color: var(--gray);
+    }
+
+    .page-meta-item strong {
+      color: var(--black); font-weight: 500;
+    }
+
+    /* GRID */
+    .motion-grid {
+      padding: 64px 40px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* VIDEO CARD */
+    .video-card {
+      cursor: pointer;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #111;
+      position: relative;
+      display: block;
+      text-decoration: none;
+    }
+
+    .video-thumb {
+      width: 100%;
+      aspect-ratio: 16/9;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .video-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .video-card:hover .video-thumb img {
+      transform: scale(1.04);
+    }
+
+    /* Play overlay */
+    .play-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.3);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .video-card:hover .play-overlay {
+      opacity: 1;
+    }
+
+    .play-btn {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.9);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--black);
+      font-size: 1.1rem;
+    }
+
+    /* Source badge */
+    .source-badge {
+      position: absolute;
+      top: 10px; right: 10px;
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      z-index: 2;
+    }
+
+    .source-badge.vimeo { background: #1ab7ea; color: #fff; }
+    .source-badge.youtube { background: #ff0000; color: #fff; }
+
+    /* Card info */
+    .video-info {
+      padding: 12px 14px 14px;
+    }
+
+    .video-type {
+      font-size: 0.65rem; color: rgba(255,255,255,0.35);
+      letter-spacing: 0.08em; text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+
+    .video-title {
+      font-size: 0.825rem; font-weight: 400;
+      color: rgba(255,255,255,0.8); line-height: 1.35;
+    }
+
+    /* LIGHTBOX */
+    .lightbox {
+      position: fixed; inset: 0; z-index: 1000;
+      background: rgba(0,0,0,0.92);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .lightbox.open { opacity: 1; pointer-events: all; }
+
+    .lightbox-inner {
+      width: 90%; max-width: 960px; position: relative;
+    }
+
+    .lightbox-video {
+      width: 100%; aspect-ratio: 16/9;
+      border-radius: 8px; overflow: hidden; background: #000;
+    }
+
+    .lightbox-video iframe { width: 100%; height: 100%; border: none; }
+
+    .lightbox-close {
+      position: absolute; top: -44px; right: 0;
+      background: none; border: none;
+      color: rgba(255,255,255,0.6); font-size: 1.5rem;
+      cursor: pointer; padding: 8px;
+      transition: color 0.2s; font-family: var(--font);
+    }
+    .lightbox-close:hover { color: #fff; }
+
+    /* CTA */
+    .cs-cta {
+      padding: 64px 40px; background: var(--black);
+      display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid var(--light-gray);
+    }
+
+    .cta-left h2 {
+      font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 600;
+      letter-spacing: -0.03em; color: var(--white);
+      line-height: 1.1; margin-bottom: 8px;
+    }
+
+    .cta-left p { font-size: 0.875rem; color: rgba(255,255,255,0.45); }
+
+    .btn-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent); color: var(--white);
+      padding: 13px 26px; border-radius: 100px;
+      font-size: 0.8rem; font-weight: 500; text-decoration: none;
+      white-space: nowrap; transition: background 0.2s, transform 0.15s;
+    }
+    .btn-pill:hover { background: #1238e0; transform: translateY(-1px); }
+
+    /* FOOTER */
+    footer {
+      padding: 28px 40px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      background: var(--black);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .footer-text { font-size: 0.75rem; color: rgba(255,255,255,0.3); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      nav { padding: 16px 20px; }
+      .nav-links { gap: 16px; }
+      .page-header { padding: 100px 20px 48px; }
+      .motion-grid { padding: 40px 20px; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .cs-cta { padding: 48px 20px; flex-direction: column; gap: 32px; text-align: center; }
+      footer { padding: 24px 20px; flex-direction: column; gap: 8px; text-align: center; }
+    }
+
+    @media (max-width: 560px) {
+      .motion-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav id="nav">
+    <a href="index.html" class="nav-name">Guido Usnayo Vidaurre</a>
+    <ul class="nav-links">
+      <li><a href="incode.html">Incode</a></li>
+      <li><a href="speaker.html">Speaker</a></li>
+      <li><a href="ytem.html">Ytem</a></li>
+      <li><a href="other.html">Other work</a></li>
+      <li><a href="motion.html" class="active">Motion</a></li>
+      <li class="nav-divider"></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="https://www.linkedin.com/in/guido-usnayovidaurre/" target="_blank">LinkedIn ↗</a></li>
+    </ul>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="page-header">
+    <span class="page-label">Motion Work</span>
+    <h1 class="page-title">Motion as a functional layer.</h1>
+    <p class="page-desc">A mix of commercial motion work — spanning UI animation, product interaction, and creative direction. Some pieces combine motion, visual direction, and production across different stages of a project.</p>
+    <div class="page-meta">
+      <div class="page-meta-item"><strong>22</strong> pieces</div>
+      <div class="page-meta-item"><strong>Vimeo</strong> + YouTube</div>
+      <div class="page-meta-item"><strong>2021–2025</strong></div>
+    </div>
+  </header>
+
+  <!-- VIDEO GRID -->
+  <section class="motion-grid" id="motionGrid">
+
+    <!-- VIMEO -->
+    <div class="video-card" data-type="vimeo" data-id="1145366421">
+      <div class="video-thumb">
+        <img src="https://vumbnail.com/1145366421.jpg" alt="Motion piece">
+        <span class="source-badge vimeo">Vimeo</span>
+        <div class="play-overlay"><div class="play-btn">▶</div></div>
+      </div>
+      <div class="video-info">
+        <div class="video-type">UI Motion</div>
+        <div class="video-title">Interface motion system</div>
+      </div>
+    </div>
+
+    <div class="video-card" data-type="vimeo" data-id="1029800637">
+      <div class="video-thumb">
+        <img src="https://vumbnail.com/1029800637.jpg" alt="Motion piece">
+        <span class="source-badge vimeo">Vimeo</span>
+        <div class="play-overlay"><div class="play-btn">▶</div></div>
+      </div>
+      <div class="video-info">
+        <div class="video-type">UI Motion</div>
+        <div class="video-title">Interface motion system</div>
+      </div>
+    </div>
+
+    <div class="video-card" data-type="vimeo" data-id="870443762">
+      <div class="video-thumb">
+        <img src="https://vumbnail.com/870443762.jpg" alt="Motion piece">
+        <span class="source-badge vimeo">Vimeo</span>
+        <div class="play-overlay"><div class="play-btn">▶</div></div>
+      </div>
+      <div class="video-info">
+        <div class="video-type">UI Motion</div>
+        <div class="video-title">Interface motion system</div>
+      </div>
+    </div>
+
+    <div class="video-card" data-type="vimeo" data-id="848826173">
+      <div class="video-thumb">
+        <img src="https://vumbnail.com/848826173.jpg" alt="Motion piece">
+        <span class="source-badge vimeo">Vimeo</span>
+        <div class="play-overlay"><div class="play-btn">▶</div></div>
+      </div>
+      <div class="video-info">
+        <div class="video-type">UI Motion</div>
+        <div class="video-title">Interface motion system</div>
+      </div>
+    </div>
+
+    <div class="video-card" data-type="vimeo" data-id="830710395">
+      <div class="video-thumb">
+        <img src="https://vumbnail.com/830710395.jpg" alt="Motion piece">
+        <span class="source-badge vimeo">Vimeo</span>
+        <div class="play-overlay"><div class="play-btn">▶</div></div>
+      </div>
+      <div class="video-info">
+        <div class="video-type">UI Motion</div>
+        <div class="video-title">Interface motion system</div>
+      </div>
+    </div>
+
+    <div class="video-card" data-type="vimeo" data-id="818816558">
+      <div class="video-thumb">
+        <img src="https://vumbnail.com/818816558.jpg" alt="Motion piece">
+        <span class="source-badge vimeo">Vimeo</span>
+        <div class="play-overlay"><div class="play-btn">▶</div></div>
+      </div>
+      <div class="video-info">
+        <div class="video-type">UI Motion</div>
+        <div class="video-title">Interface motion system</div>
+      </div>
+    </div>
+
+    <div class="video-card" data-type="vimeo" data-id="802350822">
+      <div class="video-thumb">
+        <img src="https://vumbnail.com/802350822.jpg" alt="Motion piece">
+        <span class="source-badge vimeo">Vimeo</span>
+        <div class="play-overlay"><div class="play-btn">▶</div></div>
+      </div>
+      <div class="video-info">
+        <div class="video-type">UI Motion</div>
+        <div class="video-title">Interface motion system</div>
+      </div>
+    </div>
+
+    <div class="video-card" data-type="vimeo" data-id="795730294">
+      <div class="video-thumb">
+        <img src="https://vumbnail.com/795730294.jpg" alt="Motion piece">
+        <span class="source-badge vimeo">Vimeo</span>
+        <div class="play-overlay"><div class="play-btn">▶</div></div>
+      </div>
+      <div class="video-info">
+        <div class="video-type">UI Motion</div>
+        <div class="video-title">Interface motion system</div>
+      </div>
+    </div>
+
+    <div class="video-card" data-type="vimeo" data-id="795726483">
+      <div class="video-thumb">
+        <img src="https://vumbnail.com/795726483.jpg" alt="Motion piece">
+        <span class="source-badge vimeo">Vimeo</span>
+        <div class="play-overlay"><div class="play-btn">▶</div></div>
+      </div>
+      <div class="video-info">
+        <div class="video-type">UI Motion</div>
+        <div class="video-title">Interface motion system</div>
+      </div>
+    </div>
+
+    <div class="video-card" data-type="vimeo" data-id="792766271">
+      <div class="video-thumb">
+        <img src="https://vumbnail.com/792766271.jpg" alt="Motion piece">
+        <span class="source-badge vimeo">Vimeo</span>
+        <div class="play-overlay"><div class="play-btn">▶</div></div>
+      </div>
+      <div class="video-info">
+        <div class="video-type">UI Motion</div>
+        <div class="video-title">Interface motion system</div>
+      </div>
+    </div>
+
+    <div class="video-card" data-type="vimeo" data-id="788048163">
+      <div class="video-thumb">
+        <img src="https://vumbnail.com/788048163.jpg" alt="Motion piece">
+        <span class="source-badge vimeo">Vimeo</span>
+        <div class="play-overlay"><div class="play-btn">▶</div></div>
+      </div>
+      <div class="video-info">
+        <div class="video-type">UI Motion</div>
+        <div class="video-title">Interface motion system</div>
+      </div>
+    </div>
+
+    <div class="video-card" data-type="vimeo" data-id="783805204">
+      <div class="video-thumb">
+        <img src="https://vumbnail.com/783805204.jpg" alt="Motion piece">
+        <span class="source-badge vimeo">Vimeo</span>
+        <div class="play-overlay"><div class="play-btn">▶</div></div>
+      </div>
+      <div class="video-info">
+        <div class="video-type">UI Motion</div>
+        <div class="video-title">Interface motion system</div>
+      </div>
+    </div>
+
+    <div class="video-card" data-type="vimeo" data-id="783990170">
+      <div class="video-thumb">
+        <img src="https://vumbnail.com/783990170.jpg" alt="Motion piece">
+        <span class="source-badge vimeo">Vimeo</span>
+        <div class="play-overlay"><div class="play-btn">▶</div></div>
+      </div>
+      <div class="video-info">
+        <div class="video-type">UI Motion</div>
+        <div class="video-title">Interface motion system</div>
+      </div>
+    </div>
+
+    <!-- YOUTUBE -->
+    <div class="video-card" data-type="youtube" data-id="JBlYOSPxNCw">
+      <div class="video-thumb">
+        <img src="https://img.youtube.com/vi/JBlYOSPxNCw/mqdefault.jpg" alt="Motion piece">
+        <span class="source-badge youtube">YouTube</span>
+        <div class="play-overlay"><div class="play-btn">▶</div></div>
+      </div>
+      <div class="video-info">
+        <div class="video-type">UI Motion</div>
+        <div class="video-title">Interface motion system</div>
+      </div>
+    </div>
+
+    <div class="video-card" data-type="youtube" data-id="8pZTBvgBhn8">
+      <div class="video-thumb">
+        <img src="https://img.youtube.com/vi/8pZTBvgBhn8/mqdefault.jpg" alt="Motion piece">
+        <span class="source-badge youtube">YouTube</span>
+        <div class="play-overlay"><div class="play-btn">▶</div></div>
+      </div>
+      <div class="video-info">
+        <div class="video-type">UI Motion</div>
+        <div class="video-title">Interface motion system</div>
+      </div>
+    </div>
+
+    <div class="video-card" data-type="youtube" data-id="8v5nUAunt2Y">
+      <div class="video-thumb">
+        <img src="https://img.youtube.com/vi/8v5nUAunt2Y/mqdefault.jpg" alt="Motion piece">
+        <span class="source-badge youtube">YouTube</span>
+        <div class="play-overlay"><div class="play-btn">▶</div></div>
+      </div>
+      <div class="video-info">
+        <div class="video-type">UI Motion</div>
+        <div class="video-title">Interface motion system</div>
+      </div>
+    </div>
+
+    <div class="video-card" data-type="youtube" data-id="xYQ-HdVfBSA">
+      <div class="video-thumb">
+        <img src="https://img.youtube.com/vi/xYQ-HdVfBSA/mqdefault.jpg" alt="Motion piece">
+        <span class="source-badge youtube">YouTube</span>
+        <div class="play-overlay"><div class="play-btn">▶</div></div>
+      </div>
+      <div class="video-info">
+        <div class="video-type">UI Motion</div>
+        <div class="video-title">Interface motion system</div>
+      </div>
+    </div>
+
+    <div class="video-card" data-type="youtube" data-id="sTnTV8Ui3Ok">
+      <div class="video-thumb">
+        <img src="https://img.youtube.com/vi/sTnTV8Ui3Ok/mqdefault.jpg" alt="Motion piece">
+        <span class="source-badge youtube">YouTube</span>
+        <div class="play-overlay"><div class="play-btn">▶</div></div>
+      </div>
+      <div class="video-info">
+        <div class="video-type">UI Motion</div>
+        <div class="video-title">Interface motion system</div>
+      </div>
+    </div>
+
+    <div class="video-card" data-type="youtube" data-id="m8Ms1PiEL18">
+      <div class="video-thumb">
+        <img src="https://img.youtube.com/vi/m8Ms1PiEL18/mqdefault.jpg" alt="Motion piece">
+        <span class="source-badge youtube">YouTube</span>
+        <div class="play-overlay"><div class="play-btn">▶</div></div>
+      </div>
+      <div class="video-info">
+        <div class="video-type">UI Motion</div>
+        <div class="video-title">Interface motion system</div>
+      </div>
+    </div>
+
+
+    <div class="video-card" data-type="youtube" data-id="-Hjq2XS3U-8">
+      <div class="video-thumb">
+        <img src="https://img.youtube.com/vi/-Hjq2XS3U-8/mqdefault.jpg" alt="Motion piece">
+        <span class="source-badge youtube">YouTube</span>
+        <div class="play-overlay"><div class="play-btn">▶</div></div>
+      </div>
+      <div class="video-info">
+        <div class="video-type">UI Motion</div>
+        <div class="video-title">Interface motion system</div>
+      </div>
+    </div>
+
+    <div class="video-card" data-type="youtube" data-id="6imG95z8Bpk">
+      <div class="video-thumb">
+        <img src="https://img.youtube.com/vi/6imG95z8Bpk/mqdefault.jpg" alt="Motion piece">
+        <span class="source-badge youtube">YouTube</span>
+        <div class="play-overlay"><div class="play-btn">▶</div></div>
+      </div>
+      <div class="video-info">
+        <div class="video-type">UI Motion</div>
+        <div class="video-title">Interface motion system</div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-inner">
+      <button class="lightbox-close" id="lightboxClose">✕</button>
+      <div class="lightbox-video">
+        <iframe id="lightboxFrame" src="" allowfullscreen allow="autoplay"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <section class="cs-cta">
+    <div class="cta-left">
+      <h2>Interested in<br><em style="font-weight:300; font-style:italic">working together?</em></h2>
+      <p>I'm currently open to Senior Product Designer opportunities in fintech, B2B SaaS, and digital identity.</p>
+    </div>
+    <a href="mailto:guido.usnayo@icloud.com" class="btn-pill">Get in touch →</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-text">© 2026 Guido Usnayo Vidaurre</span>
+    <span class="footer-text">Leipzig · Available across Germany and Europe</span>
+    <span class="footer-text">guido.usnayo@icloud.com</span>
+  </footer>
+
+  <script>
+    // Nav scroll
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    // Lightbox
+    const lightbox = document.getElementById('lightbox');
+    const lightboxFrame = document.getElementById('lightboxFrame');
+    const lightboxClose = document.getElementById('lightboxClose');
+
+    document.querySelectorAll('.video-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const type = card.dataset.type;
+        const id = card.dataset.id;
+        let src = '';
+        if (type === 'vimeo') {
+          src = `https://player.vimeo.com/video/${id}?autoplay=1&title=0&byline=0&portrait=0`;
+        } else if (type === 'youtube') {
+          src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
+        }
+        lightboxFrame.src = src;
+        lightbox.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+      lightboxFrame.src = '';
+      document.body.style.overflow = '';
+    }
+
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+  </script>
+
+</body>
+</html>

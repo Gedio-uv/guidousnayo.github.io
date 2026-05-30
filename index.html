@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Motion — Guido Usnayo Vidaurre</title>
+  <title>Guido Usnayo Vidaurre — Senior Product Designer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -65,313 +65,218 @@
       transition: color 0.2s;
     }
     .nav-links a:hover { color: var(--black); }
-    .nav-links a.active { color: var(--black); font-weight: 500; }
     .nav-divider { width: 1px; height: 12px; background: var(--light-gray); }
 
-    /* PAGE HEADER */
-    .page-header {
-      padding: 120px 40px 64px;
-      border-bottom: 1px solid var(--light-gray);
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 120px 40px 80px;
+      gap: 80px;
     }
 
-    .page-label {
+    .hero-label {
       font-size: 0.7rem;
       font-weight: 500;
       letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--accent);
-      margin-bottom: 16px;
-      display: block;
+      margin-bottom: 20px;
       opacity: 0;
       animation: fadeUp 0.5s ease forwards 0.1s;
     }
 
-    .page-title {
-      font-size: clamp(2.2rem, 4vw, 3.5rem);
+    .hero-headline {
+      font-size: clamp(2.8rem, 5vw, 4.5rem);
       font-weight: 600;
-      letter-spacing: -0.03em;
       line-height: 1.05;
+      letter-spacing: -0.03em;
       color: var(--black);
-      margin-bottom: 16px;
+      margin-bottom: 24px;
       opacity: 0;
       animation: fadeUp 0.5s ease forwards 0.2s;
     }
 
-    .page-desc {
-      font-size: 0.95rem;
+    .hero-headline em {
+      font-style: italic;
+      font-weight: 300;
       color: var(--gray);
+    }
+
+    .hero-sub {
+      font-size: 0.95rem;
       line-height: 1.65;
-      max-width: 560px;
+      color: var(--gray);
+      margin-bottom: 40px;
       opacity: 0;
       animation: fadeUp 0.5s ease forwards 0.3s;
     }
 
-    /* FILTER BAR */
-    .filter-bar {
-      padding: 24px 40px;
-      border-bottom: 1px solid var(--light-gray);
-      display: flex;
-      gap: 8px;
+    .hero-actions {
       opacity: 0;
       animation: fadeUp 0.5s ease forwards 0.4s;
-    }
-
-    .filter-btn {
-      padding: 7px 16px;
-      border-radius: 100px;
-      font-size: 0.75rem;
-      font-weight: 400;
-      border: 1px solid var(--light-gray);
-      background: transparent;
-      color: var(--gray);
-      cursor: pointer;
-      transition: all 0.2s;
-      font-family: var(--font);
-    }
-
-    .filter-btn:hover {
-      border-color: var(--black);
-      color: var(--black);
-    }
-
-    .filter-btn.active {
-      background: var(--black);
-      color: var(--white);
-      border-color: var(--black);
-    }
-
-    /* MOTION GRID */
-    .motion-grid {
-      padding: 40px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-    }
-
-    .motion-item {
-      position: relative;
-      border-radius: 8px;
-      overflow: hidden;
-      cursor: pointer;
-      text-decoration: none;
-      display: block;
-      background: #111;
-      opacity: 0;
-      animation: fadeIn 0.5s ease forwards;
-    }
-
-    /* Staggered animation for grid items */
-    .motion-item:nth-child(1) { animation-delay: 0.1s; }
-    .motion-item:nth-child(2) { animation-delay: 0.15s; }
-    .motion-item:nth-child(3) { animation-delay: 0.2s; }
-    .motion-item:nth-child(4) { animation-delay: 0.25s; }
-    .motion-item:nth-child(5) { animation-delay: 0.3s; }
-    .motion-item:nth-child(6) { animation-delay: 0.35s; }
-    .motion-item:nth-child(7) { animation-delay: 0.4s; }
-    .motion-item:nth-child(8) { animation-delay: 0.45s; }
-    .motion-item:nth-child(9) { animation-delay: 0.5s; }
-    .motion-item:nth-child(10) { animation-delay: 0.55s; }
-    .motion-item:nth-child(11) { animation-delay: 0.6s; }
-    .motion-item:nth-child(12) { animation-delay: 0.65s; }
-
-    .motion-thumbnail {
-      width: 100%;
-      aspect-ratio: 16/9;
-      background: #1a1a1a;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Placeholder pattern */
-    .motion-thumbnail::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        45deg,
-        transparent,
-        transparent 20px,
-        rgba(255,255,255,0.02) 20px,
-        rgba(255,255,255,0.02) 40px
-      );
-    }
-
-    .play-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: rgba(255,255,255,0.8);
-      font-size: 1rem;
-      position: relative;
-      z-index: 1;
-      transition: background 0.2s, transform 0.2s;
-    }
-
-    .motion-item:hover .motion-thumbnail { transform: scale(1.02); }
-    .motion-item:hover .play-icon {
-      background: rgba(255,255,255,0.2);
-      transform: scale(1.08);
-    }
-
-    /* Source badge — Vimeo or YouTube */
-    .source-badge {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      padding: 4px 10px;
-      border-radius: 100px;
-      font-size: 0.65rem;
-      font-weight: 500;
-      letter-spacing: 0.04em;
-      z-index: 2;
-    }
-
-    .source-badge.vimeo {
-      background: #1ab7ea;
-      color: #fff;
-    }
-
-    .source-badge.youtube {
-      background: #ff0000;
-      color: #fff;
-    }
-
-    .source-badge.local {
-      background: rgba(255,255,255,0.15);
-      color: rgba(255,255,255,0.8);
-      border: 1px solid rgba(255,255,255,0.15);
-    }
-
-    /* Motion item info */
-    .motion-info {
-      padding: 14px 16px 16px;
-    }
-
-    .motion-type {
-      font-size: 0.65rem;
-      color: rgba(255,255,255,0.35);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 4px;
-    }
-
-    .motion-title {
-      font-size: 0.85rem;
-      font-weight: 400;
-      color: rgba(255,255,255,0.85);
-      line-height: 1.3;
-    }
-
-    /* LIGHTBOX */
-    .lightbox {
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      background: rgba(0,0,0,0.92);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s;
-    }
-
-    .lightbox.open {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .lightbox-inner {
-      width: 90%;
-      max-width: 960px;
-      position: relative;
-    }
-
-    .lightbox-video {
-      width: 100%;
-      aspect-ratio: 16/9;
-      border-radius: 8px;
-      overflow: hidden;
-      background: #000;
-    }
-
-    .lightbox-video iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-
-    .lightbox-close {
-      position: absolute;
-      top: -44px;
-      right: 0;
-      background: none;
-      border: none;
-      color: rgba(255,255,255,0.6);
-      font-size: 1.5rem;
-      cursor: pointer;
-      padding: 8px;
-      transition: color 0.2s;
-      font-family: var(--font);
-    }
-
-    .lightbox-close:hover { color: #fff; }
-
-    /* CTA */
-    .motion-cta {
-      padding: 64px 40px;
-      border-top: 1px solid var(--light-gray);
-      background: var(--black);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .cta-left h2 {
-      font-size: clamp(1.8rem, 3vw, 2.5rem);
-      font-weight: 600;
-      letter-spacing: -0.03em;
-      color: var(--white);
-      line-height: 1.1;
-      margin-bottom: 8px;
-    }
-
-    .cta-left p {
-      font-size: 0.875rem;
-      color: rgba(255,255,255,0.45);
-      line-height: 1.6;
     }
 
     .btn-pill {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: var(--white);
-      color: var(--black);
+      background: var(--black);
+      color: var(--white);
       padding: 13px 26px;
       border-radius: 100px;
       font-size: 0.8rem;
-      font-weight: 500;
+      font-weight: 600;
       text-decoration: none;
-      white-space: nowrap;
+      letter-spacing: 0.01em;
       transition: background 0.2s, transform 0.15s;
     }
-    .btn-pill:hover { background: #e8e8e8; transform: translateY(-1px); }
+    .btn-pill:hover { background: #222; transform: translateY(-1px); }
+
+    /* HERO RIGHT */
+    .hero-right {
+      opacity: 0;
+      animation: fadeIn 0.7s ease forwards 0.5s;
+    }
+
+    .hero-image-placeholder {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: #f0f0f0;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray);
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border: 1px dashed var(--light-gray);
+    }
+
+    /* STATS BAR */
+    .stats {
+      padding: 48px 40px;
+      border-top: 1px solid var(--light-gray);
+      display: flex;
+      gap: 0;
+    }
+
+    .stat {
+      flex: 1;
+      padding-right: 40px;
+      border-right: 1px solid var(--light-gray);
+    }
+    .stat:not(:first-child) { padding-left: 40px; }
+    .stat:last-child { border-right: none; }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      color: var(--black);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .stat-value span { color: var(--accent); }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--gray);
+      line-height: 1.4;
+    }
+
+    /* WORK GRID */
+    .work { padding: 80px 40px; }
+
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 32px;
+      display: block;
+    }
+
+    .work-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .work-item {
+      position: relative;
+      display: block;
+      text-decoration: none;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+
+    .work-item:first-child {
+      grid-column: 1 / -1;
+    }
+
+    .work-item-img {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/7;
+      background: #1a1a2e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.15);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
+      overflow: hidden;
+    }
+
+    .work-item:not(:first-child) .work-item-img {
+      aspect-ratio: 4/3;
+    }
+
+    .work-item:nth-child(2) .work-item-img { background: #0d0d0d; }
+    .work-item:nth-child(3) .work-item-img { background: #f0f0f0; color: rgba(0,0,0,0.15); }
+
+    .work-item:hover .work-item-img { transform: scale(1.02); }
+
+    /* Title overlay inside image */
+    .work-item-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 48px 28px 24px;
+      background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%);
+    }
+
+    .work-item:nth-child(3) .work-item-info {
+      background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 100%);
+    }
+
+    .work-item-meta {
+      font-size: 0.68rem;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: 0.04em;
+      margin-bottom: 4px;
+    }
+
+    .work-item-title {
+      font-size: 1rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.95);
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+    }
 
     /* FOOTER */
     footer {
       padding: 32px 40px;
-      border-top: 1px solid rgba(255,255,255,0.08);
-      background: var(--black);
+      border-top: 1px solid var(--light-gray);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -379,7 +284,7 @@
 
     .footer-text {
       font-size: 0.75rem;
-      color: rgba(255,255,255,0.3);
+      color: var(--gray);
     }
 
     /* ANIMATIONS */
@@ -393,24 +298,35 @@
     }
 
     /* RESPONSIVE */
-    @media (max-width: 900px) {
+    @media (max-width: 860px) {
       nav { padding: 16px 20px; }
       .nav-links { gap: 16px; }
-      .page-header { padding: 100px 20px 48px; }
-      .filter-bar { padding: 20px; }
-      .motion-grid { padding: 20px; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-      .motion-cta { padding: 48px 20px; flex-direction: column; gap: 32px; text-align: center; }
-      footer { padding: 24px 20px; flex-direction: column; gap: 8px; text-align: center; }
-    }
 
-    @media (max-width: 560px) {
-      .motion-grid { grid-template-columns: 1fr; }
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 100px 20px 60px;
+        gap: 40px;
+        min-height: auto;
+      }
+
+      .stats {
+        padding: 40px 20px;
+        flex-wrap: wrap;
+        gap: 24px;
+      }
+      .stat { flex: 1 1 40%; border-right: none; padding: 0; }
+
+      .work { padding: 40px 20px; }
+      .work-grid { grid-template-columns: 1fr; }
+      .work-item:first-child { grid-column: 1; }
+      .work-item .work-item-img { aspect-ratio: 4/3 !important; }
+
+      footer { padding: 24px 20px; flex-direction: column; gap: 8px; text-align: center; }
     }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
   <nav id="nav">
     <a href="index.html" class="nav-name">Guido Usnayo Vidaurre</a>
     <ul class="nav-links">
@@ -418,191 +334,86 @@
       <li><a href="speaker.html">Speaker</a></li>
       <li><a href="ytem.html">Ytem</a></li>
       <li><a href="other.html">Other work</a></li>
-      <li><a href="motion.html" class="active">Motion</a></li>
+      <li><a href="motion.html">Motion</a></li>
       <li class="nav-divider"></li>
       <li><a href="about.html">About</a></li>
       <li><a href="https://www.linkedin.com/in/guido-usnayovidaurre/" target="_blank">LinkedIn ↗</a></li>
     </ul>
   </nav>
 
-  <!-- PAGE HEADER -->
-  <header class="page-header">
-    <span class="page-label">Motion Work</span>
-    <h1 class="page-title">Motion as a functional layer.</h1>
-    <p class="page-desc">A selection of motion work across product interfaces, onboarding flows, and interaction systems. Some pieces are shown without client attribution due to confidentiality.</p>
-  </header>
-
-  <!-- FILTER BAR -->
-  <div class="filter-bar">
-    <button class="filter-btn active" data-filter="all">All</button>
-    <button class="filter-btn" data-filter="ui">UI Transitions</button>
-    <button class="filter-btn" data-filter="onboarding">Onboarding</button>
-    <button class="filter-btn" data-filter="feedback">Feedback & States</button>
-    <button class="filter-btn" data-filter="brand">Brand Motion</button>
-  </div>
-
-  <!-- MOTION GRID -->
-  <!-- 
-    HOW TO ADD YOUR VIDEOS:
-    - For Vimeo: set data-type="vimeo" and data-id="YOUR_VIMEO_ID"
-    - For YouTube: set data-type="youtube" and data-id="YOUR_YOUTUBE_ID"
-    - Change source-badge class to "vimeo", "youtube", or "local"
-    - Replace motion-type text with: UI Transitions / Onboarding / Feedback & States / Brand Motion
-    - For NDA work: leave motion-title as a generic description — no client name needed
-  -->
-  <section class="motion-grid" id="motionGrid">
-
-    <a class="motion-item" data-type="vimeo" data-id="VIMEO_ID_1" data-filter="ui" href="#">
-      <div class="motion-thumbnail">
-        <span class="source-badge vimeo">Vimeo</span>
-        <div class="play-icon">▶</div>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <p class="hero-label">Senior Product Designer</p>
+      <h1 class="hero-headline">Designing systems for <em>high-trust</em> environments.</h1>
+      <p class="hero-sub">Identity verification · B2B platforms · Products where getting the flow wrong has real consequences.</p>
+      <div class="hero-actions">
+        <a href="https://drive.google.com/file/d/1SzSFB1lvbNfN5dKFIprZUKIo4jcVjWtV/view?usp=share_link" target="_blank" class="btn-pill">Download CV</a>
       </div>
-      <div class="motion-info">
-        <div class="motion-type">UI Transitions</div>
-        <div class="motion-title">Dashboard state transitions</div>
-      </div>
-    </a>
-
-    <a class="motion-item" data-type="youtube" data-id="YOUTUBE_ID_1" data-filter="onboarding" href="#">
-      <div class="motion-thumbnail">
-        <span class="source-badge youtube">YouTube</span>
-        <div class="play-icon">▶</div>
-      </div>
-      <div class="motion-info">
-        <div class="motion-type">Onboarding</div>
-        <div class="motion-title">Identity verification flow</div>
-      </div>
-    </a>
-
-    <a class="motion-item" data-type="vimeo" data-id="VIMEO_ID_2" data-filter="feedback" href="#">
-      <div class="motion-thumbnail">
-        <span class="source-badge vimeo">Vimeo</span>
-        <div class="play-icon">▶</div>
-      </div>
-      <div class="motion-info">
-        <div class="motion-type">Feedback & States</div>
-        <div class="motion-title">Verification success state</div>
-      </div>
-    </a>
-
-    <a class="motion-item" data-type="vimeo" data-id="VIMEO_ID_3" data-filter="ui" href="#">
-      <div class="motion-thumbnail">
-        <span class="source-badge vimeo">Vimeo</span>
-        <div class="play-icon">▶</div>
-      </div>
-      <div class="motion-info">
-        <div class="motion-type">UI Transitions</div>
-        <div class="motion-title">Interface motion system</div>
-      </div>
-    </a>
-
-    <a class="motion-item" data-type="vimeo" data-id="VIMEO_ID_4" data-filter="brand" href="#">
-      <div class="motion-thumbnail">
-        <span class="source-badge vimeo">Vimeo</span>
-        <div class="play-icon">▶</div>
-      </div>
-      <div class="motion-info">
-        <div class="motion-type">Brand Motion</div>
-        <div class="motion-title">Product launch animation</div>
-      </div>
-    </a>
-
-    <a class="motion-item" data-type="vimeo" data-id="VIMEO_ID_5" data-filter="feedback" href="#">
-      <div class="motion-thumbnail">
-        <span class="source-badge vimeo">Vimeo</span>
-        <div class="play-icon">▶</div>
-      </div>
-      <div class="motion-info">
-        <div class="motion-type">Feedback & States</div>
-        <div class="motion-title">Loading and processing states</div>
-      </div>
-    </a>
-
-    <a class="motion-item" data-type="vimeo" data-id="VIMEO_ID_6" data-filter="onboarding" href="#">
-      <div class="motion-thumbnail">
-        <span class="source-badge vimeo">Vimeo</span>
-        <div class="play-icon">▶</div>
-      </div>
-      <div class="motion-info">
-        <div class="motion-type">Onboarding</div>
-        <div class="motion-title">Mobile onboarding sequence</div>
-      </div>
-    </a>
-
-    <a class="motion-item" data-type="vimeo" data-id="VIMEO_ID_7" data-filter="ui" href="#">
-      <div class="motion-thumbnail">
-        <span class="source-badge local">Motion</span>
-        <div class="play-icon">▶</div>
-      </div>
-      <div class="motion-info">
-        <div class="motion-type">UI Transitions</div>
-        <div class="motion-title">Navigation transition system</div>
-      </div>
-    </a>
-
-    <a class="motion-item" data-type="vimeo" data-id="VIMEO_ID_8" data-filter="brand" href="#">
-      <div class="motion-thumbnail">
-        <span class="source-badge vimeo">Vimeo</span>
-        <div class="play-icon">▶</div>
-      </div>
-      <div class="motion-info">
-        <div class="motion-type">Brand Motion</div>
-        <div class="motion-title">Brand identity in motion</div>
-      </div>
-    </a>
-
-    <a class="motion-item" data-type="vimeo" data-id="VIMEO_ID_9" data-filter="feedback" href="#">
-      <div class="motion-thumbnail">
-        <span class="source-badge local">Motion</span>
-        <div class="play-icon">▶</div>
-      </div>
-      <div class="motion-info">
-        <div class="motion-type">Feedback & States</div>
-        <div class="motion-title">Error and recovery states</div>
-      </div>
-    </a>
-
-    <a class="motion-item" data-type="vimeo" data-id="VIMEO_ID_10" data-filter="ui" href="#">
-      <div class="motion-thumbnail">
-        <span class="source-badge vimeo">Vimeo</span>
-        <div class="play-icon">▶</div>
-      </div>
-      <div class="motion-info">
-        <div class="motion-type">UI Transitions</div>
-        <div class="motion-title">Data visualization animation</div>
-      </div>
-    </a>
-
-    <a class="motion-item" data-type="vimeo" data-id="VIMEO_ID_11" data-filter="onboarding" href="#">
-      <div class="motion-thumbnail">
-        <span class="source-badge vimeo">Vimeo</span>
-        <div class="play-icon">▶</div>
-      </div>
-      <div class="motion-info">
-        <div class="motion-type">Onboarding</div>
-        <div class="motion-title">Step-by-step guided flow</div>
-      </div>
-    </a>
-
+    </div>
+    <div class="hero-right">
+      <!-- Replace src with your actual hero image -->
+      <img src="images/ic1.png" alt="Incode operator dashboard" style="width:100%; height:100%; object-fit:cover; border-radius:12px;">
+    </div>
   </section>
 
-  <!-- LIGHTBOX -->
-  <div class="lightbox" id="lightbox">
-    <div class="lightbox-inner">
-      <button class="lightbox-close" id="lightboxClose">✕</button>
-      <div class="lightbox-video">
-        <iframe id="lightboxFrame" src="" allowfullscreen allow="autoplay"></iframe>
-      </div>
+  <!-- STATS -->
+  <section class="stats">
+    <div class="stat">
+      <div class="stat-value">8<span>yrs</span></div>
+      <div class="stat-label">product design experience</div>
     </div>
-  </div>
+    <div class="stat">
+      <div class="stat-value">770<span>K+</span></div>
+      <div class="stat-label">fans verified at Incode</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">17</div>
+      <div class="stat-label">stadiums deployed across Mexico</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">3</div>
+      <div class="stat-label">industries · identity, fintech, B2B SaaS</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">1</div>
+      <div class="stat-label">motion practice, built from scratch</div>
+    </div>
+  </section>
 
-  <!-- CTA -->
-  <section class="motion-cta">
-    <div class="cta-left">
-      <h2>Interested<br><em style="font-weight:300; font-style:italic">in working together?</em></h2>
-      <p>I'm currently open to Senior Product Designer opportunities<br>in fintech, B2B SaaS, and digital identity.</p>
+  <!-- WORK -->
+  <section class="work">
+    <span class="section-label">Selected Work</span>
+    <div class="work-grid">
+
+      <a href="incode.html" class="work-item">
+        <div class="work-item-img">Incode FanID · hero image · 1200×525
+          <div class="work-item-info">
+            <div class="work-item-meta">Identity Verification · B2B · 2022–2023</div>
+            <div class="work-item-title">Incode Fan ID — 770,000+ fans, 17 stadiums</div>
+          </div>
+        </div>
+      </a>
+
+      <a href="ytem.html" class="work-item">
+        <div class="work-item-img">Ytem · hero image · 600×450
+          <div class="work-item-info">
+            <div class="work-item-meta">B2B · Retail Operations · Deployed</div>
+            <div class="work-item-title">Ytem — Inventory management for operators</div>
+          </div>
+        </div>
+      </a>
+
+      <a href="speaker.html" class="work-item">
+        <div class="work-item-img">Speaker · hero image · 600×450
+          <div class="work-item-info">
+            <div class="work-item-meta">Community Platform · Multiplatform · Freelance</div>
+            <div class="work-item-title">Speaker — Privacy-first community platform</div>
+          </div>
+        </div>
+      </a>
+
     </div>
-    <a href="mailto:guido.usnayo@icloud.com" class="btn-pill">Get in touch →</a>
   </section>
 
   <!-- FOOTER -->
@@ -613,68 +424,9 @@
   </footer>
 
   <script>
-    // Nav scroll
     const nav = document.getElementById('nav');
     window.addEventListener('scroll', () => {
       nav.classList.toggle('scrolled', window.scrollY > 20);
-    });
-
-    // Lightbox
-    const lightbox = document.getElementById('lightbox');
-    const lightboxFrame = document.getElementById('lightboxFrame');
-    const lightboxClose = document.getElementById('lightboxClose');
-
-    document.querySelectorAll('.motion-item').forEach(item => {
-      item.addEventListener('click', e => {
-        e.preventDefault();
-        const type = item.dataset.type;
-        const id = item.dataset.id;
-
-        // Skip placeholder items
-        if (id.includes('_ID_')) return;
-
-        let src = '';
-        if (type === 'vimeo') {
-          src = `https://player.vimeo.com/video/${id}?autoplay=1&title=0&byline=0&portrait=0`;
-        } else if (type === 'youtube') {
-          src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
-        }
-
-        lightboxFrame.src = src;
-        lightbox.classList.add('open');
-        document.body.style.overflow = 'hidden';
-      });
-    });
-
-    function closeLightbox() {
-      lightbox.classList.remove('open');
-      lightboxFrame.src = '';
-      document.body.style.overflow = '';
-    }
-
-    lightboxClose.addEventListener('click', closeLightbox);
-    lightbox.addEventListener('click', e => {
-      if (e.target === lightbox) closeLightbox();
-    });
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') closeLightbox();
-    });
-
-    // Filter
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        const filter = btn.dataset.filter;
-        document.querySelectorAll('.motion-item').forEach(item => {
-          if (filter === 'all' || item.dataset.filter === filter) {
-            item.style.display = 'block';
-          } else {
-            item.style.display = 'none';
-          }
-        });
-      });
     });
   </script>
 

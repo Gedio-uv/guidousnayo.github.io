@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Speaker — Guido Usnayo Vidaurre</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0a0a0a;
+      --white: #fafafa;
+      --gray: #6b6b6b;
+      --light-gray: #e8e8e8;
+      --accent: #1a46ff;
+      --font: 'Inter', -apple-system, sans-serif;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      background: var(--white);
+      color: var(--black);
+      font-family: var(--font);
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      background: rgba(250,250,250,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s;
+    }
+    nav.scrolled { border-bottom-color: var(--light-gray); }
+    .nav-name {
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: var(--black);
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.8rem;
+      color: var(--gray);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--black); }
+    .nav-links a.active { color: var(--black); font-weight: 500; }
+    .nav-divider { width: 1px; height: 12px; background: var(--light-gray); }
+
+    /* HEADER */
+    .cs-header {
+      padding: 120px 40px 48px;
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .cs-label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+      display: block;
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards 0.1s;
+    }
+
+    .cs-title {
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      color: var(--black);
+      margin-bottom: 16px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards 0.2s;
+    }
+
+    .cs-subtitle {
+      font-size: 1.05rem;
+      color: var(--gray);
+      line-height: 1.6;
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards 0.3s;
+    }
+
+    .cs-meta {
+      display: flex;
+      gap: 48px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards 0.4s;
+    }
+
+    .cs-meta-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 4px;
+    }
+
+    .cs-meta-value {
+      font-size: 0.85rem;
+      color: var(--black);
+      line-height: 1.4;
+    }
+
+    /* HERO IMAGE */
+    .cs-hero-img {
+      display: block;
+      max-width: 600px;
+      width: 100%;
+      margin: 40px auto 0;
+      padding: 0px 40px;
+    }
+
+    /* CONTENT */
+    .cs-content {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 80px 40px;
+    }
+
+    .cs-section {
+      margin-bottom: 80px;
+    }
+
+    .cs-section-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .cs-section h2 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--black);
+      margin-bottom: 20px;
+    }
+
+    .cs-section p {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: var(--gray);
+      margin-bottom: 16px;
+    }
+
+    .cs-section p:last-child { margin-bottom: 0; }
+
+    /* FULL WIDTH IMAGE */
+    .cs-img-full {
+      width: 40%;
+      display: block;
+      border-radius: 8px;
+      margin: 32px auto;
+    }
+
+    /* IMAGE GRID — 3 col for sp4 screens */
+    .img-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 32px 0;
+    }
+
+    .img-grid-3 img {
+      width: 100%;
+      border-radius: 8px;
+      display: block;
+    }
+
+    /* CONSTRAINTS GRID */
+    .constraints-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 32px 0;
+    }
+
+    .constraint-card {
+      padding: 24px 20px;
+      background: #f5f5f5;
+      border-radius: 8px;
+    }
+
+    .constraint-number {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .constraint-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--black);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .constraint-desc {
+      font-size: 0.8rem;
+      color: var(--gray);
+      line-height: 1.5;
+    }
+
+    /* IMPACT TAGS */
+    .impact-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 24px 0;
+    }
+
+    .impact-tag {
+      padding: 8px 16px;
+      border-radius: 100px;
+      border: 1px solid var(--light-gray);
+      font-size: 0.8rem;
+      color: var(--black);
+      font-weight: 400;
+    }
+
+    .impact-tag strong {
+      font-weight: 600;
+      color: var(--accent);
+      margin-right: 6px;
+    }
+
+    /* DESIGN DECISION */
+    .decision {
+      border-top: 1px solid var(--light-gray);
+      padding-top: 64px;
+      margin-bottom: 64px;
+    }
+
+    .decision-number {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .decision h3 {
+      font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--black);
+      margin-bottom: 16px;
+      line-height: 1.15;
+    }
+
+    .decision p {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: var(--gray);
+      margin-bottom: 16px;
+    }
+
+    /* CTA */
+    .cs-cta {
+      padding: 64px 40px;
+      background: var(--black);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .cta-left h2 {
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      color: var(--white);
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+
+    .cta-left p {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.45);
+    }
+
+    .btn-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent);
+      color: var(--white);
+      padding: 13px 26px;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-pill:hover { background: #1238e0; transform: translateY(-1px); }
+
+    /* FOOTER */
+    footer {
+      padding: 28px 40px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      background: var(--black);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-text {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.3);
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 860px) {
+      nav { padding: 16px 20px; }
+      .nav-links { gap: 16px; }
+      .cs-header { padding: 100px 20px 48px; }
+      .cs-meta { flex-wrap: wrap; gap: 24px; }
+      .cs-content { padding: 48px 20px; }
+      .constraints-grid { grid-template-columns: 1fr; }
+      .img-grid-3 { grid-template-columns: 1fr 1fr; }
+      .cs-cta { padding: 48px 20px; flex-direction: column; gap: 32px; text-align: center; }
+      footer { padding: 24px 20px; flex-direction: column; gap: 8px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <a href="index.html" class="nav-name">Guido Usnayo Vidaurre</a>
+    <ul class="nav-links">
+      <li><a href="incode.html">Incode</a></li>
+      <li><a href="speaker.html" class="active">Speaker</a></li>
+      <li><a href="ytem.html">Ytem</a></li>
+      <li><a href="other.html">Other work</a></li>
+      <li><a href="motion.html">Motion</a></li>
+      <li class="nav-divider"></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="https://www.linkedin.com/in/guido-usnayovidaurre/" target="_blank">LinkedIn ↗</a></li>
+    </ul>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="cs-header">
+    <span class="cs-label">Case Study 02</span>
+    <h1 class="cs-title">Speaker</h1>
+    <p class="cs-subtitle">Community connection platform for urban residents — privacy-first architecture for shared residential spaces.</p>
+    <div class="cs-meta">
+      <div>
+        <div class="cs-meta-label">Role</div>
+        <div class="cs-meta-value">Solo Designer</div>
+      </div>
+      <div>
+        <div class="cs-meta-label">Type</div>
+        <div class="cs-meta-value">Freelance</div>
+      </div>
+      <div>
+        <div class="cs-meta-label">Scope</div>
+        <div class="cs-meta-value">Brand, UX, UI</div>
+      </div>
+      <div>
+        <div class="cs-meta-label">Platforms</div>
+        <div class="cs-meta-value">Mobile · iPad · Web</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO IMAGE -->
+  <img src="images/sp1.png" alt="Speaker — community connection platform" class="cs-hero-img">
+
+  <!-- CONTENT -->
+  <div class="cs-content">
+
+    <!-- CONTEXT -->
+    <section class="cs-section">
+      <span class="cs-section-label">Context</span>
+      <h2>The brief sounded simple. The challenge wasn't.</h2>
+      <p>A real estate and property company approached me to design a community connection platform for residents living in the same private building. The target audience was busy young professionals aged 18–35 who needed a simple way to connect with neighbors, book shared spaces, and stay informed about building events.</p>
+      <p>The real challenge was harder — design a system where residents could coordinate shared spaces, communicate directly, and access building services without feeling surveilled or socially pressured. The line between useful and invasive had to be designed explicitly, not assumed.</p>
+    </section>
+
+    <!-- THE PROBLEM -->
+    <section class="cs-section">
+      <span class="cs-section-label">The Problem</span>
+      <h2>Buildings full of strangers.</h2>
+      <p>The core tension wasn't technical — it was architectural. A building app that feels too social gets abandoned. One that's too transactional misses the point. The design had to hold both: enough connection to be useful, enough privacy to feel safe. Every feature decision was filtered through that constraint.</p>
+    </section>
+
+    <!-- SYSTEM CONSTRAINTS -->
+    <section class="cs-section">
+      <span class="cs-section-label">System Constraints</span>
+      <h2>Architecture before pixels.</h2>
+      <p>Speaker wasn't a visual problem — it was a system one. Three constraints shaped every decision that followed.</p>
+
+      <div class="constraints-grid">
+        <div class="constraint-card">
+          <span class="constraint-number">01</span>
+          <div class="constraint-title">Privacy by default</div>
+          <div class="constraint-desc">Resident identity and floor location visible only when the resident chose to share it. The system had to protect without restricting.</div>
+        </div>
+        <div class="constraint-card">
+          <span class="constraint-number">02</span>
+          <div class="constraint-title">Communication without exposure</div>
+          <div class="constraint-desc">Direct messaging between neighbors without requiring personal contact details. Connection had to feel safe, not invasive.</div>
+        </div>
+        <div class="constraint-card">
+          <span class="constraint-number">03</span>
+          <div class="constraint-title">Services as the foundation</div>
+          <div class="constraint-desc">Booking, announcements, and access had to work reliably before any social layer was added on top. Utility first, community second.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BRANDING -->
+    <div class="decision">
+      <span class="decision-number">Design — Branding Process</span>
+      <h3>From brief to brand identity.</h3>
+      <p>Starting from the brief, I ran through four naming and brand concepts before landing on Speaker — a name combining 'speaker' with the idea of storeys and floors, visually represented by a speech bubble icon made of colorful dots arranged like a building grid.</p>
+      <img src="images/sp2.png" alt="Speaker branding process" class="cs-img-full">
+    </div>
+
+    <!-- DESIGN PROCESS -->
+    <div class="decision">
+      <span class="decision-number">Design — Process</span>
+      <h3>Low to high fidelity.</h3>
+      <p>I tested at low, medium, and high fidelity — moving from hand-drawn sketches to mid-fi screens to final UI. User testing with real residents shaped key decisions, particularly around group organization by floor and the emergency contact feature which emerged as an unexpected priority.</p>
+      <img src="images/sp3.png" alt="Speaker design process — sketches to final UI" class="cs-img-full">
+    </div>
+
+    <!-- DESIGN DECISION 01 -->
+    <div class="decision">
+      <span class="decision-number">Design Decision 01</span>
+      <h3>Warm UI for a social product.</h3>
+      <p>The colorful, high-contrast chat UI was a deliberate choice to make the social layer feel warm and approachable — distinct from the cold utility of most building management tools.</p>
+      <div class="img-grid-3">
+        <img src="images/sp4a.png" alt="Speaker UI — chat interface">
+        <img src="images/sp4b.png" alt="Speaker UI — floor navigation">
+        <img src="images/sp4c.png" alt="Speaker UI — community features">
+      </div>
+    </div>
+
+    <!-- DESIGN DECISION 02 -->
+    <div class="decision">
+      <span class="decision-number">Design Decision 02</span>
+      <h3>Space as a navigation model.</h3>
+      <p>The floor plan visualization on the main screen gave residents immediate spatial orientation within their building — something no competing product was doing at the time. Navigation organized by floor and interest group made the community feel tangible, not abstract.</p>
+      <img src="images/sp5.png" alt="Speaker — space as navigation model" class="cs-img-full">
+    </div>
+
+    <!-- IMPACT -->
+    <section class="cs-section">
+      <span class="cs-section-label">Impact</span>
+      <h2>Deployed to real residents.</h2>
+      <p>The product was implemented by the client and deployed to real residents. User testing confirmed the core flows were intuitive across the target age group. The client planned to scale it across additional buildings — validating that the privacy-first approach didn't reduce adoption.</p>
+
+      <img src="images/sp6.png" alt="Speaker — deployed product" class="cs-img-full">
+
+      <div class="impact-tags">
+        <div class="impact-tag"><strong>Deployed</strong> Implemented by client</div>
+        <div class="impact-tag"><strong>3 platforms</strong> Mobile, tablet, web</div>
+        <div class="impact-tag"><strong>Tested</strong> Validated with real residents</div>
+        <div class="impact-tag"><strong>Solo</strong> Brand through UI</div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- CTA -->
+  <section class="cs-cta">
+    <div class="cta-left">
+      <h2>Interested in<br><em style="font-weight:300; font-style:italic">working together?</em></h2>
+      <p>I'm currently open to Senior Product Designer opportunities in fintech, B2B SaaS, and digital identity.</p>
+    </div>
+    <a href="mailto:guido.usnayo@icloud.com" class="btn-pill">Get in touch →</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-text">© 2026 Guido Usnayo Vidaurre</span>
+    <span class="footer-text">Leipzig · Available across Germany and Europe</span>
+    <span class="footer-text">guido.usnayo@icloud.com</span>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    });
+  </script>
+
+</body>
+</html>

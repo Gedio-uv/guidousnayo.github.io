@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Incode Fan ID — Guido Usnayo Vidaurre</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0a0a0a;
+      --white: #fafafa;
+      --gray: #6b6b6b;
+      --light-gray: #e8e8e8;
+      --accent: #1a46ff;
+      --font: 'Inter', -apple-system, sans-serif;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      background: var(--white);
+      color: var(--black);
+      font-family: var(--font);
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      background: rgba(250,250,250,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s;
+    }
+    nav.scrolled { border-bottom-color: var(--light-gray); }
+    .nav-name {
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: var(--black);
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.8rem;
+      color: var(--gray);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--black); }
+    .nav-links a.active { color: var(--black); font-weight: 500; }
+    .nav-divider { width: 1px; height: 12px; background: var(--light-gray); }
+
+    /* CASE STUDY HEADER */
+    .cs-header {
+      padding: 120px 40px 48px;
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .cs-label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+      display: block;
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards 0.1s;
+    }
+
+    .cs-title {
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      color: var(--black);
+      margin-bottom: 16px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards 0.2s;
+    }
+
+    .cs-subtitle {
+      font-size: 1.05rem;
+      color: var(--gray);
+      line-height: 1.6;
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards 0.3s;
+    }
+
+    .cs-meta {
+      display: flex;
+      gap: 48px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards 0.4s;
+    }
+
+    .cs-meta-item {}
+    .cs-meta-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 4px;
+    }
+    .cs-meta-value {
+      font-size: 0.85rem;
+      color: var(--black);
+      line-height: 1.4;
+    }
+
+    /* HERO IMAGE */
+    .cs-hero-img {
+      display: block;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 40px;
+      box-sizing: border-box;
+    }
+
+    /* DECISION WITH SIDE IMAGE */
+    .decision-split {
+      border-top: 1px solid var(--light-gray);
+      padding-top: 64px;
+      margin-bottom: 64px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    .decision-split .decision-text {}
+
+    .decision-split .decision-number {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .decision-split h3 {
+      font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--black);
+      margin-bottom: 16px;
+      line-height: 1.15;
+    }
+
+    .decision-split p {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: var(--gray);
+    }
+
+    .decision-split .decision-img {
+      width: 100%;
+      max-width: 200px;
+      display: block;
+      border-radius: 16px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 860px) {
+      .decision-split {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+      .decision-split .decision-img {
+        max-width: 260px;
+      }
+    }
+
+    /* CONTENT */
+    .cs-content {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 80px 40px;
+    }
+
+    .cs-section {
+      margin-bottom: 80px;
+    }
+
+    .cs-section-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .cs-section h2 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--black);
+      margin-bottom: 20px;
+    }
+
+    .cs-section p {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: var(--gray);
+      margin-bottom: 16px;
+    }
+
+    .cs-section p:last-child { margin-bottom: 0; }
+
+    /* IMPACT METRICS */
+    .impact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin: 32px 0;
+      background: var(--light-gray);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .impact-item {
+      background: var(--white);
+      padding: 28px 24px;
+    }
+
+    .impact-value {
+      font-size: 2rem;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      color: var(--black);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .impact-value span { color: var(--accent); }
+
+    .impact-label {
+      font-size: 0.75rem;
+      color: var(--gray);
+      line-height: 1.4;
+    }
+
+    /* PROBLEM CARDS */
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 24px 0;
+    }
+
+    .problem-card {
+      padding: 20px;
+      background: #f5f5f5;
+      border-radius: 8px;
+    }
+
+    .problem-number {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: var(--gray);
+      margin-bottom: 8px;
+    }
+
+    .problem-title {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--black);
+      margin-bottom: 4px;
+    }
+
+    .problem-desc {
+      font-size: 0.8rem;
+      color: var(--gray);
+      line-height: 1.5;
+    }
+
+    /* FULL WIDTH IMAGE */
+    .cs-img-full {
+      width: 100%;
+      display: block;
+      border-radius: 8px;
+      margin: 32px 0;
+    }
+
+    .cs-img-caption {
+      font-size: 0.75rem;
+      color: var(--gray);
+      text-align: center;
+      margin-top: -20px;
+      margin-bottom: 32px;
+    }
+
+    /* DESIGN DECISION */
+    .decision {
+      border-top: 1px solid var(--light-gray);
+      padding-top: 64px;
+      margin-bottom: 64px;
+    }
+
+    .decision-number {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .decision h3 {
+      font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--black);
+      margin-bottom: 16px;
+      line-height: 1.15;
+    }
+
+    .decision p {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: var(--gray);
+      margin-bottom: 16px;
+    }
+
+    /* FLOW IMAGES — horizontal scroll on mobile */
+    .flow-images {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin: 32px 0;
+    }
+
+    .flow-images img {
+      width: 100%;
+      border-radius: 8px;
+      display: block;
+    }
+
+    /* CTA */
+    .cs-cta {
+      padding: 64px 40px;
+      background: var(--black);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .cta-left h2 {
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      color: var(--white);
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+
+    .cta-left p {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.45);
+    }
+
+    .btn-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent);
+      color: var(--white);
+      padding: 13px 26px;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-pill:hover { background: #1238e0; transform: translateY(-1px); }
+
+    /* FOOTER */
+    footer {
+      padding: 28px 40px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      background: var(--black);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-text {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .footer-right {
+      display: flex;
+      align-items: center;
+    }
+
+    .footer-next {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--white);
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .footer-next:hover { opacity: 0.7; }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 860px) {
+      nav { padding: 16px 20px; }
+      .nav-links { gap: 16px; }
+      .cs-header { padding: 100px 20px 48px; }
+      .cs-meta { flex-wrap: wrap; gap: 24px; }
+      .cs-content { padding: 48px 20px; }
+      .impact-grid { grid-template-columns: repeat(2, 1fr); }
+      .problem-grid { grid-template-columns: 1fr; }
+      .flow-images { grid-template-columns: repeat(3, 1fr); }
+      .cs-cta { padding: 48px 20px; flex-direction: column; gap: 32px; text-align: center; }
+      .next-project { padding: 32px 20px; }
+      footer { padding: 24px 20px; flex-direction: column; gap: 8px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <a href="index.html" class="nav-name">Guido Usnayo Vidaurre</a>
+    <ul class="nav-links">
+      <li><a href="incode.html" class="active">Incode</a></li>
+      <li><a href="speaker.html">Speaker</a></li>
+      <li><a href="ytem.html">Ytem</a></li>
+      <li><a href="other.html">Other work</a></li>
+      <li><a href="motion.html">Motion</a></li>
+      <li class="nav-divider"></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="https://www.linkedin.com/in/guido-usnayovidaurre/" target="_blank">LinkedIn ↗</a></li>
+    </ul>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="cs-header">
+    <span class="cs-label">Case Study 01</span>
+    <h1 class="cs-title">Incode Fan ID</h1>
+    <p class="cs-subtitle">Designing identity verification at national scale — 770,000 fans, 17 stadiums, one consistent flow.</p>
+    <div class="cs-meta">
+      <div class="cs-meta-item">
+        <div class="cs-meta-label">Role</div>
+        <div class="cs-meta-value">Lead Product Designer</div>
+      </div>
+      <div class="cs-meta-item">
+        <div class="cs-meta-label">Year</div>
+        <div class="cs-meta-value">2022–2023</div>
+      </div>
+      <div class="cs-meta-item">
+        <div class="cs-meta-label">Scope</div>
+        <div class="cs-meta-value">End-to-end UX/UI</div>
+      </div>
+      <div class="cs-meta-item">
+        <div class="cs-meta-label">Collaborator</div>
+        <div class="cs-meta-value">PM Poojit Sharma</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO IMAGE -->
+  <img src="images/ic1.png" alt="Incode Fan ID — identity verification flow" class="cs-hero-img">
+
+  <!-- CONTENT -->
+  <div class="cs-content">
+
+    <!-- CONTEXT -->
+    <section class="cs-section">
+      <span class="cs-section-label">Context</span>
+      <h2>A security failure that demanded a design solution.</h2>
+      <p>In March 2022, a violent incident at a Liga MX match between Atlas and Querétaro exposed a systemic failure: stadiums had no reliable way of knowing who was entering. Sports authorities responded by mandating identity verification across all national stadiums. Incode was selected to build the solution. I led product design working directly with PM Poojit Sharma.</p>
+    </section>
+
+    <!-- IMPACT -->
+    <section class="cs-section">
+      <span class="cs-section-label">Impact · Verified at scale</span>
+      <h2>770,000 fans. One consistent flow.</h2>
+      <p>These results came from a single consistent onboarding flow, designed to work for 770,000 people across different ages, devices, and digital literacy levels — from tech-savvy users to first-time smartphone users.</p>
+      <img src="images/ic2.png" alt="Impact dashboard — Verified at scale" class="cs-img-full">
+    </section>
+
+    <!-- THE PROBLEM -->
+    <section class="cs-section">
+      <span class="cs-section-label">The Problem</span>
+      <h2>Manual checks don't scale.</h2>
+      <p>The challenge wasn't only technical. Tens of thousands of fans had to complete biometric verification before entering — many unaware the requirement existed, with varying levels of digital literacy, under time pressure before kickoff. A slow or confusing flow wasn't just a UX problem: it was a real security bottleneck.</p>
+
+      <div class="problem-grid">
+        <div class="problem-card">
+          <div class="problem-number">01</div>
+          <div class="problem-title">Unaware attendees</div>
+          <div class="problem-desc">Arrived without knowing verification was required</div>
+        </div>
+        <div class="problem-card">
+          <div class="problem-number">02</div>
+          <div class="problem-title">Elderly users</div>
+          <div class="problem-desc">Struggled with mobile onboarding and abandoned mid-flow</div>
+        </div>
+        <div class="problem-card">
+          <div class="problem-number">03</div>
+          <div class="problem-title">Accessibility needs</div>
+          <div class="problem-desc">Required on-site assisted support</div>
+        </div>
+        <div class="problem-card">
+          <div class="problem-number">04</div>
+          <div class="problem-title">No device available</div>
+          <div class="problem-desc">Could not complete registration independently</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DESIGN DECISION 01 -->
+    <div class="decision">
+      <span class="decision-number">Design Decision 01</span>
+      <h3>Shift friction before the gate.</h3>
+      <p>The core principle: move verification pressure away from the entry point. By encouraging pre-event registration, gate congestion dropped significantly. For the verification flow itself, I separated ID capture and face capture into distinct guided steps — reducing cognitive load and error rates at each stage.</p>
+
+      <div class="flow-images">
+        <img src="images/ic3a.png" alt="Take selfie step">
+        <img src="images/ic3b.png" alt="Face recognition step">
+        <img src="images/ic3c.png" alt="Scan ID step">
+        <img src="images/ic3e.png" alt="Processing step">
+        <img src="images/ic3f.png" alt="Verified state">
+      </div>
+    </div>
+
+    <!-- DESIGN DECISION 02 -->
+    <div class="decision">
+      <span class="decision-number">Design Decision 02</span>
+      <h3>Status-first hierarchy for operators.</h3>
+      <p>The operator dashboard had to support fast decision-making under real event-day pressure. I structured information in a status-first hierarchy — critical verification states immediately visible, evidence organized to support review without hesitation. Exception handling was designed to resolve edge cases without disrupting access control flow.</p>
+
+      <img src="images/ic4.png" alt="Operator dashboard — status-first hierarchy" class="cs-img-full">
+    </div>
+
+    <!-- DESIGN DECISION 03 -->
+    <div class="decision-split">
+      <div class="decision-text">
+        <span class="decision-number">Design Decision 03</span>
+        <h3>Turning verification into a reusable layer.</h3>
+        <p>Beyond single-event access, the identity wallet extended verification into a persistent layer — linking tickets, credentials, and future access points under one verified profile. One registration, any stadium, any match.</p>
+      </div>
+      <img src="images/ic5.png" alt="Identity wallet — reusable verification layer" class="decision-img">
+    </div>
+
+  </div>
+
+  <!-- CTA -->
+  <section class="cs-cta">
+    <div class="cta-left">
+      <h2>Interested in<br><em style="font-weight:300; font-style:italic">working together?</em></h2>
+      <p>I'm currently open to Senior Product Designer opportunities in fintech, B2B SaaS, and digital identity.</p>
+    </div>
+    <a href="mailto:guido.usnayo@icloud.com" class="btn-pill">Get in touch →</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-text">© 2026 Guido Usnayo Vidaurre</span>
+    <span class="footer-text">Leipzig · Available across Germany and Europe</span>
+    <span class="footer-text">guido.usnayo@icloud.com</span>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    });
+  </script>
+
+</body>
+</html>

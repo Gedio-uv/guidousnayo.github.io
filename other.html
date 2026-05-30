@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Other Work — Guido Usnayo Vidaurre</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0a0a0a;
+      --white: #fafafa;
+      --gray: #6b6b6b;
+      --light-gray: #e8e8e8;
+      --accent: #1a46ff;
+      --font: 'Inter', -apple-system, sans-serif;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      background: var(--white);
+      color: var(--black);
+      font-family: var(--font);
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      background: rgba(250,250,250,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s;
+    }
+    nav.scrolled { border-bottom-color: var(--light-gray); }
+    .nav-name { font-size: 0.875rem; font-weight: 400; color: var(--black); text-decoration: none; }
+    .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+    .nav-links a { font-size: 0.8rem; color: var(--gray); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--black); }
+    .nav-links a.active { color: var(--black); font-weight: 500; }
+    .nav-divider { width: 1px; height: 12px; background: var(--light-gray); }
+
+    /* HEADER */
+    .page-header {
+      padding: 120px 40px 64px;
+      border-bottom: 1px solid var(--light-gray);
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards 0.1s;
+    }
+
+    .page-label {
+      font-size: 0.7rem; font-weight: 500; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 16px; display: block;
+    }
+
+    .page-title {
+      font-size: clamp(2.2rem, 4vw, 3.5rem); font-weight: 600;
+      letter-spacing: -0.03em; line-height: 1.05; color: var(--black);
+      margin-bottom: 16px;
+    }
+
+    .page-desc {
+      font-size: 1rem; color: var(--gray); line-height: 1.6;
+      max-width: 560px;
+    }
+
+    /* PROJECTS GRID */
+    .projects {
+      padding: 80px 40px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .project-item {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      padding-bottom: 80px;
+      margin-bottom: 80px;
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .project-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .project-item.reverse {
+      direction: rtl;
+    }
+
+    .project-item.reverse > * {
+      direction: ltr;
+    }
+
+    .project-img {
+      width: 100%;
+      max-height: 400px;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+      border-radius: 8px;
+      background: transparent;
+    }
+
+    .project-info {}
+
+    .project-number {
+      font-size: 0.65rem; font-weight: 500; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--gray);
+      margin-bottom: 12px; display: block;
+    }
+
+    .project-title {
+      font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 600;
+      letter-spacing: -0.03em; line-height: 1.1; color: var(--black);
+      margin-bottom: 12px;
+    }
+
+    .project-subtitle {
+      font-size: 0.9rem; color: var(--accent);
+      margin-bottom: 20px; font-weight: 400;
+    }
+
+    .project-desc {
+      font-size: 1rem; line-height: 1.75; color: var(--gray);
+      margin-bottom: 24px;
+    }
+
+    .project-tags {
+      display: flex; flex-wrap: wrap; gap: 8px;
+    }
+
+    .project-tag {
+      padding: 6px 14px; border-radius: 100px;
+      border: 1px solid var(--light-gray);
+      font-size: 0.75rem; color: var(--gray);
+    }
+
+    /* SKILLS SECTION */
+    .skills-section {
+      padding: 80px 40px;
+      background: var(--white);
+      border-top: 1px solid var(--light-gray);
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .skills-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+    }
+
+    .skills-label {
+      font-size: 0.7rem; font-weight: 500; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--gray);
+      margin-bottom: 32px; display: block;
+    }
+
+    .skills-group h3 {
+      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--gray);
+      margin-bottom: 16px;
+    }
+
+    .skills-list {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 40px;
+    }
+
+    .skill-item {
+      padding: 8px 16px; border-radius: 100px;
+      border: 1px solid var(--light-gray);
+      font-size: 0.8rem; color: var(--black);
+    }
+
+    /* CTA */
+    .cs-cta {
+      padding: 64px 40px; background: var(--black);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .cta-left h2 {
+      font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 600;
+      letter-spacing: -0.03em; color: var(--white);
+      line-height: 1.1; margin-bottom: 8px;
+    }
+
+    .cta-left p { font-size: 0.875rem; color: rgba(255,255,255,0.45); }
+
+    .btn-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent); color: var(--white);
+      padding: 13px 26px; border-radius: 100px;
+      font-size: 0.8rem; font-weight: 500; text-decoration: none;
+      white-space: nowrap; transition: background 0.2s, transform 0.15s;
+    }
+    .btn-pill:hover { background: #1238e0; transform: translateY(-1px); }
+
+    /* FOOTER */
+    footer {
+      padding: 28px 40px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      background: var(--black);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .footer-text { font-size: 0.75rem; color: rgba(255,255,255,0.3); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 860px) {
+      nav { padding: 16px 20px; }
+      .nav-links { gap: 16px; }
+      .page-header { padding: 100px 20px 48px; }
+      .projects { padding: 48px 20px; }
+      .project-item { grid-template-columns: 1fr; gap: 32px; }
+      .project-item.reverse { direction: ltr; }
+      .skills-section { padding: 48px 20px; }
+      .skills-inner { grid-template-columns: 1fr; gap: 40px; }
+      .cs-cta { padding: 48px 20px; flex-direction: column; gap: 32px; text-align: center; }
+      footer { padding: 24px 20px; flex-direction: column; gap: 8px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav id="nav">
+    <a href="index.html" class="nav-name">Guido Usnayo Vidaurre</a>
+    <ul class="nav-links">
+      <li><a href="incode.html">Incode</a></li>
+      <li><a href="speaker.html">Speaker</a></li>
+      <li><a href="ytem.html">Ytem</a></li>
+      <li><a href="other.html" class="active">Other work</a></li>
+      <li><a href="motion.html">Motion</a></li>
+      <li class="nav-divider"></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="https://www.linkedin.com/in/guido-usnayovidaurre/" target="_blank">LinkedIn ↗</a></li>
+    </ul>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="page-header">
+    <span class="page-label">Other Work</span>
+    <h1 class="page-title">More projects.</h1>
+    <p class="page-desc">A selection of additional work across branding, product design, and UX — spanning mobile, IoT, and AR experiences.</p>
+  </header>
+
+  <!-- PROJECTS -->
+  <section class="projects">
+
+    <!-- SENDEN -->
+    <div class="project-item">
+      <img src="images/m1.png" alt="Senden — parcel delivery branding and product design" class="project-img">
+      <div class="project-info">
+        <span class="project-number">Project 01</span>
+        <h2 class="project-title">Senden</h2>
+        <p class="project-subtitle">Branding and product design for a global parcel delivery startup</p>
+        <p class="project-desc">Designed the brand identity and product experience for a global parcel delivery startup. The challenge was creating a system that communicated reliability and speed across a mobile tracking interface — clear status hierarchy, real-time updates, and a visual language that could scale across markets.</p>
+        <div class="project-tags">
+          <span class="project-tag">Branding</span>
+          <span class="project-tag">Product Design</span>
+          <span class="project-tag">Mobile</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TORAKKA -->
+    <div class="project-item reverse">
+      <img src="images/m2.png" alt="Torakka — Bluetooth bike tracking app" class="project-img">
+      <div class="project-info">
+        <span class="project-number">Project 02</span>
+        <h2 class="project-title">Torakka</h2>
+        <p class="project-subtitle">UX and UI design for a Bluetooth bike tracking app</p>
+        <p class="project-desc">Designed the UX and UI for a Bluetooth-connected bike tracking application. The core challenge was surfacing real-time location and status data in a way that felt immediately readable — mapping context, connection state, and alert hierarchy all had to work together without overwhelming the interface.</p>
+        <div class="project-tags">
+          <span class="project-tag">UX Design</span>
+          <span class="project-tag">Mobile</span>
+          <span class="project-tag">IoT</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TIMELENSE -->
+    <div class="project-item">
+      <img src="images/m3.png" alt="Timelense — AR postcard app" class="project-img">
+      <div class="project-info">
+        <span class="project-number">Project 03</span>
+        <h2 class="project-title">Timelense</h2>
+        <p class="project-subtitle">AR-powered postcard app connecting printed photos to digital media</p>
+        <p class="project-desc">Designed the UX and UI for an AR-powered postcard application that connected physical printed photos to digital video content. The design challenge was making the AR trigger feel intuitive and the content discovery seamless — bridging physical and digital without requiring technical knowledge from the user.</p>
+        <div class="project-tags">
+          <span class="project-tag">UX Design</span>
+          <span class="project-tag">AR</span>
+          <span class="project-tag">Mobile</span>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- SKILLS & TOOLS -->
+  <section class="skills-section">
+    <div class="skills-inner">
+      <div>
+        <span class="skills-label">Core Skills</span>
+        <div class="skills-list">
+          <span class="skill-item">Identity & Verification Systems</span>
+          <span class="skill-item">Product Architecture</span>
+          <span class="skill-item">B2B Dashboard & Operational UX</span>
+          <span class="skill-item">Motion Design & Prototyping</span>
+          <span class="skill-item">Cross-functional Collaboration</span>
+          <span class="skill-item">Brand Identity</span>
+          <span class="skill-item">Design Systems</span>
+          <span class="skill-item">Information Architecture</span>
+        </div>
+      </div>
+      <div>
+        <span class="skills-label">Tools</span>
+        <div class="skills-list">
+          <span class="skill-item">Figma</span>
+          <span class="skill-item">After Effects</span>
+          <span class="skill-item">Principle</span>
+          <span class="skill-item">Photoshop</span>
+          <span class="skill-item">Cinema 4D</span>
+          <span class="skill-item">Framer</span>
+          <span class="skill-item">Figma AI</span>
+          <span class="skill-item">Gemini</span>
+          <span class="skill-item">Claude</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cs-cta">
+    <div class="cta-left">
+      <h2>Interested in<br><em style="font-weight:300; font-style:italic">working together?</em></h2>
+      <p>I'm currently open to Senior Product Designer opportunities in fintech, B2B SaaS, and digital identity.</p>
+    </div>
+    <a href="mailto:guido.usnayo@icloud.com" class="btn-pill">Get in touch →</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-text">© 2026 Guido Usnayo Vidaurre</span>
+    <span class="footer-text">Leipzig · Available across Germany and Europe</span>
+    <span class="footer-text">guido.usnayo@icloud.com</span>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    });
+  </script>
+
+</body>
+</html>

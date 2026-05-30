@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ytem — Guido Usnayo Vidaurre</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0a0a0a;
+      --dark: #111214;
+      --white: #fafafa;
+      --gray: #6b6b6b;
+      --light-gray: #e8e8e8;
+      --accent: #1a46ff;
+      --red: #fc0d30;
+      --font: 'Inter', -apple-system, sans-serif;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      background: var(--white);
+      color: var(--black);
+      font-family: var(--font);
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      background: rgba(250,250,250,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s;
+    }
+    nav.scrolled { border-bottom-color: var(--light-gray); }
+    .nav-name { font-size: 0.875rem; font-weight: 400; color: var(--black); text-decoration: none; }
+    .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+    .nav-links a { font-size: 0.8rem; color: var(--gray); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--black); }
+    .nav-links a.active { color: var(--black); font-weight: 500; }
+    .nav-divider { width: 1px; height: 12px; background: var(--light-gray); }
+
+    /* HEADER */
+    .cs-header {
+      padding: 120px 40px 48px;
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .cs-label {
+      font-size: 0.7rem; font-weight: 500; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 16px; display: block;
+      opacity: 0; animation: fadeUp 0.5s ease forwards 0.1s;
+    }
+
+    .cs-title {
+      font-size: clamp(2.2rem, 4vw, 3.5rem); font-weight: 600;
+      letter-spacing: -0.03em; line-height: 1.05; color: var(--black);
+      margin-bottom: 12px;
+      opacity: 0; animation: fadeUp 0.5s ease forwards 0.2s;
+    }
+
+    .cs-subtitle {
+      font-size: 1rem; color: var(--gray); line-height: 1.6;
+      margin-bottom: 40px;
+      opacity: 0; animation: fadeUp 0.5s ease forwards 0.3s;
+    }
+
+    .cs-meta {
+      display: flex; gap: 48px;
+      opacity: 0; animation: fadeUp 0.5s ease forwards 0.4s;
+    }
+
+    .cs-meta-label { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray); margin-bottom: 4px; }
+    .cs-meta-value { font-size: 0.85rem; color: var(--black); }
+
+    /* HERO — dark full width */
+    .hero-dark {
+      
+      padding: 56px 40px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .hero-dark img {
+      max-width: 860px;
+      width: 100%;
+      display: block;
+    }
+
+    /* CONTEXT — centered single column */
+    .context-section {
+      padding: 80px 40px;
+      max-width: 720px;
+      margin: 0 auto;
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .context-section h2 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 600;
+      letter-spacing: -0.03em; line-height: 1.1; color: var(--black);
+      margin-bottom: 20px;
+    }
+
+    .context-section p {
+      font-size: 1rem; line-height: 1.75; color: var(--gray);
+      margin-bottom: 12px;
+    }
+
+    .context-meta {
+      display: flex; flex-wrap: wrap; gap: 16px; margin-top: 32px;
+    }
+
+    .context-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 16px; border-radius: 100px;
+      border: 1px solid var(--light-gray);
+    }
+
+    .context-tag-label {
+      font-size: 0.8rem; font-weight: 600; color: var(--accent);
+    }
+
+    .context-tag-value {
+      font-size: 0.8rem; color: var(--gray);
+    }
+
+    /* THE PROBLEM — light */
+    .problem-section {
+      padding: 80px 40px;
+    }
+
+    .problem-section-inner {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .problem-section h2 {
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 600;
+      letter-spacing: -0.03em; line-height: 1.05; color: var(--black);
+      margin-bottom: 20px;
+    }
+
+    .problem-section p {
+      font-size: 1rem; line-height: 1.75; color: var(--gray);
+      margin-bottom: 12px;
+    }
+
+    /* DARK BAND — full width dark sections */
+    .dark-band {
+      background: var(--dark);
+      padding: 64px 40px;
+    }
+
+    .dark-band-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .dark-band .section-label { color: var(--red); }
+
+    .dark-band h2 {
+      font-size: clamp(1.4rem, 2.5vw, 1.8rem); font-weight: 600;
+      letter-spacing: -0.02em; line-height: 1.15; color: var(--white);
+      margin-bottom: 16px;
+    }
+
+    .dark-band p {
+      font-size: 1rem; line-height: 1.75; color: rgba(255,255,255,0.5);
+      margin-bottom: 32px; max-width: 560px;
+    }
+
+    .dark-band img {
+      width: 100%; display: block; border-radius: 8px;
+    }
+
+    /* DESIGN PRINCIPLES — dark band with grid */
+    .principles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .principle-card {
+      padding: 24px 20px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+    }
+
+    .principle-number {
+      font-size: 0.65rem; font-weight: 500; letter-spacing: 0.1em;
+      color: var(--red); margin-bottom: 10px; display: block;
+    }
+
+    .principle-title {
+      font-size: 0.875rem; font-weight: 600; color: var(--white);
+      margin-bottom: 8px; line-height: 1.3;
+    }
+
+    .principle-desc {
+      font-size: 0.8rem; color: rgba(255,255,255,0.45); line-height: 1.5;
+    }
+
+    /* DESIGN DECISIONS — light, split layout */
+    .decision-split {
+      padding: 80px 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      border-bottom: 1px solid var(--light-gray);
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .decision-split.reverse { direction: rtl; }
+    .decision-split.reverse > * { direction: ltr; }
+
+    .decision-number {
+      font-size: 0.65rem; font-weight: 500; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--gray);
+      margin-bottom: 12px; display: block;
+    }
+
+    .decision-split h3 {
+      font-size: clamp(1.4rem, 2.5vw, 1.8rem); font-weight: 600;
+      letter-spacing: -0.02em; color: var(--black);
+      margin-bottom: 16px; line-height: 1.15;
+    }
+
+    .decision-split p {
+      font-size: 1rem; line-height: 1.75; color: var(--gray);
+    }
+
+    .decision-split img {
+      width: 100%;
+      display: block;
+      border-radius: 8px;
+      background: transparent;
+      margin: 0 auto;
+    }
+
+    .img-phone {
+      width: 100%;
+      max-width: 280px;
+      display: block;
+      border-radius: 8px;
+      background: transparent;
+      margin: 0 auto;
+    }
+
+    /* BRAND SYSTEM — dark full band */
+    .brand-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 32px;
+    }
+
+    .brand-grid img {
+      width: 100%; display: block; border-radius: 8px;
+      background: rgba(255,255,255,0.04);
+    }
+
+    /* IMPACT — light */
+    .impact-section {
+      padding: 80px 40px;
+    }
+
+    .impact-section-inner {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .impact-section h2 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 600;
+      letter-spacing: -0.03em; line-height: 1.1; color: var(--black);
+      margin-bottom: 20px;
+    }
+
+    .impact-section p {
+      font-size: 1rem; line-height: 1.75; color: var(--gray);
+      margin-bottom: 32px;
+    }
+
+    .impact-tags {
+      display: flex; flex-wrap: wrap; gap: 10px;
+    }
+
+    .impact-tag {
+      padding: 8px 16px; border-radius: 100px;
+      border: 1px solid var(--light-gray);
+      font-size: 0.8rem; color: var(--black);
+    }
+
+    .impact-tag strong { font-weight: 600; color: var(--accent); margin-right: 6px; }
+
+    /* CTA */
+    .cs-cta {
+      padding: 64px 40px; background: var(--black);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .cta-left h2 {
+      font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 600;
+      letter-spacing: -0.03em; color: var(--white);
+      line-height: 1.1; margin-bottom: 8px;
+    }
+
+    .cta-left p { font-size: 0.875rem; color: rgba(255,255,255,0.45); }
+
+    .btn-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent); color: var(--white);
+      padding: 13px 26px; border-radius: 100px;
+      font-size: 0.8rem; font-weight: 500; text-decoration: none;
+      white-space: nowrap; transition: background 0.2s, transform 0.15s;
+    }
+    .btn-pill:hover { background: #1238e0; transform: translateY(-1px); }
+
+    /* FOOTER */
+    footer {
+      padding: 28px 40px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      background: var(--black);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .footer-text { font-size: 0.75rem; color: rgba(255,255,255,0.3); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 860px) {
+      nav { padding: 16px 20px; }
+      .nav-links { gap: 16px; }
+      .cs-header { padding: 100px 20px 0; }
+      .cs-header-inner { grid-template-columns: 1fr; gap: 32px; }
+      .cs-meta { flex-direction: row; flex-wrap: wrap; }
+      .cs-meta-item { text-align: left; }
+      .hero-dark { padding: 32px 20px; }
+      .context-section { grid-template-columns: 1fr; gap: 40px; padding: 48px 20px; }
+      .problem-section { padding: 48px 20px; }
+      .dark-band { padding: 48px 20px; }
+      .principles-grid { grid-template-columns: 1fr; }
+      .decision-split { grid-template-columns: 1fr; gap: 32px; padding: 48px 20px; }
+      .decision-split.reverse { direction: ltr; }
+      .brand-grid { grid-template-columns: 1fr; }
+      .impact-section { padding: 48px 20px; }
+      .cs-cta { padding: 48px 20px; flex-direction: column; gap: 32px; text-align: center; }
+      footer { padding: 24px 20px; flex-direction: column; gap: 8px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav id="nav">
+    <a href="index.html" class="nav-name">Guido Usnayo Vidaurre</a>
+    <ul class="nav-links">
+      <li><a href="incode.html">Incode</a></li>
+      <li><a href="speaker.html">Speaker</a></li>
+      <li><a href="ytem.html" class="active">Ytem</a></li>
+      <li><a href="other.html">Other work</a></li>
+      <li><a href="motion.html">Motion</a></li>
+      <li class="nav-divider"></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="https://www.linkedin.com/in/guido-usnayovidaurre/" target="_blank">LinkedIn ↗</a></li>
+    </ul>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="cs-header">
+    <span class="cs-label">Case Study 03</span>
+    <h1 class="cs-title">Ytem</h1>
+    <p class="cs-subtitle">Inventory management system for retail store operators — designed for the shop floor, not the office.</p>
+    <div class="cs-meta">
+      <div>
+        <div class="cs-meta-label">Role</div>
+        <div class="cs-meta-value">UX & UI Designer</div>
+      </div>
+      <div>
+        <div class="cs-meta-label">Type</div>
+        <div class="cs-meta-value">Client project</div>
+      </div>
+      <div>
+        <div class="cs-meta-label">Status</div>
+        <div class="cs-meta-value">Deployed</div>
+      </div>
+      <div>
+        <div class="cs-meta-label">Platform</div>
+        <div class="cs-meta-value">Mobile + RFID</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO — dark -->
+  <div class="hero-dark">
+    <img src="images/y1.png" alt="Ytem — inventory management app screens">
+  </div>
+
+  <!-- CONTEXT -->
+  <section class="context-section">
+    <span class="section-label">Context</span>
+    <h2>Inventory management sounds like a back-office problem.</h2>
+    <p>In practice, it's a real-time operational challenge — non-technical staff, variable lighting, physical tasks, and time pressure. The design had to work in that environment, not around it.</p>
+    <p>A retail technology client needed a faster, smarter way for store owners to manage inventory. Ytem was designed to solve this — a mobile app connected to a handheld RFID scanning device that automated inventory counting and fed that data directly into supply chain decisions.</p>
+    <div class="context-meta">
+      <div class="context-tag">
+        <span class="context-tag-label">Client project</span>
+        <span class="context-tag-value">Project type</span>
+      </div>
+      <div class="context-tag">
+        <span class="context-tag-label">UX & UI Designer</span>
+        <span class="context-tag-value">Role</span>
+      </div>
+      <div class="context-tag">
+        <span class="context-tag-label">Deployed</span>
+        <span class="context-tag-value">Status</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE PROBLEM -->
+  <section class="problem-section">
+    <div class="problem-section-inner">
+      <span class="section-label">The Problem</span>
+      <h2>Inventory that lies to you.</h2>
+      <p>Retail store owners were losing time and money to inaccurate inventory. The gap between what was physically on shelves and what the system recorded was creating supply chain failures — over-ordering, stock-outs, and missed sales.</p>
+      <p>The constraint that shaped every decision: the user is holding a scanner, standing in a stockroom, under time pressure. This is the same design problem as an operator dashboard in a high-stakes B2B environment — reduce cognitive load, surface what matters, get out of the way.</p>
+    </div>
+  </section>
+
+  <!-- SYSTEM ARCHITECTURE — dark band -->
+  <div class="dark-band">
+    <div class="dark-band-inner">
+      <span class="section-label">System Architecture</span>
+      <h2>Four layers, one connected system.</h2>
+      <p>Mobile app, RFID scanners, connection gateway, and data dashboard — connected into a single operational flow from physical scan to supply chain decision.</p>
+      <img src="images/y2.png" alt="Ytem system architecture">
+    </div>
+  </div>
+
+  <!-- DESIGN DECISION 01 -->
+  <div style="border-bottom: 1px solid var(--light-gray);">
+    <div class="decision-split">
+      <div>
+        <span class="decision-number">Design Decision 01</span>
+        <h3>Dark UI for a bright shop floor.</h3>
+        <p>The most important decision was the dark UI. Working in a retail environment meant screens needed to be easy to read under variable lighting conditions — the dark theme significantly improved scan visibility and reduced eye strain during extended use.</p>
+      </div>
+      <img src="images/y3.png" alt="Ytem dark UI — shop floor readability">
+    </div>
+  </div>
+
+  <!-- DESIGN DECISION 02 -->
+  <div style="border-bottom: 1px solid var(--light-gray);">
+    <div class="decision-split reverse">
+      <div>
+        <span class="decision-number">Design Decision 02</span>
+        <h3>Three taps. Scan. Done.</h3>
+        <p>The app was structured around the core scanning workflow — receive, scan, sync. Every screen was optimized to minimize taps and keep the user focused on the physical task at hand. Progress indicators, found/expected counters, and location labels gave operators constant awareness without overwhelming them.</p>
+      </div>
+      <img src="images/y4.png" alt="Ytem scanning workflow" class="img-phone">
+    </div>
+  </div>
+
+  <!-- BRAND SYSTEM — dark band -->
+  <div class="dark-band">
+    <div class="dark-band-inner">
+      <span class="section-label">Brand System</span>
+      <h2>A visual identity built for dark environments.</h2>
+      <p>Dark background, red accent for critical actions, clean typography optimized for small screens under variable light.</p>
+      <div class="brand-grid">
+        <img src="images/y5a.png" alt="Ytem typography">
+        <img src="images/y5b.png" alt="Ytem colors">
+        <img src="images/y5c.png" alt="Ytem logo">
+      </div>
+    </div>
+  </div>
+
+  <!-- DESIGN PRINCIPLES — split layout, light background -->
+  <section style="padding: 80px 40px; border-bottom: 1px solid var(--light-gray);">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; max-width: 1100px; margin: 0 auto;">
+      <div>
+        <span class="section-label">Design Principles</span>
+        <h2 style="font-size: clamp(1.4rem, 2.5vw, 1.8rem); font-weight: 600; letter-spacing: -0.02em; color: var(--black); margin-bottom: 24px; line-height: 1.15;">Three principles guided every screen.</h2>
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="padding: 20px; background: #f5f5f5; border-radius: 8px;">
+            <span style="font-size: 0.65rem; font-weight: 500; letter-spacing: 0.1em; color: var(--accent); display: block; margin-bottom: 8px;">01</span>
+            <div style="font-size: 0.875rem; font-weight: 600; color: var(--black); margin-bottom: 4px;">Glanceable over readable</div>
+            <div style="font-size: 0.8rem; color: var(--gray); line-height: 1.5;">Operators process status at a distance — not sitting at a desk reading sentences.</div>
+          </div>
+          <div style="padding: 20px; background: #f5f5f5; border-radius: 8px;">
+            <span style="font-size: 0.65rem; font-weight: 500; letter-spacing: 0.1em; color: var(--accent); display: block; margin-bottom: 8px;">02</span>
+            <div style="font-size: 0.875rem; font-weight: 600; color: var(--black); margin-bottom: 4px;">Physical context first</div>
+            <div style="font-size: 0.8rem; color: var(--gray); line-height: 1.5;">One hand is always on the scanner. Every tap was designed around that constraint.</div>
+          </div>
+          <div style="padding: 20px; background: #f5f5f5; border-radius: 8px;">
+            <span style="font-size: 0.65rem; font-weight: 500; letter-spacing: 0.1em; color: var(--accent); display: block; margin-bottom: 8px;">03</span>
+            <div style="font-size: 0.875rem; font-weight: 600; color: var(--black); margin-bottom: 4px;">Zero training required</div>
+            <div style="font-size: 0.8rem; color: var(--gray); line-height: 1.5;">The flow had to be self-evident on day one, to someone who had never seen the app before.</div>
+          </div>
+        </div>
+      </div>
+      <img src="images/y6.png" alt="Ytem design principles applied" style="width: 100%; display: block; border-radius: 8px;">
+    </div>
+  </section>
+
+  <!-- IMPACT -->
+  <section class="impact-section">
+    <div class="impact-section-inner">
+      <span class="section-label">Impact</span>
+      <h2>Deployed to real retail environments.</h2>
+      <p>Ytem was deployed to real retail environments and is actively used by store owners for inventory management. The product successfully bridged the gap between physical stock counting and digital supply chain management, reducing the friction of a previously manual and error-prone process.</p>
+      <div class="impact-tags">
+        <div class="impact-tag"><strong>Deployed</strong> Used in real retail environments</div>
+        <div class="impact-tag"><strong>B2B</strong> Designed for store operators</div>
+        <div class="impact-tag"><strong>Collaborative</strong> Working with a small team</div>
+        <div class="impact-tag"><strong>End-to-end</strong> Brief through deployment</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cs-cta">
+    <div class="cta-left">
+      <h2>Interested in<br><em style="font-weight:300; font-style:italic">working together?</em></h2>
+      <p>I'm currently open to Senior Product Designer opportunities in fintech, B2B SaaS, and digital identity.</p>
+    </div>
+    <a href="mailto:guido.usnayo@icloud.com" class="btn-pill">Get in touch →</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-text">© 2026 Guido Usnayo Vidaurre</span>
+    <span class="footer-text">Leipzig · Available across Germany and Europe</span>
+    <span class="footer-text">guido.usnayo@icloud.com</span>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    });
+  </script>
+
+</body>
+</html>

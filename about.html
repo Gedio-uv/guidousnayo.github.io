@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — Guido Usnayo Vidaurre</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0a0a0a;
+      --white: #fafafa;
+      --gray: #6b6b6b;
+      --light-gray: #e8e8e8;
+      --accent: #1a46ff;
+      --font: 'Inter', -apple-system, sans-serif;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      background: var(--white);
+      color: var(--black);
+      font-family: var(--font);
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      background: rgba(250,250,250,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s;
+    }
+    nav.scrolled { border-bottom-color: var(--light-gray); }
+    .nav-name { font-size: 0.875rem; font-weight: 400; color: var(--black); text-decoration: none; }
+    .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+    .nav-links a { font-size: 0.8rem; color: var(--gray); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--black); }
+    .nav-links a.active { color: var(--black); font-weight: 500; }
+    .nav-divider { width: 1px; height: 12px; background: var(--light-gray); }
+
+    /* HERO — split layout */
+    .about-hero {
+      padding: 120px 40px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .about-left {
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards 0.1s;
+    }
+
+    .about-label {
+      font-size: 0.7rem; font-weight: 500; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 20px; display: block;
+    }
+
+    .about-headline {
+      font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 600;
+      letter-spacing: -0.03em; line-height: 1.05; color: var(--black);
+      margin-bottom: 24px;
+    }
+
+    .about-tagline {
+      font-size: 0.9rem; color: var(--gray); line-height: 1.5;
+      margin-bottom: 40px;
+    }
+
+    .about-quick-meta {
+      display: flex; flex-direction: column; gap: 12px;
+      padding-top: 32px;
+      border-top: 1px solid var(--light-gray);
+    }
+
+    .about-meta-row {
+      display: flex; gap: 16px;
+    }
+
+    .about-meta-label {
+      font-size: 0.7rem; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--gray);
+      min-width: 120px;
+    }
+
+    .about-meta-value {
+      font-size: 0.85rem; color: var(--black);
+    }
+
+    /* PHOTO */
+    .about-right {
+      opacity: 0;
+      animation: fadeIn 0.7s ease forwards 0.3s;
+      max-height: 85vh;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+
+    .about-photo {
+      width: 100%;
+      height: auto;
+      max-height: 85vh;
+      object-fit: contain;
+      display: block;
+      border-radius: 8px;
+    }
+
+    /* CONTENT SECTIONS */
+    .about-content {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 80px 40px;
+    }
+
+    .about-section {
+      margin-bottom: 64px;
+      padding-bottom: 64px;
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .about-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section-label {
+      font-size: 0.65rem; font-weight: 500; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 16px; display: block;
+    }
+
+    .about-section p {
+      font-size: 1rem; line-height: 1.8; color: var(--gray);
+      margin-bottom: 16px;
+    }
+
+    .about-section p:last-child { margin-bottom: 0; }
+
+    .about-section p strong {
+      color: var(--black); font-weight: 500;
+    }
+
+    /* STATS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      border-top: 1px solid var(--light-gray);
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .stat-item {
+      padding: 40px 0;
+      border-right: 1px solid var(--light-gray);
+      text-align: center;
+    }
+
+    .stat-item:last-child { border-right: none; }
+
+    .stat-value {
+      font-size: 1.8rem; font-weight: 600;
+      letter-spacing: -0.03em; color: var(--black);
+      line-height: 1; margin-bottom: 6px;
+    }
+
+    .stat-value span { color: var(--accent); }
+
+    .stat-label {
+      font-size: 0.72rem; color: var(--gray); line-height: 1.4;
+      padding: 0 12px;
+    }
+
+    /* CTA */
+    .cs-cta {
+      padding: 64px 40px; background: var(--black);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .cta-left h2 {
+      font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 600;
+      letter-spacing: -0.03em; color: var(--white);
+      line-height: 1.1; margin-bottom: 8px;
+    }
+
+    .cta-left p { font-size: 0.875rem; color: rgba(255,255,255,0.45); }
+
+    .btn-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent); color: var(--white);
+      padding: 13px 26px; border-radius: 100px;
+      font-size: 0.8rem; font-weight: 500; text-decoration: none;
+      white-space: nowrap; transition: background 0.2s, transform 0.15s;
+    }
+    .btn-pill:hover { background: #1238e0; transform: translateY(-1px); }
+
+    /* FOOTER */
+    footer {
+      padding: 28px 40px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      background: var(--black);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .footer-text { font-size: 0.75rem; color: rgba(255,255,255,0.3); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 860px) {
+      nav { padding: 16px 20px; }
+      .nav-links { gap: 16px; }
+      .about-hero { grid-template-columns: 1fr; padding: 100px 20px 48px; gap: 40px; }
+      .about-right { order: -1; }
+      .about-photo { max-width: 280px; margin: 0 auto; display: block; }
+      .about-content { padding: 48px 20px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .stat-item:nth-child(2) { border-right: none; }
+      .stat-item:nth-child(3) { border-right: 1px solid var(--light-gray); }
+      .cs-cta { padding: 48px 20px; flex-direction: column; gap: 32px; text-align: center; }
+      footer { padding: 24px 20px; flex-direction: column; gap: 8px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav id="nav">
+    <a href="index.html" class="nav-name">Guido Usnayo Vidaurre</a>
+    <ul class="nav-links">
+      <li><a href="incode.html">Incode</a></li>
+      <li><a href="speaker.html">Speaker</a></li>
+      <li><a href="ytem.html">Ytem</a></li>
+      <li><a href="other.html">Other work</a></li>
+      <li><a href="motion.html">Motion</a></li>
+      <li class="nav-divider"></li>
+      <li><a href="about.html" class="active">About</a></li>
+      <li><a href="https://www.linkedin.com/in/guido-usnayovidaurre/" target="_blank">LinkedIn ↗</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="about-hero">
+    <div class="about-left">
+      <span class="about-label">About</span>
+      <h1 class="about-headline">Designing for products that can't afford a bad flow.</h1>
+      <p class="about-tagline">Identity verification · Fintech · B2B platforms used by operators under pressure.</p>
+      <div class="about-quick-meta">
+        <div class="about-meta-row">
+          <span class="about-meta-label">Based in</span>
+          <span class="about-meta-value">Leipzig, Germany</span>
+        </div>
+        <div class="about-meta-row">
+          <span class="about-meta-label">Experience</span>
+          <span class="about-meta-value">8 years</span>
+        </div>
+        <div class="about-meta-row">
+          <span class="about-meta-label">Available for</span>
+          <span class="about-meta-value">Senior IC roles · Europe</span>
+        </div>
+        <div class="about-meta-row">
+          <span class="about-meta-label">Languages</span>
+          <span class="about-meta-value">Spanish · English · German (A1/A2)</span>
+        </div>
+      </div>
+    </div>
+    <div class="about-right">
+      <img src="images/a1.png" alt="Guido Usnayo Vidaurre" class="about-photo">
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-grid">
+    <div class="stat-item">
+      <div class="stat-value">8<span>yrs</span></div>
+      <div class="stat-label">product design experience</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">770<span>K+</span></div>
+      <div class="stat-label">fans verified at Incode</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">17</div>
+      <div class="stat-label">stadiums deployed</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">3</div>
+      <div class="stat-label">industries · identity, fintech, B2B</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">1</div>
+      <div class="stat-label">motion practice, built from scratch</div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="about-content">
+
+    <div class="about-section">
+      <span class="section-label">How I work</span>
+      <p>I lead end-to-end — framing the problem, building the architecture, designing the system, and shipping the final UI. My work sits at the boundary between product thinking and craft, and I'm equally at home in a research conversation or a late-night animation pass.</p>
+      <p><strong>AI sits in my process as a layer:</strong> Figma AI for component exploration, Gemini for visual concepting, and Claude for structuring information architecture and rationale. It keeps me fast through early thinking so I can spend more time on the decisions that actually need a human.</p>
+    </div>
+
+    <div class="about-section">
+      <span class="section-label">Building what's missing</span>
+      <p>At Incode, I led design for the largest stadium identity rollout in Latin America — <strong>770,000+ fans verified across 17 venues</strong>, sub-five-second authentication at the gate.</p>
+      <p>Along the way I noticed the product needed motion to communicate trust under pressure, but no one owned that craft. So I built it. I taught myself the toolchain, shipped the first prototypes, and grew it into a formal capability the team could rely on. That's how I tend to work: spot the gap, learn what's needed, and leave behind something the team can keep using.</p>
+    </div>
+
+    <div class="about-section">
+      <span class="section-label">What I'm looking for</span>
+      <p>I moved to Leipzig deliberately — looking for a work culture that respects boundaries and supports long-term quality. I'm freelancing selectively while I look for my next senior IC role in Europe, ideally on a product that still has hard problems left to solve.</p>
+      <p>Based in Leipzig, open to roles across Germany and Europe. Available from June 2026.</p>
+    </div>
+
+  </div>
+
+  <!-- CTA -->
+  <section class="cs-cta">
+    <div class="cta-left">
+      <h2>Interested in<br><em style="font-weight:300; font-style:italic">working together?</em></h2>
+      <p>I'm currently open to Senior Product Designer opportunities in fintech, B2B SaaS, and digital identity.</p>
+    </div>
+    <a href="mailto:guido.usnayo@icloud.com" class="btn-pill">Get in touch →</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-text">© 2026 Guido Usnayo Vidaurre</span>
+    <span class="footer-text">Leipzig · Available across Germany and Europe</span>
+    <span class="footer-text">guido.usnayo@icloud.com</span>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    });
+  </script>
+
+</body>
+</html>
