@@ -20,6 +20,9 @@ function detectProvider(apiKey) {
 const GROQ_URL   = 'https://api.groq.com/openai/v1/chat/completions';
 const GROQ_MODEL = 'llama-3.3-70b-versatile';
 
+// ── Cloudflare Worker proxy (holds the key securely as a secret) ──
+const WORKER_URL = 'https://deutsch-lernen-api.guido-usnayo-v.workers.dev/api/chat';
+
 async function callGroq(apiKey, promptText) {
   const response = await fetch(GROQ_URL, {
     method: 'POST',
@@ -41,6 +44,33 @@ async function callGroq(apiKey, promptText) {
     if (response.status === 401 || response.status === 403) throw new Error('INVALID_KEY');
     if (response.status === 429) throw new Error('RATE_LIMIT');
     throw new Error(err.error?.message || `GROQ_HTTP_${response.status}`);
+  }
+
+  const data = await response.json();
+  return data.choices?.[0]?.message?.content || null;
+}
+
+/**
+ * Call our Cloudflare Worker proxy — no key needed in the browser.
+ */
+async function callProxy(promptText) {
+  const response = await fetch(WORKER_URL, {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model:           GROQ_MODEL,
+      messages:        [{ role: 'user', content: promptText }],
+      temperature:     0.3,
+      max_tokens:      1024,
+      response_format: { type: 'json_object' },
+    }),
+  });
+
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    if (response.status === 401) throw new Error('INVALID_KEY');
+    if (response.status === 429) throw new Error('RATE_LIMIT');
+    throw new Error(err.error?.message || `PROXY_HTTP_${response.status}`);
   }
 
   const data = await response.json();
@@ -95,11 +125,20 @@ async function callGemini(apiKey, promptText) {
 
 /* ══════════════════════════════════════════════════
    UNIFIED CALL
+   Priority:
+     1. No key / empty key → use Worker proxy (key lives in Cloudflare)
+     2. Groq key (gsk_...)  → call Groq directly with user's key
+     3. Gemini key (AIza...) → call Gemini directly
 ══════════════════════════════════════════════════ */
 
 async function callAI(apiKey, promptText) {
+  // No personal key — use the Worker proxy (Groq key stored securely)
+  if (!apiKey || apiKey.trim() === '') {
+    return callProxy(promptText);
+  }
+
   const provider = detectProvider(apiKey);
-  if (!provider) throw new Error('NO_API_KEY');
+  if (!provider) return callProxy(promptText); // unrecognised key — fall back to proxy
 
   const rawText = provider === 'groq'
     ? await callGroq(apiKey, promptText)

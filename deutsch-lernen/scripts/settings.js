@@ -12,26 +12,14 @@ const KEYS = {
 };
 
 /**
- * Pre-configured shared key for testing.
- * Split into fragments so automated scanners don't flag it.
- * Users can override it in Settings with their own key.
- */
-const DEFAULT_GROQ_KEY = [
-  'gsk_WcAo',
-  '1flHuKaQ',
-  'RTmmtj8RWGdy',
-  'b3FYmYK83WWG',
-  'AvWfbB4Ozxzg0SGQ',
-].join('');
-
-/**
  * Load all settings from localStorage.
  * Returns an object with all settings.
+ * Note: geminiKey defaults to '' — callAI uses the Worker proxy automatically.
  */
 export function loadSettings() {
   return {
     difficulty:   localStorage.getItem(KEYS.DIFFICULTY)   || null,
-    geminiKey:    localStorage.getItem(KEYS.GEMINI_KEY)   || DEFAULT_GROQ_KEY,
+    geminiKey:    localStorage.getItem(KEYS.GEMINI_KEY)   || '',
     unsplashKey:  localStorage.getItem(KEYS.UNSPLASH_KEY) || '',
     speechRate:   parseFloat(localStorage.getItem(KEYS.SPEECH_RATE) || '0.9'),
     nativeLang:   localStorage.getItem(KEYS.NATIVE_LANG)  || null,
