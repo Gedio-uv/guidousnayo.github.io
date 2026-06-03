@@ -350,9 +350,16 @@ async function doSearch(query) {
 
     // Load image in background — update DOM when ready
     if (result.imageQuery) {
+      // Show verb-specific hint in placeholder
+      const isVerb = ['verb','adverb','preposition'].includes((result.partOfSpeech||'').toLowerCase());
+      const placeholderLabel = $('result-image-placeholder-label');
+      if (placeholderLabel) {
+        placeholderLabel.textContent = isVerb ? '🎨 Generating image…' : '🖼️ Loading…';
+      }
+
       fetchImage(
         result.imageQuery,
-        state.unsplashKey || null,
+        null,                        // use built-in Unsplash key from images.js
         result.partOfSpeech || null
       ).then(imageUrl => {
         if (!imageUrl) return;

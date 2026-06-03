@@ -271,11 +271,37 @@
   flex-shrink: 0;
 }
 
+/* Shimmer skeleton while AI image is generating */
+.result-image-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    var(--c-bg-3) 0%,
+    var(--c-surface) 50%,
+    var(--c-bg-3) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+  z-index: 0;
+}
+.result-image-container.img-loaded::before {
+  display: none; /* hide shimmer once image is shown */
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 .result-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.5s ease;
+  position: relative;
+  z-index: 1;
 }
 .result-image[src=""] { opacity: 0; }
 
@@ -288,16 +314,31 @@
     rgba(8, 8, 14, 0.5) 70%,
     rgba(8, 8, 14, 0.95) 100%
   );
+  z-index: 2;
 }
 
 .result-image-placeholder {
   position: absolute;
   inset: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 48px;
-  background: var(--c-bg-3);
+  gap: 8px;
+  z-index: 1;
+}
+
+.result-image-placeholder__icon {
+  font-size: 32px;
+  opacity: 0.3;
+}
+
+.result-image-placeholder__label {
+  font-size: 12px;
+  color: var(--c-text-3);
+  font-weight: 500;
+  opacity: 0.6;
+  animation: textPulse 1.5s ease-in-out infinite;
 }
 
 /* ── Result Body ── */

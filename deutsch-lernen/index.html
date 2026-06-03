@@ -154,10 +154,11 @@
         <div id="search-result" class="search-result hidden" aria-live="polite">
 
           <div class="result-image-container">
-            <img id="result-image" class="result-image" src="" alt="" loading="lazy" />
+            <img id="result-image" class="result-image" src="" alt="" />
             <div class="result-image-overlay"></div>
             <div class="result-image-placeholder" id="result-image-placeholder" aria-hidden="true">
-              <span>🖼️</span>
+              <span class="result-image-placeholder__icon">🖼️</span>
+              <span class="result-image-placeholder__label" id="result-image-placeholder-label">Loading…</span>
             </div>
           </div>
 
