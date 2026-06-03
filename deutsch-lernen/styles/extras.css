@@ -185,25 +185,23 @@
 #grammar-content {
   flex: 1;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  position: relative;      /* needed for absolute child trick */
   min-height: 0;
 }
 
-/* Panels — only active one shows, it scrolls */
+/* Panels — position absolute fills #grammar-content exactly */
 .grammar-panel {
   display: none;
-  flex: 1;
+  position: absolute;
+  inset: 0;
   overflow-y: auto;
+  overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   padding: 1rem 1.25rem 6rem;
-  gap: 1rem;
-  flex-direction: column;
-  min-height: 0;
 }
 
 .grammar-panel.active {
-  display: flex;
+  display: block;
 }
 
 .grammar-intro {
@@ -333,11 +331,15 @@
   border-radius: 12px;
   border: 1px solid rgba(255,255,255,0.08);
   width: 100%;
+  max-width: 100%;        /* never wider than panel */
+  overflow-x: hidden;     /* tables adapt, no h-scroll */
 }
 
 .grammar-table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;    /* equal columns, no overflow */
+  word-break: break-word;
   font-size: 0.875rem;
   font-family: 'Outfit', sans-serif;
 }

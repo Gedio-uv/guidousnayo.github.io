@@ -315,6 +315,9 @@ svg { display: block; }
   inset: 0;
   display: flex;
   flex-direction: column;
+  width: 100%;           /* fill exactly the viewport */
+  max-width: 100vw;      /* never overflow horizontally */
+  overflow: hidden;
 }
 
 /* ─── VIEWS ─── */
