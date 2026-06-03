@@ -186,8 +186,6 @@ function parseJSON(raw) {
  * @returns {Promise<WordResult>}
  */
 export async function lookupWord(word, nativeLang, nativeLangName, apiKey) {
-  if (!apiKey) throw new Error('NO_API_KEY');
-
   const prompt = buildWordPrompt(word.trim(), nativeLangName);
   const rawText = await callAI(apiKey, prompt);
   const result  = parseJSON(rawText);
@@ -205,8 +203,6 @@ export async function lookupWord(word, nativeLang, nativeLangName, apiKey) {
  * @returns {Promise<FlashCard[]>}
  */
 export async function generateFlashcards(category, nativeLangName, apiKey) {
-  if (!apiKey) throw new Error('NO_API_KEY');
-
   const catMap = {
     animals:   'animals',
     food:      'food and drinks',
