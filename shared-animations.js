@@ -3,12 +3,26 @@
 (function () {
   'use strict';
 
-  // ── NAV SCROLL ──
+  // ── NAV SCROLL & MOBILE TOGGLE ──
   const nav = document.getElementById('nav');
   if (nav) {
     window.addEventListener('scroll', () => {
       nav.classList.toggle('scrolled', window.scrollY > 20);
     }, { passive: true });
+  }
+
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  if (navToggle && navLinks) {
+    navToggle.addEventListener('click', () => {
+      document.body.classList.toggle('nav-open');
+    });
+    // Close on link click
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.body.classList.remove('nav-open');
+      });
+    });
   }
 
   // ── PAGE TRANSITION (fade in/out) ──

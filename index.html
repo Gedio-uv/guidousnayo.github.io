@@ -184,11 +184,6 @@
 
     .hero-right img {
       width: 100%; border-radius: 12px;
-      transition: transform 0.6s var(--ease-out-expo), box-shadow 0.6s var(--ease-out-expo);
-    }
-    .hero-right img:hover {
-      transform: scale(1.015) translateY(-4px);
-      box-shadow: 0 24px 60px rgba(0,0,0,0.12);
     }
 
     /* ── STATS ── */
@@ -334,12 +329,44 @@
       .reveal, .reveal-stagger > * { opacity: 1 !important; transform: none !important; }
     }
 
+    /* MOBILE NAV */
+    .nav-mobile-toggle {
+      display: none; width: 24px; height: 24px;
+      background: none; border: none; cursor: pointer;
+      position: relative; z-index: 101;
+    }
+    .nav-mobile-toggle span {
+      display: block; width: 100%; height: 1.5px;
+      background: var(--black); position: absolute; left: 0;
+      transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), opacity 0.3s;
+    }
+    .nav-mobile-toggle span:nth-child(1) { top: 8px; }
+    .nav-mobile-toggle span:nth-child(2) { bottom: 8px; }
+    
+    body.nav-open .nav-mobile-toggle span:nth-child(1) { transform: translateY(3.5px) rotate(45deg); }
+    body.nav-open .nav-mobile-toggle span:nth-child(2) { transform: translateY(-3.5px) rotate(-45deg); }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 860px) {
       body { cursor: auto; }
       .cursor-dot, .cursor-ring { display: none; }
       nav { padding: 16px 20px; }
-      .nav-links { gap: 16px; }
+      .nav-mobile-toggle { display: block; }
+      body.nav-open nav { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+      .nav-name { position: relative; z-index: 101; }
+      .nav-links {
+        position: fixed; inset: 0;
+        background: rgba(250,250,250,0.98);
+        flex-direction: column; justify-content: center;
+        gap: 32px; font-size: 1.5rem;
+        opacity: 0; pointer-events: none;
+        transition: opacity 0.4s cubic-bezier(0.16,1,0.3,1);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+      body.nav-open .nav-links { opacity: 1; pointer-events: auto; }
+      .nav-links a { font-size: 1.25rem; }
+      .nav-divider { width: 40px; height: 1px; }
       .hero { grid-template-columns: 1fr; padding: 100px 20px 60px; gap: 40px; min-height: auto; }
       .stats { padding: 40px 20px; flex-wrap: wrap; gap: 24px; }
       .stat { flex: 1 1 40%; border-right: none; padding: 0; }
@@ -359,7 +386,8 @@
 
   <nav id="nav">
     <a href="index.html" class="nav-name">Guido Usnayo Vidaurre</a>
-    <ul class="nav-links">
+    <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle menu"><span></span><span></span></button>
+    <ul class="nav-links" id="navLinks">
       <li><a href="incode.html">Incode</a></li>
       <li><a href="speaker.html">Speaker</a></li>
       <li><a href="ytem.html">Ytem</a></li>
@@ -714,6 +742,6 @@
       document.body.style.opacity = '1';
     });
   </script>
-
+  <script src="shared-animations.js?v=2"></script>
 </body>
 </html>

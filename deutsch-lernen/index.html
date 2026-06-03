@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="DeutschLernen — Aprende alemán con IA, imágenes reales y pronunciación nativa" />
+  <meta name="theme-color" content="#0A0A0F" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>DeutschLernen 🇩🇪</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles/main.css" />
+  <link rel="stylesheet" href="styles/search.css" />
+  <link rel="stylesheet" href="styles/cards.css" />
+  <link rel="stylesheet" href="styles/settings.css" />
+</head>
+<body>
+<div id="app">
+
+  <!-- ══════════════════════════════════════ ONBOARDING ══════════════════════════════════════ -->
+  <div id="onboarding" class="onboarding" role="main" aria-label="Level selection">
+    <div class="onboarding__bg">
+      <div class="onboarding__blob onboarding__blob--1"></div>
+      <div class="onboarding__blob onboarding__blob--2"></div>
+      <div class="onboarding__blob onboarding__blob--3"></div>
+      <div class="onboarding__grid"></div>
+    </div>
+    <div class="onboarding__content">
+      <div class="onboarding__logo">
+        <div class="onboarding__flag-ring">
+          <span class="onboarding__flag" aria-hidden="true">🇩🇪</span>
+        </div>
+        <h1 class="onboarding__title">DeutschLernen</h1>
+        <p class="onboarding__subtitle" id="onboarding-subtitle">Wähle dein Niveau</p>
+      </div>
+
+      <div class="onboarding__levels">
+        <button id="level-initial" class="level-card" data-level="initial" aria-label="Initial level">
+          <div class="level-card__glow"></div>
+          <div class="level-card__icon" aria-hidden="true">🌱</div>
+          <div class="level-card__body">
+            <h2 class="level-card__title" id="level-initial-title">Inicial</h2>
+            <p class="level-card__desc" id="level-initial-desc">La interfaz en tu idioma nativo</p>
+          </div>
+          <div class="level-card__badge">A1–B1</div>
+          <div class="level-card__arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </button>
+
+        <button id="level-advanced" class="level-card level-card--advanced" data-level="advanced" aria-label="Advanced level">
+          <div class="level-card__glow level-card__glow--red"></div>
+          <div class="level-card__icon" aria-hidden="true">🚀</div>
+          <div class="level-card__body">
+            <h2 class="level-card__title" id="level-advanced-title">Fortgeschritten</h2>
+            <p class="level-card__desc" id="level-advanced-desc">Die Oberfläche komplett auf Deutsch</p>
+          </div>
+          <div class="level-card__badge level-card__badge--red">B2–C2</div>
+          <div class="level-card__arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </button>
+      </div>
+
+      <p class="onboarding__note" id="onboarding-note">Puedes cambiar el nivel en cualquier momento desde Ajustes</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════ MAIN APP ══════════════════════════════════════ -->
+  <div id="main-app" class="main-app hidden">
+
+    <!-- VIEWS -->
+    <main id="views" class="views">
+
+      <!-- ─────────── SEARCH VIEW ─────────── -->
+      <section id="view-search" class="view view--search active" aria-label="Search">
+
+        <div class="search-header">
+          <div class="search-topbar">
+            <div class="search-brand">
+              <span aria-hidden="true">🇩🇪</span>
+              <span class="search-brand__name">DeutschLernen</span>
+            </div>
+          </div>
+          <div class="search-bar-row">
+            <div class="search-bar" role="search">
+              <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+              </svg>
+              <input
+                type="search"
+                id="search-input"
+                class="search-bar__input"
+                placeholder="Buscar palabra..."
+                autocomplete="off"
+                autocorrect="off"
+                spellcheck="false"
+                enterkeyhint="search"
+                aria-label="Search word in German or your language"
+              />
+              <button id="search-clear" class="search-bar__clear hidden" aria-label="Clear search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
+            </div>
+            <button id="search-submit" class="search-submit" aria-label="Search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Empty state -->
+        <div id="search-empty" class="search-empty">
+          <div class="search-empty__visual" aria-hidden="true">
+            <div class="search-empty__ring search-empty__ring--1"></div>
+            <div class="search-empty__ring search-empty__ring--2"></div>
+            <span class="search-empty__icon">🔍</span>
+          </div>
+          <p class="search-empty__text" id="search-empty-text">Busca una palabra en alemán o en tu idioma</p>
+          <p class="search-empty__hint" id="search-empty-hint">El sistema detecta el idioma automáticamente</p>
+          <div class="search-suggestions" role="list" id="search-suggestions-container">
+            <span class="search-suggestion" data-word="Hund" role="listitem" tabindex="0">Hund</span>
+            <span class="search-suggestion" data-word="Haus" role="listitem" tabindex="0">Haus</span>
+            <span class="search-suggestion" data-word="Wasser" role="listitem" tabindex="0">Wasser</span>
+            <span class="search-suggestion" data-word="schön" role="listitem" tabindex="0">schön</span>
+            <span class="search-suggestion" data-word="lieben" role="listitem" tabindex="0">lieben</span>
+            <span class="search-suggestion" data-word="perro" role="listitem" tabindex="0">perro</span>
+            <span class="search-suggestion" data-word="casa" role="listitem" tabindex="0">casa</span>
+          </div>
+        </div>
+
+        <!-- Loading -->
+        <div id="search-loading" class="search-loading hidden" aria-live="polite" aria-label="Loading">
+          <div class="loader" aria-hidden="true">
+            <div class="loader__dot"></div>
+            <div class="loader__dot"></div>
+            <div class="loader__dot"></div>
+          </div>
+          <p class="search-loading__text" id="search-loading-text">Buscando...</p>
+        </div>
+
+        <!-- Result -->
+        <div id="search-result" class="search-result hidden" aria-live="polite">
+
+          <div class="result-image-container">
+            <img id="result-image" class="result-image" src="" alt="" loading="lazy" />
+            <div class="result-image-overlay"></div>
+            <div class="result-image-placeholder" id="result-image-placeholder" aria-hidden="true">
+              <span>🖼️</span>
+            </div>
+          </div>
+
+          <div class="result-body">
+            <div class="result-header">
+              <div class="result-word-row">
+                <div class="result-word-group">
+                  <span id="result-article" class="result-article"></span>
+                  <h2 id="result-word" class="result-word"></h2>
+                  <span id="result-plural" class="result-plural"></span>
+                </div>
+                <button id="result-listen" class="listen-btn" aria-label="Listen to pronunciation">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M11 5 6 9H2v6h4l5 4V5z"/>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="result-meta">
+                <span id="result-pos" class="result-pos-badge"></span>
+                <span id="result-ipa" class="result-ipa"></span>
+              </div>
+              <p id="result-translation" class="result-translation"></p>
+            </div>
+
+            <div class="result-synonyms-section">
+              <h3 class="result-section-label" id="synonyms-label">Sinónimos</h3>
+              <div id="result-synonyms" class="result-synonyms" role="list"></div>
+            </div>
+
+            <div class="result-tabs">
+              <div class="tabs-nav" role="tablist" aria-label="Word details">
+                <button class="tab-btn active" data-tab="examples" role="tab" id="tab-btn-examples" aria-selected="true" aria-controls="tab-panel-examples">
+                  <span id="tab-examples-label">Ejemplos</span>
+                </button>
+                <button class="tab-btn" data-tab="grammar" role="tab" id="tab-btn-grammar" aria-selected="false" aria-controls="tab-panel-grammar">
+                  <span id="tab-grammar-label">Gramática</span>
+                </button>
+              </div>
+              <div class="tabs-content">
+                <div class="tab-panel active" id="tab-panel-examples" role="tabpanel" aria-labelledby="tab-btn-examples">
+                  <ul id="examples-list" class="examples-list"></ul>
+                </div>
+                <div class="tab-panel" id="tab-panel-grammar" role="tabpanel" aria-labelledby="tab-btn-grammar">
+                  <div id="grammar-info" class="grammar-info"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Error -->
+        <div id="search-error" class="search-error hidden" role="alert">
+          <div class="search-error__icon" aria-hidden="true">⚠️</div>
+          <p class="search-error__title" id="search-error-title">Error al buscar</p>
+          <p class="search-error__text" id="search-error-text">Verifica tu Gemini API Key en Ajustes</p>
+          <button id="search-error-settings" class="btn-secondary" id="go-settings-btn">
+            <span id="go-settings-label">Ir a Ajustes</span>
+          </button>
+        </div>
+
+      </section>
+
+      <!-- ─────────── CARDS VIEW ─────────── -->
+      <section id="view-cards" class="view view--cards" aria-label="Flashcard game">
+
+        <div class="cards-header">
+          <h2 class="cards-title" id="cards-title">Kartenspiel</h2>
+          <div class="cards-controls">
+            <select id="cards-category" class="cards-category-select" aria-label="Select vocabulary category">
+              <option value="animals">🐾 Tiere</option>
+              <option value="food">🍎 Essen</option>
+              <option value="colors">🎨 Farben</option>
+              <option value="nature">🌿 Natur</option>
+              <option value="household">🏠 Haushalt</option>
+              <option value="body">💪 Körper</option>
+              <option value="transport">🚗 Verkehr</option>
+              <option value="emotions">❤️ Gefühle</option>
+              <option value="travel">✈️ Reisen</option>
+              <option value="work">💼 Arbeit</option>
+            </select>
+            <button id="cards-refresh" class="icon-btn" aria-label="Refresh / Load new cards">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/>
+                <path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Loading -->
+        <div id="cards-loading" class="cards-loading hidden" aria-live="polite">
+          <div class="loader" aria-hidden="true">
+            <div class="loader__dot"></div>
+            <div class="loader__dot"></div>
+            <div class="loader__dot"></div>
+          </div>
+          <p id="cards-loading-text">Karten werden geladen...</p>
+        </div>
+
+        <!-- Error -->
+        <div id="cards-error" class="cards-error hidden" role="alert">
+          <div class="cards-error__icon" aria-hidden="true">⚠️</div>
+          <p id="cards-error-text">Fehler beim Laden</p>
+          <button id="cards-retry-btn" class="btn-primary">
+            <span id="cards-retry-label">Wiederholen</span>
+          </button>
+        </div>
+
+        <!-- Start prompt -->
+        <div id="cards-start" class="cards-start">
+          <div class="cards-start__visual" aria-hidden="true">
+            <div class="cards-start__card cards-start__card--3"></div>
+            <div class="cards-start__card cards-start__card--2"></div>
+            <div class="cards-start__card cards-start__card--1">🃏</div>
+          </div>
+          <p class="cards-start__text" id="cards-start-text">Selecciona una categoría y carga las tarjetas</p>
+          <button id="cards-load-btn" class="btn-primary cards-load-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+              <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+            <span id="cards-load-label">Cargar tarjetas</span>
+          </button>
+        </div>
+
+        <!-- Game area -->
+        <div id="cards-game" class="cards-game hidden">
+          <div class="cards-progress">
+            <span id="cards-counter" class="cards-counter">1 / 10</span>
+            <div class="cards-progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="10">
+              <div id="cards-progress-fill" class="cards-progress-fill" style="width: 10%"></div>
+            </div>
+          </div>
+
+          <div class="card-viewport" id="card-viewport"
+               role="button"
+               tabindex="0"
+               aria-label="Flashcard — tap to flip"
+               aria-live="polite">
+            <div class="card-scene" id="card-scene">
+              <div class="flip-card" id="flip-card">
+                <!-- Front: image -->
+                <div class="flip-card__front" aria-hidden="true">
+                  <img id="card-image" class="card-image" src="" alt="Flashcard image" />
+                  <div class="card-image-overlay"></div>
+                  <div class="card-tap-hint" id="card-hint">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+                    </svg>
+                    <span id="card-hint-text">Toca para ver</span>
+                  </div>
+                </div>
+                <!-- Back: word -->
+                <div class="flip-card__back">
+                  <div class="card-back-content">
+                    <div class="card-back-word-group">
+                      <span id="card-article" class="card-back-article"></span>
+                      <h3 id="card-word" class="card-back-word"></h3>
+                    </div>
+                    <p id="card-native" class="card-back-native"></p>
+                    <button id="card-listen" class="card-listen-btn" aria-label="Listen to pronunciation">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M11 5 6 9H2v6h4l5 4V5z"/>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span id="card-listen-label">Aussprache</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p class="cards-swipe-hint" id="swipe-hint">
+            <span aria-hidden="true">←</span>
+            <span id="swipe-hint-text">Desliza o usa las flechas para pasar</span>
+            <span aria-hidden="true">→</span>
+          </p>
+
+          <div class="cards-nav-row">
+            <button id="card-prev" class="card-nav-btn" aria-label="Previous card">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+              </svg>
+            </button>
+            <button id="card-flip-btn" class="card-flip-manual-btn" aria-label="Flip card">
+              <span id="card-flip-label">Umdrehen</span>
+            </button>
+            <button id="card-next" class="card-nav-btn" aria-label="Next card">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Completed -->
+        <div id="cards-complete" class="cards-complete hidden" aria-live="polite">
+          <div class="cards-complete__emoji" aria-hidden="true">🎉</div>
+          <h3 id="cards-complete-title" class="cards-complete__title">¡Completado!</h3>
+          <p id="cards-complete-text" class="cards-complete__text">Has visto todas las tarjetas</p>
+          <button id="cards-again-btn" class="btn-primary">
+            <span id="cards-again-label">Jugar de nuevo</span>
+          </button>
+        </div>
+
+      </section>
+
+      <!-- ─────────── SETTINGS VIEW ─────────── -->
+      <section id="view-settings" class="view view--settings" aria-label="Settings">
+        <div class="settings-container">
+
+          <div class="settings-hero">
+            <span class="settings-hero__flag" aria-hidden="true">🇩🇪</span>
+            <h2 class="settings-title" id="settings-title">Einstellungen</h2>
+          </div>
+
+          <!-- Level -->
+          <div class="settings-card">
+            <h3 class="settings-card__title" id="settings-level-title">
+              <span aria-hidden="true">🎯</span> Nivel de Dificultad
+            </h3>
+            <div class="settings-level-toggle" role="group" aria-label="Difficulty level">
+              <button class="level-toggle-btn active" id="toggle-initial" data-level="initial" aria-pressed="true">
+                <span aria-hidden="true">🌱</span>
+                <span id="toggle-initial-label">Inicial</span>
+              </button>
+              <div class="level-toggle-divider" aria-hidden="true"></div>
+              <button class="level-toggle-btn" id="toggle-advanced" data-level="advanced" aria-pressed="false">
+                <span aria-hidden="true">🚀</span>
+                <span id="toggle-advanced-label">Avanzado</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- API Keys -->
+          <div class="settings-card">
+            <h3 class="settings-card__title" id="settings-api-title">
+              <span aria-hidden="true">🔑</span> API Keys
+            </h3>
+            <p class="settings-card__desc" id="settings-api-desc">
+              Las API keys se guardan solo en tu dispositivo (localStorage).
+            </p>
+
+            <div class="settings-field">
+              <label class="settings-label" for="gemini-key" id="gemini-key-label">Gemini API Key</label>
+              <div class="settings-input-row">
+                <input type="password" id="gemini-key" class="settings-input" placeholder="AIza..." autocomplete="off" />
+                <button class="settings-eye-btn" data-target="gemini-key" aria-label="Toggle visibility">
+                  <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                  <svg class="eye-closed hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                    <line x1="1" y1="1" x2="23" y2="23"/>
+                  </svg>
+                </button>
+              </div>
+              <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" class="settings-link" id="gemini-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                <span id="gemini-link-text">Obtener Gemini API Key gratis</span>
+              </a>
+            </div>
+
+            <div class="settings-field">
+              <label class="settings-label" for="unsplash-key" id="unsplash-key-label">Unsplash Access Key</label>
+              <div class="settings-input-row">
+                <input type="password" id="unsplash-key" class="settings-input" placeholder="Access Key..." autocomplete="off" />
+                <button class="settings-eye-btn" data-target="unsplash-key" aria-label="Toggle visibility">
+                  <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                  <svg class="eye-closed hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                    <line x1="1" y1="1" x2="23" y2="23"/>
+                  </svg>
+                </button>
+              </div>
+              <a href="https://unsplash.com/developers" target="_blank" rel="noopener noreferrer" class="settings-link" id="unsplash-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                <span id="unsplash-link-text">Obtener Unsplash Access Key gratis</span>
+              </a>
+            </div>
+
+            <button id="save-keys" class="btn-primary settings-save-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                <polyline points="17 21 17 13 7 13 7 21"/>
+                <polyline points="7 3 7 8 15 8"/>
+              </svg>
+              <span id="save-keys-label">Guardar Keys</span>
+            </button>
+
+            <div id="save-feedback" class="save-feedback hidden" role="status" aria-live="polite">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                <path d="M20 6 9 17l-5-5"/>
+              </svg>
+              <span id="save-feedback-text">¡Keys guardadas correctamente!</span>
+            </div>
+          </div>
+
+          <!-- Speech -->
+          <div class="settings-card">
+            <h3 class="settings-card__title" id="settings-speech-title">
+              <span aria-hidden="true">🔊</span> Pronunciación
+            </h3>
+            <div class="settings-field">
+              <label class="settings-label" for="speech-rate" id="speech-rate-label">Velocidad de pronunciación</label>
+              <div class="settings-slider-row">
+                <span aria-hidden="true">🐢</span>
+                <input type="range" id="speech-rate" class="settings-slider"
+                       min="0.5" max="1.5" step="0.1" value="0.9"
+                       aria-label="Speech rate" aria-valuemin="0.5" aria-valuemax="1.5" />
+                <span aria-hidden="true">🐇</span>
+              </div>
+              <div class="settings-slider-labels" aria-hidden="true">
+                <span>Lento</span>
+                <span id="speech-rate-value">0.9×</span>
+                <span>Rápido</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- About -->
+          <div class="settings-card settings-card--about">
+            <div class="settings-about">
+              <p class="settings-about__name">DeutschLernen</p>
+              <p class="settings-about__version">v1.0.0</p>
+              <p class="settings-about__desc" id="settings-about-desc">
+                Aprende alemán con inteligencia artificial, imágenes reales y pronunciación nativa.
+              </p>
+              <div class="settings-about__techs">
+                <span class="tech-badge">Gemini AI</span>
+                <span class="tech-badge">Unsplash</span>
+                <span class="tech-badge">Web Speech API</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- BOTTOM NAV -->
+    <nav id="nav-bar" class="nav-bar" aria-label="Main navigation">
+      <button class="nav-item active" data-view="search" id="nav-search" aria-label="Search" aria-current="page">
+        <div class="nav-item__indicator" aria-hidden="true"></div>
+        <svg class="nav-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <span class="nav-item__label" id="nav-search-label">Suche</span>
+      </button>
+      <button class="nav-item" data-view="cards" id="nav-cards" aria-label="Flashcards">
+        <div class="nav-item__indicator" aria-hidden="true"></div>
+        <svg class="nav-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="2" y="7" width="16" height="13" rx="2"/>
+          <path d="M6 7V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2h-2"/>
+        </svg>
+        <span class="nav-item__label" id="nav-cards-label">Karten</span>
+      </button>
+      <button class="nav-item" data-view="settings" id="nav-settings" aria-label="Settings">
+        <div class="nav-item__indicator" aria-hidden="true"></div>
+        <svg class="nav-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+        <span class="nav-item__label" id="nav-settings-label">Optionen</span>
+      </button>
+    </nav>
+
+  </div>
+</div>
+
+<script type="module" src="scripts/app.js"></script>
+</body>
+</html>
