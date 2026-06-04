@@ -125,64 +125,69 @@ const $ = id => document.getElementById(id);
    BOOT
 ════════════════════════════════════════════ */
 async function boot() {
-  // Load saved settings
-  const saved = loadSettings();
+  try {
+    // Load saved settings
+    const saved = loadSettings();
 
-  // Detect native language
-  state.nativeLang = saved.nativeLang || detectNativeLanguage();
-  saveNativeLang(state.nativeLang);
+    // Detect native language
+    state.nativeLang = saved.nativeLang || detectNativeLanguage();
+    saveNativeLang(state.nativeLang);
 
-  state.geminiKey   = saved.geminiKey  || '';
-  state.unsplashKey = saved.unsplashKey || '';
-  state.speechRate  = saved.speechRate || 0.9;
+    state.geminiKey   = saved.geminiKey  || '';
+    state.unsplashKey = saved.unsplashKey || '';
+    state.speechRate  = saved.speechRate || 0.9;
 
-  // Initialize speech
-  await initSpeech();
-  setSpeechRate(state.speechRate);
+    // Initialize speech
+    await initSpeech();
+    setSpeechRate(state.speechRate);
 
-  // Initialize flashcard module
-  initFlashcards({
-    elCard:         $('flip-card'),
-    elCardImage:    $('card-image'),
-    elCardArticle:  $('card-article'),
-    elCardWord:     $('card-word'),
-    elCardNative:   $('card-native'),
-    elCounter:      $('cards-counter'),
-    elProgressFill: $('cards-progress-fill'),
-    elHintText:     $('card-hint-text'),
-    elListenBtn:    $('card-listen'),
-    elListenLabel:  $('card-listen-label'),
-    elFlipBtn:      $('card-flip-btn'),
-    elFlipLabel:    $('card-flip-label'),
-    elPrevBtn:      $('card-prev'),
-    elNextBtn:      $('card-next'),
-    elSwipeHint:    $('swipe-hint'),
-    elGameArea:     $('cards-game'),
-    elCompleteArea: $('cards-complete'),
-    elLoadingArea:  $('cards-loading'),
-    elErrorArea:    $('cards-error'),
-    elErrorText:    $('cards-error-text'),
-    elRetryBtn:     $('cards-retry-btn'),
-    elCardViewport: $('card-viewport'),
-    elStartArea:    $('cards-start'),
-  });
+    // Initialize flashcard module
+    initFlashcards({
+      elCard:         $('flip-card'),
+      elCardImage:    $('card-image'),
+      elCardArticle:  $('card-article'),
+      elCardWord:     $('card-word'),
+      elCardNative:   $('card-native'),
+      elCounter:      $('cards-counter'),
+      elProgressFill: $('cards-progress-fill'),
+      elHintText:     $('card-hint-text'),
+      elListenBtn:    $('card-listen'),
+      elListenLabel:  $('card-listen-label'),
+      elFlipBtn:      $('card-flip-btn'),
+      elFlipLabel:    $('card-flip-label'),
+      elPrevBtn:      $('card-prev'),
+      elNextBtn:      $('card-next'),
+      elSwipeHint:    $('swipe-hint'),
+      elGameArea:     $('cards-game'),
+      elCompleteArea: $('cards-complete'),
+      elLoadingArea:  $('cards-loading'),
+      elErrorArea:    $('cards-error'),
+      elErrorText:    $('cards-error-text'),
+      elRetryBtn:     $('cards-retry-btn'),
+      elCardViewport: $('card-viewport'),
+      elStartArea:    $('cards-start'),
+    });
 
-  // Initialize music module
-  initMusic(state);
+    // Initialize music module
+    initMusic(state);
 
-  if (isInitialized()) {
-    // Returning user: go straight to main app
-    state.difficulty = saved.difficulty;
-    const uiLang = state.difficulty === 'advanced' ? 'de' : state.nativeLang;
-    applyLanguage(uiLang);
-    showMainApp();
-  } else {
-    // First time: show onboarding
-    applyOnboardingLanguage(state.nativeLang);
-    showOnboarding();
+    if (isInitialized()) {
+      // Returning user: go straight to main app
+      state.difficulty = saved.difficulty;
+      const uiLang = state.difficulty === 'advanced' ? 'de' : state.nativeLang;
+      applyLanguage(uiLang);
+      showMainApp();
+    } else {
+      // First time: show onboarding
+      applyOnboardingLanguage(state.nativeLang);
+      showOnboarding();
+    }
+
+    bindGlobalEvents();
+  } catch (err) {
+    alert("App startup error: " + err.message + "\n\nStack: " + err.stack);
+    console.error("Boot error:", err);
   }
-
-  bindGlobalEvents();
 }
 
 /* ════════════════════════════════════════════

@@ -506,8 +506,8 @@ function handleQuizAnswer(btn, correctWord) {
 
   const resultEl = $('quiz-result');
   if (resultEl) {
-    resultEl.textContent  = isCorrect ? '✅ Correct!' : \`❌ The answer was: \${correctWord}\`;
-    resultEl.className    = \`music-quiz__result \${isCorrect ? 'music-quiz__result--correct' : 'music-quiz__result--wrong'}\`;
+    resultEl.textContent  = isCorrect ? '✅ Correct!' : `❌ The answer was: ${correctWord}`;
+    resultEl.className    = `music-quiz__result ${isCorrect ? 'music-quiz__result--correct' : 'music-quiz__result--wrong'}`;
     resultEl.classList.remove('hidden');
   }
 
@@ -524,7 +524,7 @@ function handleQuizAnswer(btn, correctWord) {
 function setToggleMode(mode) {
   currentMode = mode;
   ['original', 'german', 'bilingual'].forEach(m => {
-    const btn = $(\`toggle-\${m}\`);
+    const btn = $(`toggle-${m}`);
     if (btn) btn.setAttribute('aria-pressed', String(m === mode));
     btn?.classList.toggle('active', m === mode);
   });
@@ -549,7 +549,7 @@ function bindMusicEvents() {
 
   // Toggle buttons
   ['original', 'german', 'bilingual'].forEach(mode => {
-    $(\`toggle-\${mode}\`)?.addEventListener('click', () => setToggleMode(mode));
+    $(`toggle-${mode}`)?.addEventListener('click', () => setToggleMode(mode));
   });
 
   // Word popup close
