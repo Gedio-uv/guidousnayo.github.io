@@ -764,7 +764,7 @@ function closePlayer() {
 
 async function translateLyricsChunk(linesText, targetLang) {
   // Use public Google Translate endpoint
-  const url = \`https://translate.googleapis.com/translate_a/single?client=gtx&sl=de&tl=\${targetLang}&dt=t&q=\${encodeURIComponent(linesText)}\`;
+  const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=de&tl=${targetLang}&dt=t&q=${encodeURIComponent(linesText)}`;
   try {
     const res = await fetch(url);
     const data = await res.json();
@@ -785,10 +785,10 @@ async function getNativeLyrics(song) {
   // We need to translate line by line, but to avoid 50 API calls, we join them
   // with newlines and translate in one go.
   const originalLines = song.lyrics.original.map(l => l.line);
-  const textToTranslate = originalLines.join('\\n');
+  const textToTranslate = originalLines.join('\n');
   
   const translatedText = await translateLyricsChunk(textToTranslate, userLangCode);
-  const translatedLines = translatedText.split('\\n');
+  const translatedLines = translatedText.split('\n');
   
   // Cache it
   song.lyrics.native = song.lyrics.original.map((l, i) => ({
@@ -821,19 +821,19 @@ async function renderLyrics(song, mode) {
     : (mode === 'native' ? nativeLines : song.lyrics.original);
 
   if (mode === 'bilingual') {
-    lyricsEl.innerHTML = lines.map((pair, i) => \`
-      <div class="lyric-pair" data-index="\${i}">
-        <p class="lyric-line lyric-line--original">\${renderClickableWords(pair.original)}</p>
-        <p class="lyric-line lyric-line--german">\${pair.german}</p>
+    lyricsEl.innerHTML = lines.map((pair, i) => `
+      <div class="lyric-pair" data-index="${i}">
+        <p class="lyric-line lyric-line--original">${renderClickableWords(pair.original)}</p>
+        <p class="lyric-line lyric-line--german">${pair.german}</p>
       </div>
-    \`).join('');
+    `).join('');
   } else {
     const isOriginal = mode === 'original';
-    lyricsEl.innerHTML = lines.map((l, i) => \`
-      <p class="lyric-line\${!isOriginal ? ' lyric-line--german' : ''}" data-index="\${i}">
-        \${isOriginal ? renderClickableWords(l.line) : escapeHtml(l.line)}
+    lyricsEl.innerHTML = lines.map((l, i) => `
+      <p class="lyric-line${!isOriginal ? ' lyric-line--german' : ''}" data-index="${i}">
+        ${isOriginal ? renderClickableWords(l.line) : escapeHtml(l.line)}
       </p>
-    \`).join('');
+    `).join('');
   }
 
   // Bind word click events on Original (German) lines
