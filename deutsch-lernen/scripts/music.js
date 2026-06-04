@@ -112,25 +112,33 @@ const YT_SUGGESTIONS = [
     vocabulary: ['Berlin', 'stehen', 'Zuhause', 'weil', 'hier']
   },
   {
-    videoId: '4wOoLLDXbOU',
+    videoId: '8Xz590x0nEU',
     title: 'Easy',
     artist: 'Cro',
     level: 'A2',
     lyrics: {
       original: [
-        { line: 'Das Leben ist schön', timestamp: 20 },
-        { line: 'Auch wenn du es nicht siehst', timestamp: 23 },
-        { line: 'Du musst nur schauen', timestamp: 25 },
-        { line: 'Was vor dir liegt', timestamp: 27 }
+        { line: 'Easy, ea-, ea-; ea-, ea-', timestamp: 14 },
+        { line: 'Easy, ea-, ea-; ea-, ea-', timestamp: 16 },
+        { line: 'Leute sagen zu mir „Cro das Genie“', timestamp: 18 },
+        { line: 'denn er flowt wieder wie Dieser Hova', timestamp: 21 },
+        { line: 'und außerdem baut er die Beats', timestamp: 23 },
+        { line: 'es ist easy, ea-, ea-; ea-, ea-', timestamp: 25 },
+        { line: 'Und dieser Typ hier vergleicht sich mit Jay-Z', timestamp: 27 },
+        { line: 'und scheißt auf die Playsi', timestamp: 30 }
       ],
       german: [
-        { line: 'Das Leben ist schön', timestamp: 20 },
-        { line: 'Auch wenn du es nicht siehst', timestamp: 23 },
-        { line: 'Du musst nur schauen', timestamp: 25 },
-        { line: 'Was vor dir liegt', timestamp: 27 }
+        { line: 'Easy, ea-, ea-; ea-, ea-', timestamp: 14 },
+        { line: 'Easy, ea-, ea-; ea-, ea-', timestamp: 16 },
+        { line: 'Leute sagen zu mir „Cro das Genie“', timestamp: 18 },
+        { line: 'denn er flowt wieder wie Dieser Hova', timestamp: 21 },
+        { line: 'und außerdem baut er die Beats', timestamp: 23 },
+        { line: 'es ist easy, ea-, ea-; ea-, ea-', timestamp: 25 },
+        { line: 'Und dieser Typ hier vergleicht sich mit Jay-Z', timestamp: 27 },
+        { line: 'und scheißt auf die Playsi', timestamp: 30 }
       ]
     },
-    vocabulary: ['Leben', 'schön', 'sehen', 'müssen', 'liegen']
+    vocabulary: ['Leute', 'sagen', 'wieder', 'außerdem', 'bauen']
   }
 ];
 
