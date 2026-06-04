@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tolk - Select your language</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #08080E;
+            --accent-color: #A78BFA;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-hover-bg: rgba(255, 255, 255, 0.06);
+            --text-primary: #FFFFFF;
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 24px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            margin-top: 2vh;
+        }
+
+        .logo-icon {
+            font-size: 32px;
+        }
+
+        .logo-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 36px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #A78BFA 0%, #D8B4FE 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-family: 'Outfit', sans-serif;
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 40px;
+            text-align: center;
+            letter-spacing: -0.02em;
+        }
+
+        .language-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+            margin-bottom: 48px;
+        }
+
+        .language-btn {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            padding: 18px 20px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .language-btn:hover, .language-btn:active {
+            background-color: var(--card-hover-bg);
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(167, 139, 250, 0.1);
+        }
+
+        .flag {
+            font-size: 26px;
+            line-height: 1;
+        }
+
+        .language-name {
+            font-size: 17px;
+            font-weight: 500;
+            flex-grow: 1;
+            letter-spacing: -0.01em;
+        }
+
+        .arrow-icon {
+            width: 20px;
+            height: 20px;
+            color: var(--text-secondary);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .language-btn:hover .arrow-icon, .language-btn:active .arrow-icon {
+            color: var(--accent-color);
+        }
+
+        .language-btn:not([dir="rtl"]):hover .arrow-icon,
+        .language-btn:not([dir="rtl"]):active .arrow-icon {
+            transform: translateX(4px);
+        }
+
+        .language-btn[dir="rtl"] .arrow-icon {
+            transform: scaleX(-1);
+        }
+
+        .language-btn[dir="rtl"]:hover .arrow-icon,
+        .language-btn[dir="rtl"]:active .arrow-icon {
+            transform: scaleX(-1) translateX(4px);
+        }
+
+        .footer {
+            margin-top: auto;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+            padding-top: 24px;
+            line-height: 1.5;
+        }
+
+        .footer-highlight {
+            color: var(--accent-color);
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <span class="logo-icon">🌍</span>
+            <span class="logo-text">Tolk</span>
+        </div>
+        
+        <h1 class="subtitle">Select your language to start</h1>
+
+        <div class="language-list">
+            <a href="https://tally.so/r/0QkQ9B" class="language-btn">
+                <span class="flag">🇬🇧</span>
+                <span class="language-name">English</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+            
+            <a href="https://tally.so/r/5BVjdZ" class="language-btn">
+                <span class="flag">🇪🇸</span>
+                <span class="language-name">Español</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+            
+            <a href="https://tally.so/r/2Eoa4D" class="language-btn" dir="rtl">
+                <span class="flag">🇸🇦</span>
+                <span class="language-name">العربية</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+            
+            <a href="https://tally.so/r/QK4eAG" class="language-btn">
+                <span class="flag">🇷🇺</span>
+                <span class="language-name">Русский</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+            
+            <a href="https://tally.so/r/7RELDR" class="language-btn">
+                <span class="flag">🇫🇷</span>
+                <span class="language-name">Français</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
+
+        <div class="footer">
+            Takes less than 2 minutes · <span class="footer-highlight">50% early bird discount</span>
+        </div>
+    </div>
+</body>
+</html>
