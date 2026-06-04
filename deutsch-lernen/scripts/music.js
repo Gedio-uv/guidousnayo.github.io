@@ -26,7 +26,7 @@ const $ = id => document.getElementById(id);
 // ── Hardcoded Option B Suggestions ──
 const YT_SUGGESTIONS = [
   {
-    videoId: 'La4Dcd1aUcE',
+    videoId: '2oV1KwiTrdM',
     title: '99 Luftballons',
     artist: 'Nena',
     level: 'A2',
@@ -68,7 +68,7 @@ const YT_SUGGESTIONS = [
     vocabulary: ['Sonne', 'Stern', 'hell', 'kommen', 'alle']
   },
   {
-    videoId: 'iukUNxnC2xw',
+    videoId: 'v0y6oOBZ7Mk',
     title: 'Autobahn',
     artist: 'Kraftwerk',
     level: 'A1',
@@ -118,7 +118,7 @@ const YT_SUGGESTIONS = [
     vocabulary: ['verbrennen', 'Asche', 'erschlagen', 'vergraben', 'Leben']
   },
   {
-    videoId: '8Xz590x0nEU',
+    videoId: 'hK-mYC8QQ3A',
     title: 'Easy',
     artist: 'Cro',
     level: 'A2',
