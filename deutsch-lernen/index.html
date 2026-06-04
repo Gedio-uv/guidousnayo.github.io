@@ -262,32 +262,18 @@
           <p class="music-header__subtitle">Learn German with songs you love</p>
         </div>
 
-        <!-- Search / Filter bar -->
-        <div class="music-filters">
-          <div class="music-search-bar">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-            </svg>
-            <input type="search" id="music-search-input" class="music-search-input"
-              placeholder="Search songs or artists..." autocomplete="off" />
+        <!-- YouTube Input & Suggestions -->
+        <div class="yt-section" id="yt-section">
+          <div class="yt-input-wrapper">
+            <input type="text" id="yt-link-input" class="yt-input" placeholder="Paste YouTube link here..." />
+            <button id="yt-load-btn" class="btn-primary yt-btn">Load Song</button>
           </div>
-          <div class="music-level-pills" role="group" aria-label="Filter by level">
-            <button class="music-level-pill active" data-level="all">All</button>
-            <button class="music-level-pill" data-level="A1">A1</button>
-            <button class="music-level-pill" data-level="A2">A2</button>
-            <button class="music-level-pill" data-level="B1">B1</button>
-            <button class="music-level-pill" data-level="B2">B2</button>
+          <p id="yt-error-msg" class="yt-error-msg hidden"></p>
+
+          <h3 class="yt-suggestions-title">Recommended Songs</h3>
+          <div class="yt-suggestions" id="yt-suggestions">
+            <!-- Rendered by JS -->
           </div>
-        </div>
-
-        <!-- Catalog grid -->
-        <div id="music-catalog" class="music-catalog" role="list" aria-label="Song catalog"></div>
-
-        <!-- Empty state -->
-        <div id="music-empty" class="music-empty hidden">
-          <span class="music-empty__icon">🎵</span>
-          <p class="music-empty__text">No songs found</p>
-          <p class="music-empty__hint">Try a different search or level</p>
         </div>
 
         <!-- Player / Karaoke view -->
@@ -305,6 +291,11 @@
               <p id="player-song-artist" class="music-player__song-artist"></p>
             </div>
             <div class="music-player__level-badge" id="player-level-badge"></div>
+          </div>
+
+          <!-- YouTube Player Container -->
+          <div class="yt-player-container" id="yt-player-container">
+            <div id="yt-player"></div>
           </div>
 
           <!-- Toggle original / German -->

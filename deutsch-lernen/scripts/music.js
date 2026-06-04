@@ -1,234 +1,304 @@
 /**
- * music.js — Tolk Music Feature
- * Catalog browsing, karaoke view, word lookup, vocabulary quiz.
- * Integrates with existing lookupWord() and speak() modules.
+ * music.js — Tolk Music Feature (YouTube Integration)
+ * YouTube player, synced karaoke lyrics, word lookup, vocabulary quiz.
  */
 
 import { lookupWord } from './search.js';
 import { speak, stopSpeech } from './speech.js';
 
+const YOUTUBE_API_KEY = ''; // Add your YouTube Data API v3 Key here
+
 // ── State ──
 let currentSong   = null;
 let currentMode   = 'original'; // 'original' | 'german' | 'bilingual'
-let catalog       = [];
-let filteredCatalog = [];
-let activeLevel   = 'all';
 let quizActive    = false;
 let quizWords     = [];
 let quizIndex     = 0;
 let appState      = null; // injected from app.js
-let isKaraokePlaying = false;
+
+let ytPlayer      = null;
+let syncInterval  = null;
+let currentActiveLineIndex = -1;
 
 // ── DOM shortcuts ──
 const $ = id => document.getElementById(id);
 
-// ── Song catalog data (curated) ──
-// In production this would be fetched from data/songs.json
-const SONGS_CATALOG = [
+// ── Hardcoded Option B Suggestions ──
+const YT_SUGGESTIONS = [
   {
-    id: 'nena-99',
+    videoId: 'La4Dcd1aUcE',
     title: '99 Luftballons',
     artist: 'Nena',
     level: 'A2',
-    genre: 'Pop',
-    year: 1983,
-    cover: '🎈',
-    color: '#E63946',
     lyrics: {
       original: [
-        { line: 'Hast du etwas Zeit für mich', timestamp: 0 },
-        { line: 'Dann singe ich ein Lied für dich', timestamp: 4 },
-        { line: 'Von 99 Luftballons', timestamp: 8 },
-        { line: 'Auf ihrem Weg zum Horizont', timestamp: 12 },
-        { line: 'Denkst du vielleicht grad an mich', timestamp: 16 },
-        { line: 'Dann singe ich ein Lied für dich', timestamp: 20 },
-        { line: 'Von 99 Luftballons', timestamp: 24 },
-        { line: 'Und dass so etwas von so etwas kommt', timestamp: 28 },
+        { line: 'Hast du etwas Zeit für mich', timestamp: 14 },
+        { line: 'Dann singe ich ein Lied für dich', timestamp: 17 },
+        { line: 'Von 99 Luftballons', timestamp: 20 },
+        { line: 'Auf ihrem Weg zum Horizont', timestamp: 24 }
       ],
       german: [
-        { line: 'Hast du etwas Zeit für mich', timestamp: 0 },
-        { line: 'Dann singe ich ein Lied für dich', timestamp: 4 },
-        { line: 'Von 99 Luftballons', timestamp: 8 },
-        { line: 'Auf ihrem Weg zum Horizont', timestamp: 12 },
-        { line: 'Denkst du vielleicht grad an mich', timestamp: 16 },
-        { line: 'Dann singe ich ein Lied für dich', timestamp: 20 },
-        { line: 'Von 99 Luftballons', timestamp: 24 },
-        { line: 'Und dass so etwas von so etwas kommt', timestamp: 28 },
-      ],
+        { line: 'Hast du etwas Zeit für mich', timestamp: 14 },
+        { line: 'Dann singe ich ein Lied für dich', timestamp: 17 },
+        { line: 'Von 99 Luftballons', timestamp: 20 },
+        { line: 'Auf ihrem Weg zum Horizont', timestamp: 24 }
+      ]
     },
-    vocabulary: ['Luftballon', 'Horizont', 'singen', 'Zeit', 'Lied'],
+    vocabulary: ['Luftballon', 'Horizont', 'singen', 'Zeit', 'Lied']
   },
   {
-    id: 'rammstein-sonne',
+    videoId: 'StZcUAPRRac',
     title: 'Sonne',
     artist: 'Rammstein',
     level: 'B1',
-    genre: 'Rock',
-    year: 2001,
-    cover: '☀️',
-    color: '#FFCB47',
     lyrics: {
       original: [
-        { line: 'Eins, hier kommt die Sonne', timestamp: 0 },
-        { line: 'Zwei, hier kommt die Sonne', timestamp: 4 },
-        { line: 'Drei, sie ist der hellste Stern von allen', timestamp: 8 },
-        { line: 'Vier, hier kommt die Sonne', timestamp: 12 },
+        { line: 'Eins, hier kommt die Sonne', timestamp: 35 },
+        { line: 'Zwei, hier kommt die Sonne', timestamp: 39 },
+        { line: 'Drei, sie ist der hellste Stern von allen', timestamp: 43 },
+        { line: 'Vier, hier kommt die Sonne', timestamp: 47 }
       ],
       german: [
-        { line: 'Eins, hier kommt die Sonne', timestamp: 0 },
-        { line: 'Zwei, hier kommt die Sonne', timestamp: 4 },
-        { line: 'Drei, sie ist der hellste Stern von allen', timestamp: 8 },
-        { line: 'Vier, hier kommt die Sonne', timestamp: 12 },
-      ],
+        { line: 'Eins, hier kommt die Sonne', timestamp: 35 },
+        { line: 'Zwei, hier kommt die Sonne', timestamp: 39 },
+        { line: 'Drei, sie ist der hellste Stern von allen', timestamp: 43 },
+        { line: 'Vier, hier kommt die Sonne', timestamp: 47 }
+      ]
     },
-    vocabulary: ['Sonne', 'Stern', 'hell', 'kommen', 'alle'],
+    vocabulary: ['Sonne', 'Stern', 'hell', 'kommen', 'alle']
   },
   {
-    id: 'kraftwerk-autobahn',
+    videoId: 'iukUNxnC2xw',
     title: 'Autobahn',
     artist: 'Kraftwerk',
     level: 'A1',
-    genre: 'Electronic',
-    year: 1974,
-    cover: '🚗',
-    color: '#4ADE80',
     lyrics: {
       original: [
-        { line: 'Wir fahr\'n fahr\'n fahr\'n auf der Autobahn', timestamp: 0 },
-        { line: 'Vor uns liegt ein weites Tal', timestamp: 4 },
-        { line: 'Die Sonne scheint mit Glitzerstrahl', timestamp: 8 },
-        { line: 'Die Fahrbahn ist ein graues Band', timestamp: 12 },
-        { line: 'Weiße Streifen, grüner Rand', timestamp: 16 },
+        { line: 'Wir fahr\'n fahr\'n fahr\'n auf der Autobahn', timestamp: 60 },
+        { line: 'Vor uns liegt ein weites Tal', timestamp: 65 },
+        { line: 'Die Sonne scheint mit Glitzerstrahl', timestamp: 70 },
+        { line: 'Die Fahrbahn ist ein graues Band', timestamp: 75 },
+        { line: 'Weiße Streifen, grüner Rand', timestamp: 80 }
       ],
       german: [
-        { line: 'Wir fahr\'n fahr\'n fahr\'n auf der Autobahn', timestamp: 0 },
-        { line: 'Vor uns liegt ein weites Tal', timestamp: 4 },
-        { line: 'Die Sonne scheint mit Glitzerstrahl', timestamp: 8 },
-        { line: 'Die Fahrbahn ist ein graues Band', timestamp: 12 },
-        { line: 'Weiße Streifen, grüner Rand', timestamp: 16 },
-      ],
+        { line: 'Wir fahr\'n fahr\'n fahr\'n auf der Autobahn', timestamp: 60 },
+        { line: 'Vor uns liegt ein weites Tal', timestamp: 65 },
+        { line: 'Die Sonne scheint mit Glitzerstrahl', timestamp: 70 },
+        { line: 'Die Fahrbahn ist ein graues Band', timestamp: 75 },
+        { line: 'Weiße Streifen, grüner Rand', timestamp: 80 }
+      ]
     },
-    vocabulary: ['Autobahn', 'fahren', 'Sonne', 'Tal', 'grün'],
+    vocabulary: ['Autobahn', 'fahren', 'Sonne', 'Tal', 'grün']
   },
   {
-    id: 'peter-fox-alles-neu',
+    videoId: 'qdtLCfEcPL4',
     title: 'Alles Neu',
     artist: 'Peter Fox',
     level: 'B1',
-    genre: 'Hip-Hop',
-    year: 2008,
-    cover: '✨',
-    color: '#818CF8',
     lyrics: {
       original: [
-        { line: 'Ich steh auf Berlin', timestamp: 0 },
-        { line: 'Weil ich von hier bin', timestamp: 4 },
-        { line: 'Das ist mein Zuhause', timestamp: 8 },
-        { line: 'Hier bin ich zu Hause', timestamp: 12 },
+        { line: 'Ich steh auf Berlin', timestamp: 15 },
+        { line: 'Weil ich von hier bin', timestamp: 18 },
+        { line: 'Das ist mein Zuhause', timestamp: 20 },
+        { line: 'Hier bin ich zu Hause', timestamp: 22 }
       ],
       german: [
-        { line: 'Ich steh auf Berlin', timestamp: 0 },
-        { line: 'Weil ich von hier bin', timestamp: 4 },
-        { line: 'Das ist mein Zuhause', timestamp: 8 },
-        { line: 'Hier bin ich zu Hause', timestamp: 12 },
-      ],
+        { line: 'Ich steh auf Berlin', timestamp: 15 },
+        { line: 'Weil ich von hier bin', timestamp: 18 },
+        { line: 'Das ist mein Zuhause', timestamp: 20 },
+        { line: 'Hier bin ich zu Hause', timestamp: 22 }
+      ]
     },
-    vocabulary: ['Berlin', 'stehen', 'Zuhause', 'weil', 'hier'],
+    vocabulary: ['Berlin', 'stehen', 'Zuhause', 'weil', 'hier']
   },
   {
-    id: 'cro-whatever',
+    videoId: '4wOoLLDXbOU',
     title: 'Easy',
     artist: 'Cro',
     level: 'A2',
-    genre: 'Hip-Hop',
-    year: 2012,
-    cover: '🐼',
-    color: '#FB923C',
     lyrics: {
       original: [
-        { line: 'Das Leben ist schön', timestamp: 0 },
-        { line: 'Auch wenn du es nicht siehst', timestamp: 4 },
-        { line: 'Du musst nur schauen', timestamp: 8 },
-        { line: 'Was vor dir liegt', timestamp: 12 },
+        { line: 'Das Leben ist schön', timestamp: 20 },
+        { line: 'Auch wenn du es nicht siehst', timestamp: 23 },
+        { line: 'Du musst nur schauen', timestamp: 25 },
+        { line: 'Was vor dir liegt', timestamp: 27 }
       ],
       german: [
-        { line: 'Das Leben ist schön', timestamp: 0 },
-        { line: 'Auch wenn du es nicht siehst', timestamp: 4 },
-        { line: 'Du musst nur schauen', timestamp: 8 },
-        { line: 'Was vor dir liegt', timestamp: 12 },
-      ],
+        { line: 'Das Leben ist schön', timestamp: 20 },
+        { line: 'Auch wenn du es nicht siehst', timestamp: 23 },
+        { line: 'Du musst nur schauen', timestamp: 25 },
+        { line: 'Was vor dir liegt', timestamp: 27 }
+      ]
     },
-    vocabulary: ['Leben', 'schön', 'sehen', 'müssen', 'liegen'],
-  },
+    vocabulary: ['Leben', 'schön', 'sehen', 'müssen', 'liegen']
+  }
 ];
 
 /* ════════════════════════════════════════════
-   INIT
+   INIT & YOUTUBE API LOADER
 ════════════════════════════════════════════ */
 
 export function initMusic(state) {
   appState = state;
-  catalog  = SONGS_CATALOG;
-  filteredCatalog = [...catalog];
-
-  renderCatalog(filteredCatalog);
+  loadYouTubeAPI();
+  renderSuggestions();
   bindMusicEvents();
 }
 
+function loadYouTubeAPI() {
+  if (window.YT && window.YT.Player) return;
+  const tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  const firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+}
+
+// Called automatically by YT API when ready
+window.onYouTubeIframeAPIReady = function() {
+  ytPlayer = new window.YT.Player('yt-player', {
+    height: '100%',
+    width: '100%',
+    playerVars: {
+      autoplay: 1,
+      controls: 1,
+      modestbranding: 1,
+      rel: 0
+    },
+    events: {
+      'onStateChange': onPlayerStateChange
+    }
+  });
+};
+
 /* ════════════════════════════════════════════
-   CATALOG RENDERING
+   SUGGESTIONS RENDERING
 ════════════════════════════════════════════ */
 
-function renderCatalog(songs) {
-  const container = $('music-catalog');
-  const emptyEl   = $('music-empty');
+function renderSuggestions() {
+  const container = $('yt-suggestions');
   if (!container) return;
 
-  if (songs.length === 0) {
-    container.innerHTML = '';
-    emptyEl?.classList.remove('hidden');
-    return;
-  }
-  emptyEl?.classList.add('hidden');
-
-  container.innerHTML = songs.map(song => `
-    <button class="music-card" data-song-id="${song.id}" role="listitem"
-      aria-label="Play ${song.title} by ${song.artist}">
-      <div class="music-card__cover" style="--song-color: ${song.color}">
-        <span class="music-card__emoji" aria-hidden="true">${song.cover}</span>
-        <div class="music-card__play-overlay" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <polygon points="5 3 19 12 5 21 5 3"/>
-          </svg>
-        </div>
+  container.innerHTML = YT_SUGGESTIONS.map(song => `
+    <div class="yt-suggestion-card" data-video-id="${song.videoId}" role="button" tabindex="0" aria-label="Play ${song.title} by ${song.artist}">
+      <div class="yt-suggestion-card__meta">
+        <span class="yt-suggestion-card__title">${song.title}</span>
+        <span class="yt-suggestion-card__artist">${song.artist}</span>
       </div>
-      <div class="music-card__info">
-        <p class="music-card__title">${song.title}</p>
-        <p class="music-card__artist">${song.artist}</p>
-        <div class="music-card__meta">
-          <span class="music-card__genre">${song.genre}</span>
-          <span class="music-card__level music-card__level--${song.level}">${song.level}</span>
-        </div>
-      </div>
-    </button>
+      <span class="yt-suggestion-card__level yt-suggestion-card__level--${song.level}">${song.level}</span>
+    </div>
   `).join('');
 
-  container.querySelectorAll('.music-card').forEach(card => {
+  container.querySelectorAll('.yt-suggestion-card').forEach(card => {
     card.addEventListener('click', () => {
-      const song = catalog.find(s => s.id === card.dataset.songId);
-      if (song) openPlayer(song);
+      loadSong(card.dataset.videoId);
     });
   });
 }
 
 /* ════════════════════════════════════════════
-   PLAYER
+   LOAD SONG & SYNC
+════════════════════════════════════════════ */
+
+function extractVideoId(url) {
+  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/);
+  return match ? match[1] : null;
+}
+
+function loadSong(videoIdOrUrl) {
+  const videoId = extractVideoId(videoIdOrUrl) || videoIdOrUrl;
+  const errorMsg = $('yt-error-msg');
+  if (errorMsg) errorMsg.classList.add('hidden');
+
+  if (!videoId || videoId.length !== 11) {
+    if (errorMsg) {
+      errorMsg.textContent = 'Invalid YouTube link. Please check the URL.';
+      errorMsg.classList.remove('hidden');
+    }
+    return;
+  }
+
+  // Check if it's a known suggestion (Option B logic)
+  const knownSong = YT_SUGGESTIONS.find(s => s.videoId === videoId);
+  
+  if (!knownSong) {
+    // Arbitrary public video
+    if (errorMsg) {
+      errorMsg.textContent = 'No German subtitles found for this video. Try another song or use a recommended one.';
+      errorMsg.classList.remove('hidden');
+    }
+    return;
+  }
+
+  openPlayer(knownSong);
+}
+
+function onPlayerStateChange(event) {
+  if (event.data === window.YT.PlayerState.PLAYING) {
+    startSync();
+  } else {
+    stopSync();
+  }
+}
+
+function startSync() {
+  if (syncInterval) clearInterval(syncInterval);
+  syncInterval = setInterval(() => {
+    if (!ytPlayer || !ytPlayer.getCurrentTime || !currentSong) return;
+    const time = ytPlayer.getCurrentTime();
+    syncLyricsToTime(time);
+  }, 250); // Poll every 250ms
+}
+
+function stopSync() {
+  if (syncInterval) {
+    clearInterval(syncInterval);
+    syncInterval = null;
+  }
+}
+
+function syncLyricsToTime(time) {
+  if (!currentSong) return;
+  const lines = currentSong.lyrics.german;
+  let activeIndex = -1;
+
+  // Find the last line whose timestamp is <= current time
+  for (let i = 0; i < lines.length; i++) {
+    if (time >= lines[i].timestamp) {
+      activeIndex = i;
+    } else {
+      break;
+    }
+  }
+
+  if (activeIndex !== currentActiveLineIndex) {
+    // Remove old highlights
+    document.querySelectorAll('.lyric-line--active, .lyric-pair--active').forEach(el => {
+      el.classList.remove('lyric-line--active', 'lyric-pair--active');
+    });
+
+    if (activeIndex >= 0) {
+      const lineEls = document.querySelectorAll(`[data-index="${activeIndex}"]`);
+      lineEls.forEach(el => {
+        if (el.classList.contains('lyric-pair')) el.classList.add('lyric-pair--active');
+        else el.classList.add('lyric-line--active');
+        
+        // Only scroll if we changed lines to avoid jitter
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    }
+    currentActiveLineIndex = activeIndex;
+  }
+}
+
+/* ════════════════════════════════════════════
+   PLAYER UI
 ════════════════════════════════════════════ */
 
 function openPlayer(song) {
   currentSong = song;
   currentMode = 'original';
   quizActive  = false;
+  currentActiveLineIndex = -1;
 
   // Populate header
   const titleEl  = $('player-song-title');
@@ -241,28 +311,31 @@ function openPlayer(song) {
     badgeEl.className   = `music-player__level-badge music-player__level-badge--${song.level}`;
   }
 
+  // Load video into iframe
+  if (ytPlayer && ytPlayer.loadVideoById) {
+    ytPlayer.loadVideoById(song.videoId);
+  }
+
   // Reset toggles
   setToggleMode('original');
 
   // Render lyrics
   renderLyrics(song, currentMode);
 
-  // Hide catalog, show player
-  $('music-catalog')?.classList.add('hidden');
-  $('music-filters')?.classList.add('hidden');
-  $('music-header')?.classList.add('hidden');
-  $('music-empty')?.classList.add('hidden');
+  // Hide input section, show player
+  $('yt-section')?.classList.add('hidden');
   $('music-quiz')?.classList.add('hidden');
   $('music-player')?.classList.remove('hidden');
 }
 
 function closePlayer() {
-  stopKaraoke();
+  stopSync();
+  if (ytPlayer && ytPlayer.stopVideo) {
+    ytPlayer.stopVideo();
+  }
   currentSong = null;
   $('music-player')?.classList.add('hidden');
-  $('music-catalog')?.classList.remove('hidden');
-  $('music-filters')?.classList.remove('hidden');
-  $('music-header')?.classList.remove('hidden');
+  $('yt-section')?.classList.remove('hidden');
 }
 
 function renderLyrics(song, mode) {
@@ -298,44 +371,50 @@ function renderLyrics(song, mode) {
   });
 }
 
-function renderClickableWords(line) {
-  return line.split(' ').map(word => {
-    const clean = word.replace(/[^a-zA-ZäöüÄÖÜß]/g, '');
-    if (!clean) return escapeHtml(word);
-    return `<span class="lyric-word" data-word="${escapeAttr(clean)}" tabindex="0" role="button"
-      aria-label="Look up ${escapeAttr(clean)}">${escapeHtml(word)}</span>`;
+function renderClickableWords(text) {
+  return text.split(' ').map(w => {
+    const clean = w.replace(/[^a-zA-ZäöüßÄÖÜ]/g, '');
+    if (clean.length > 2) {
+      return `<span class="lyric-word" data-word="${clean}">${w}</span>`;
+    }
+    return w;
   }).join(' ');
 }
 
 /* ════════════════════════════════════════════
-   WORD POPUP
+   WORD LOOKUP POPUP
 ════════════════════════════════════════════ */
 
 async function showWordPopup(word) {
   const popup = $('music-word-popup');
   if (!popup) return;
 
-  // Show loading state
-  $('popup-word').textContent    = word;
-  $('popup-article').textContent = '';
-  $('popup-translation').textContent = '...';
-  $('popup-example').textContent = '';
+  const popupWord    = $('popup-word');
+  const popupArticle = $('popup-article');
+  const popupMeaning = $('popup-meaning');
+  const popupLevel   = $('popup-level');
+  
+  // Quick reset
+  if (popupWord) popupWord.textContent = word;
+  if (popupArticle) popupArticle.textContent = '';
+  if (popupMeaning) popupMeaning.textContent = 'Translating...';
+  if (popupLevel) popupLevel.textContent = '';
+  
   popup.classList.remove('hidden');
 
   try {
-    const nativeLang = appState?.nativeLang || 'en';
-    const result = await lookupWord(word, nativeLang, 'English', appState?.geminiKey || '');
-
-    $('popup-article').textContent     = result.article && result.article !== '-' ? result.article : '';
-    $('popup-word').textContent        = result.word || word;
-    $('popup-translation').textContent = result.nativeTranslation || '';
-    $('popup-example').textContent     = result.examples?.[0]?.german || '';
-
-    // Listen button
-    $('popup-listen').onclick = () => speak(word, $('popup-listen'));
-
-  } catch {
-    $('popup-translation').textContent = 'Could not load definition.';
+    const data = await lookupWord(word);
+    if (!data || data.error) throw new Error(data?.error || 'Not found');
+    
+    if (popupWord) popupWord.textContent = data.word || word;
+    if (popupArticle) popupArticle.textContent = data.article ? `${data.article} ` : '';
+    if (popupMeaning) popupMeaning.textContent = data.translation || data.meaning;
+    if (popupLevel && data.level) {
+      popupLevel.textContent = data.level;
+      popupLevel.className = `music-word-popup__level music-word-popup__level--${data.level}`;
+    }
+  } catch (err) {
+    if (popupMeaning) popupMeaning.textContent = 'Translation not available.';
   }
 }
 
@@ -347,56 +426,71 @@ function startQuiz() {
   if (!currentSong) return;
   quizActive = true;
   quizIndex  = 0;
-  quizWords  = [...currentSong.vocabulary].sort(() => Math.random() - 0.5).slice(0, 5);
+  quizWords  = shuffle([...(currentSong.vocabulary || [])]).slice(0, 5);
+
+  if (quizWords.length < 3) {
+    alert("Not enough vocabulary words to generate a quiz.");
+    quizActive = false;
+    return;
+  }
 
   $('music-lyrics')?.classList.add('hidden');
-  $('music-player__actions')?.classList.add('hidden');
   $('music-quiz')?.classList.remove('hidden');
-
+  
   renderQuizQuestion();
 }
 
 function renderQuizQuestion() {
-  const questionEl = $('quiz-question');
-  const optionsEl  = $('quiz-options');
-  const progressEl = $('quiz-progress');
-  const resultEl   = $('quiz-result');
-
-  if (!questionEl || !optionsEl) return;
+  const container = $('music-quiz');
+  if (!container) return;
 
   if (quizIndex >= quizWords.length) {
-    // Quiz complete
-    questionEl.textContent = '🎉 Quiz complete!';
-    optionsEl.innerHTML    = '';
-    if (resultEl) {
-      resultEl.textContent = `You completed all ${quizWords.length} words from "${currentSong.title}"!`;
-      resultEl.classList.remove('hidden');
-    }
+    // End of quiz
+    container.innerHTML = `
+      <div class="music-quiz__complete">
+        <h3>🎉 Quiz Complete!</h3>
+        <p>You practiced ${quizWords.length} words from this song.</p>
+        <button id="quiz-done-btn" class="btn-primary" style="margin-top: 16px;">Back to Lyrics</button>
+      </div>
+    `;
+    $('quiz-done-btn')?.addEventListener('click', () => {
+      quizActive = false;
+      $('music-quiz')?.classList.add('hidden');
+      $('music-lyrics')?.classList.remove('hidden');
+    });
     return;
   }
 
-  const word = quizWords[quizIndex];
-  if (progressEl) progressEl.textContent = `${quizIndex + 1} / ${quizWords.length}`;
-  if (resultEl)   resultEl.classList.add('hidden');
+  const targetWord = quizWords[quizIndex];
+  
+  // Generate options (1 correct, 3 random wrong from the rest of the vocab)
+  const pool = (currentSong.vocabulary || []).filter(w => w !== targetWord);
+  const wrongOptions = shuffle(pool).slice(0, 3);
+  const options = shuffle([targetWord, ...wrongOptions]);
 
-  questionEl.innerHTML = `
-    <p class="quiz-prompt">What does this word mean?</p>
-    <p class="quiz-word">${word}</p>
+  container.innerHTML = `
+    <div class="music-quiz__header">
+      <p class="music-quiz__progress">Question ${quizIndex + 1} of ${quizWords.length}</p>
+      <h3 class="music-quiz__question">What does this word mean?</h3>
+      <div class="music-quiz__target">${targetWord}</div>
+    </div>
+    <div class="music-quiz__options">
+      ${options.map(opt => `<button class="quiz-option" data-word="${opt}">Translating ${opt}...</button>`).join('')}
+    </div>
+    <div id="quiz-result" class="music-quiz__result hidden"></div>
   `;
 
-  // Generate 4 options — 1 correct + 3 distractors from catalog vocabulary
-  const allWords = catalog.flatMap(s => s.vocabulary).filter(w => w !== word);
-  const distractors = allWords.sort(() => Math.random() - 0.5).slice(0, 3);
-  const options = [word, ...distractors].sort(() => Math.random() - 0.5);
-
-  optionsEl.innerHTML = options.map(opt => `
-    <button class="quiz-option" data-word="${escapeAttr(opt)}" role="listitem">
-      ${escapeHtml(opt)}
-    </button>
-  `).join('');
-
-  optionsEl.querySelectorAll('.quiz-option').forEach(btn => {
-    btn.addEventListener('click', () => handleQuizAnswer(btn, word));
+  // Fetch meanings for buttons asynchronously to mock the translation UI
+  const btns = container.querySelectorAll('.quiz-option');
+  btns.forEach(async btn => {
+    const word = btn.dataset.word;
+    try {
+      const data = await lookupWord(word);
+      btn.textContent = data.translation || word;
+    } catch {
+      btn.textContent = word; // fallback
+    }
+    btn.addEventListener('click', () => handleQuizAnswer(btn, targetWord));
   });
 }
 
@@ -412,8 +506,8 @@ function handleQuizAnswer(btn, correctWord) {
 
   const resultEl = $('quiz-result');
   if (resultEl) {
-    resultEl.textContent  = isCorrect ? '✅ Correct!' : `❌ The answer was: ${correctWord}`;
-    resultEl.className    = `music-quiz__result ${isCorrect ? 'music-quiz__result--correct' : 'music-quiz__result--wrong'}`;
+    resultEl.textContent  = isCorrect ? '✅ Correct!' : \`❌ The answer was: \${correctWord}\`;
+    resultEl.className    = \`music-quiz__result \${isCorrect ? 'music-quiz__result--correct' : 'music-quiz__result--wrong'}\`;
     resultEl.classList.remove('hidden');
   }
 
@@ -430,13 +524,11 @@ function handleQuizAnswer(btn, correctWord) {
 function setToggleMode(mode) {
   currentMode = mode;
   ['original', 'german', 'bilingual'].forEach(m => {
-    const btn = $(`toggle-${m}`);
+    const btn = $(\`toggle-\${m}\`);
     if (btn) btn.setAttribute('aria-pressed', String(m === mode));
     btn?.classList.toggle('active', m === mode);
   });
   if (currentSong) {
-    const wasPlaying = isKaraokePlaying;
-    if (wasPlaying) stopKaraoke();
     renderLyrics(currentSong, mode);
   }
 }
@@ -446,26 +538,18 @@ function setToggleMode(mode) {
 ════════════════════════════════════════════ */
 
 function bindMusicEvents() {
-
-  // Filter pills
-  document.querySelectorAll('.music-level-pill').forEach(pill => {
-    pill.addEventListener('click', () => {
-      document.querySelectorAll('.music-level-pill').forEach(p => p.classList.remove('active'));
-      pill.classList.add('active');
-      activeLevel = pill.dataset.level;
-      applyFilters();
-    });
+  // YT Link Loader
+  $('yt-load-btn')?.addEventListener('click', () => {
+    const val = $('yt-link-input')?.value;
+    if (val) loadSong(val);
   });
-
-  // Search
-  $('music-search-input')?.addEventListener('input', applyFilters);
 
   // Player back button
   $('music-player-back')?.addEventListener('click', closePlayer);
 
   // Toggle buttons
   ['original', 'german', 'bilingual'].forEach(mode => {
-    $(`toggle-${mode}`)?.addEventListener('click', () => setToggleMode(mode));
+    $(\`toggle-\${mode}\`)?.addEventListener('click', () => setToggleMode(mode));
   });
 
   // Word popup close
@@ -473,10 +557,15 @@ function bindMusicEvents() {
     $('music-word-popup')?.classList.add('hidden');
   });
 
+  // Word popup listen (speak)
+  $('popup-listen')?.addEventListener('click', () => {
+    const word = $('popup-word')?.textContent;
+    if (word) speak(word);
+  });
+
   // Quiz button
   $('music-quiz-btn')?.addEventListener('click', () => {
     if (quizActive) {
-      // Return to lyrics
       quizActive = false;
       $('music-quiz')?.classList.add('hidden');
       $('music-lyrics')?.classList.remove('hidden');
@@ -484,97 +573,12 @@ function bindMusicEvents() {
       startQuiz();
     }
   });
-
-  // Pronounce button (Karaoke)
-  $('music-pronounce-btn')?.addEventListener('click', () => {
-    if (!currentSong) return;
-    if (isKaraokePlaying) {
-      stopKaraoke();
-    } else {
-      playKaraoke();
-    }
-  });
-}
-
-function playKaraoke() {
-  if (!currentSong || !window.speechSynthesis) return;
-  isKaraokePlaying = true;
-  const btn = $('music-pronounce-btn');
-  if (btn) btn.classList.add('playing');
-
-  const lines = currentSong.lyrics.german.map(l => l.line);
-  let currentIndex = 0;
-
-  const speakNextLine = () => {
-    if (!isKaraokePlaying) return;
-    if (currentIndex >= lines.length) {
-      stopKaraoke();
-      return;
-    }
-
-    // Highlight line
-    document.querySelectorAll('.lyric-line--active, .lyric-pair--active').forEach(el => {
-      el.classList.remove('lyric-line--active', 'lyric-pair--active');
-    });
-
-    const lineEls = document.querySelectorAll(`[data-index="${currentIndex}"]`);
-    lineEls.forEach(el => {
-      if (el.classList.contains('lyric-pair')) el.classList.add('lyric-pair--active');
-      else el.classList.add('lyric-line--active');
-      
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    });
-
-    const utterance = new SpeechSynthesisUtterance(lines[currentIndex]);
-    utterance.lang = 'de-DE';
-    
-    // Try to get speech.js preferences or default
-    utterance.rate = 0.9;
-    const voices = window.speechSynthesis.getVoices();
-    const voice = voices.find(v => v.lang === 'de-DE' && v.localService) || voices.find(v => v.lang === 'de-DE');
-    if (voice) utterance.voice = voice;
-
-    utterance.onend = () => {
-      currentIndex++;
-      speakNextLine();
-    };
-    utterance.onerror = () => stopKaraoke();
-
-    window.speechSynthesis.speak(utterance);
-  };
-
-  stopSpeech(); // cancel any ongoing speech
-  speakNextLine();
-}
-
-function stopKaraoke() {
-  isKaraokePlaying = false;
-  stopSpeech();
-  const btn = $('music-pronounce-btn');
-  if (btn) btn.classList.remove('playing');
   
-  document.querySelectorAll('.lyric-line--active, .lyric-pair--active').forEach(el => {
-    el.classList.remove('lyric-line--active', 'lyric-pair--active');
-  });
-}
-
-/* ════════════════════════════════════════════
-   FILTERING
-════════════════════════════════════════════ */
-
-function applyFilters() {
-  const query = ($('music-search-input')?.value || '').toLowerCase().trim();
-
-  filteredCatalog = catalog.filter(song => {
-    const matchLevel  = activeLevel === 'all' || song.level === activeLevel;
-    const matchSearch = !query ||
-      song.title.toLowerCase().includes(query) ||
-      song.artist.toLowerCase().includes(query) ||
-      song.genre.toLowerCase().includes(query);
-    return matchLevel && matchSearch;
-  });
-
-  renderCatalog(filteredCatalog);
+  // Hide the old Pronounce button since YouTube provides the audio
+  const pronounceBtn = $('music-pronounce-btn');
+  if (pronounceBtn) {
+    pronounceBtn.style.display = 'none';
+  }
 }
 
 /* ════════════════════════════════════════════
@@ -587,6 +591,12 @@ function escapeHtml(str) {
     .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-function escapeAttr(str) {
-  return String(str).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+function shuffle(array) {
+  let currentIndex = array.length, randomIndex;
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+  }
+  return array;
 }
