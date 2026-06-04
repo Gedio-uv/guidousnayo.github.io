@@ -10,6 +10,7 @@ import { fetchImage } from './images.js';
 import { speak, setSpeechRate, initSpeech } from './speech.js';
 import { initFlashcards, updateFlashcardConfig, loadCards } from './flashcards.js';
 import { renderGrammarView } from './grammar.js';
+import { initMusic } from './music.js';
 
 // ── Global State ──
 const state = {
@@ -165,6 +166,9 @@ async function boot() {
     elCardViewport: $('card-viewport'),
     elStartArea:    $('cards-start'),
   });
+
+  // Initialize music module
+  initMusic(state);
 
   if (isInitialized()) {
     // Returning user: go straight to main app
