@@ -30,7 +30,7 @@
   font-size: 26px;
   font-weight: 800;
   letter-spacing: -0.02em;
-  background: linear-gradient(135deg, var(--c-gold), #FFE08A);
+  background: linear-gradient(135deg, var(--c-gold), #C4B5FD);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -99,7 +99,7 @@
 .level-toggle-btn.active {
   color: #1A0E00;
   background: var(--c-gold);
-  box-shadow: inset 0 0 0 1px rgba(255,203,71,0.5);
+  box-shadow: inset 0 0 0 1px rgba(167,139,250,0.5);
 }
 .level-toggle-btn:not(.active):hover {
   color: var(--c-text-2);
@@ -266,7 +266,7 @@
   font-family: var(--f-heading);
   font-size: 18px;
   font-weight: 800;
-  background: linear-gradient(135deg, var(--c-gold), #FFE08A);
+  background: linear-gradient(135deg, var(--c-gold), #C4B5FD);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -294,7 +294,7 @@
   padding: 4px 12px;
   border-radius: var(--r-full);
   background: var(--c-gold-dim);
-  border: 1px solid rgba(255,203,71,0.2);
+  border: 1px solid rgba(167,139,250,0.2);
   color: var(--c-gold);
   font-size: 11px;
   font-weight: 600;

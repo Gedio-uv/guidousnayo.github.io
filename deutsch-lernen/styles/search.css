@@ -38,7 +38,7 @@
   font-family: var(--f-heading);
   font-size: 18px;
   font-weight: 800;
-  background: linear-gradient(90deg, var(--c-gold), #FFE08A);
+  background: linear-gradient(90deg, var(--c-gold), #C4B5FD);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -113,11 +113,11 @@
   background: linear-gradient(135deg, var(--c-gold), #E6A800);
   color: #1A0E00;
   transition: transform 0.2s var(--ease-spring), box-shadow 0.2s ease;
-  box-shadow: 0 4px 16px rgba(255,203,71,0.3);
+  box-shadow: 0 4px 16px rgba(167,139,250,0.3);
 }
 .search-submit:hover {
   transform: scale(1.08);
-  box-shadow: 0 6px 24px rgba(255,203,71,0.45);
+  box-shadow: 0 6px 24px rgba(167,139,250,0.45);
 }
 .search-submit:active { transform: scale(0.95); }
 .search-submit svg { width: 20px; height: 20px; }

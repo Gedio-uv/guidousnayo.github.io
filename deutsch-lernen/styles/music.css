@@ -17,7 +17,7 @@
   font-size: 28px;
   font-weight: 800;
   letter-spacing: -0.02em;
-  background: linear-gradient(135deg, #FFCB47 0%, #FFE08A 60%, #FFCB47 100%);
+  background: linear-gradient(135deg, #A78BFA 0%, #C4B5FD 60%, #A78BFA 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -195,7 +195,7 @@
 }
 .music-card__level--A1 { background: rgba(74, 222, 128, 0.15); color: #4ADE80; }
 .music-card__level--A2 { background: rgba(74, 222, 128, 0.1);  color: #86EFAC; }
-.music-card__level--B1 { background: rgba(255, 203, 71, 0.15); color: var(--c-gold); }
+.music-card__level--B1 { background: rgba(167, 139, 250, 0.15); color: var(--c-gold); }
 .music-card__level--B2 { background: rgba(230, 57, 70, 0.15);  color: var(--c-red); }
 
 /* ─── EMPTY STATE ─── */
@@ -279,7 +279,7 @@
 }
 .music-player__level-badge--A1 { background: rgba(74,222,128,0.15); color: #4ADE80; }
 .music-player__level-badge--A2 { background: rgba(74,222,128,0.1);  color: #86EFAC; }
-.music-player__level-badge--B1 { background: rgba(255,203,71,0.15); color: var(--c-gold); }
+.music-player__level-badge--B1 { background: rgba(167,139,250,0.15); color: var(--c-gold); }
 .music-player__level-badge--B2 { background: rgba(230,57,70,0.15);  color: var(--c-red); }
 
 /* ─── TOGGLE ─── */
@@ -344,6 +344,22 @@
 }
 .lyric-pair .lyric-line--german {
   font-size: 17px;
+}
+
+.lyric-line--active,
+.lyric-pair--active {
+  color: var(--c-gold);
+  background: var(--c-gold-dim);
+  border-radius: var(--r-sm);
+  padding: 6px 8px;
+  margin: 0 -8px; /* Offset padding to keep alignment */
+  transition: all 0.2s ease;
+}
+.lyric-pair--active .lyric-line {
+  border-color: transparent;
+}
+.lyric-pair--active .lyric-line--german {
+  color: var(--c-gold);
 }
 
 .lyric-word {

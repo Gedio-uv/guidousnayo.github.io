@@ -202,6 +202,8 @@ function applyLanguage(uiLang) {
   setText('level-initial-desc',     trans.levelInitialDesc);
   setText('level-advanced-title',   trans.levelAdvancedTitle);
   setText('level-advanced-desc',    trans.levelAdvancedDesc);
+  setText('level-unsure-title',     trans.levelUnsureTitle || "I'm not sure");
+  setText('level-unsure-desc',      trans.levelUnsureDesc || "Short test to find your level");
   setText('onboarding-note',        trans.onboardingNote);
 
   // Nav
@@ -570,6 +572,10 @@ function bindGlobalEvents() {
   document.querySelectorAll('.level-card').forEach(card => {
     card.addEventListener('click', () => {
       const level = card.dataset.level;
+      if (!level) {
+        runPlacementTest();
+        return;
+      }
       state.difficulty = level;
       saveDifficulty(level);
 
@@ -737,6 +743,86 @@ function bindGlobalEvents() {
 
   // ── Settings: Level buttons also in onboarding ──
   // (handled above via .level-card delegation)
+}
+
+/* ════════════════════════════════════════════
+   PLACEMENT TEST
+════════════════════════════════════════════ */
+
+const PLACEMENT_QUESTIONS = [
+  { q: "Ich gehe ___ Schule.", opts: ["in", "zur", "der", "auf"], ans: "zur" },
+  { q: "Er gibt ___ Frau ein Buch.", opts: ["der", "die", "dem", "das"], ans: "der" },
+  { q: "Ich sehe ___ Mann.", opts: ["den", "dem", "der", "das"], ans: "den" },
+  { q: "Das ist ___ Auto meines Vaters.", opts: ["das", "dem", "des", "die"], ans: "das" },
+  { q: "Was ist der Plural von 'das Kind'?", opts: ["die Kinder", "die Kindes", "die Kinden", "der Kind"], ans: "die Kinder" }
+];
+
+function runPlacementTest() {
+  const modal = $('placement-test');
+  modal.classList.remove('hidden');
+
+  let currentQ = 0;
+  let score = 0;
+
+  const renderQuestion = () => {
+    if (currentQ >= PLACEMENT_QUESTIONS.length) {
+      showResult();
+      return;
+    }
+
+    const q = PLACEMENT_QUESTIONS[currentQ];
+    $('placement-counter').textContent = `${currentQ + 1} / ${PLACEMENT_QUESTIONS.length}`;
+    $('placement-progress-fill').style.width = `${((currentQ) / PLACEMENT_QUESTIONS.length) * 100}%`;
+    
+    $('placement-question').textContent = q.q;
+    
+    const shuffled = [...q.opts].sort(() => Math.random() - 0.5);
+    
+    $('placement-options').innerHTML = shuffled.map(opt => `
+      <button class="placement-option" data-val="${opt}">${opt}</button>
+    `).join('');
+
+    document.querySelectorAll('.placement-option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.dataset.val === q.ans) score++;
+        currentQ++;
+        renderQuestion();
+      });
+    });
+  };
+
+  const showResult = () => {
+    $('placement-progress-fill').style.width = '100%';
+    $('placement-question-wrap').classList.add('hidden');
+    $('placement-result').classList.remove('hidden');
+
+    const isAdvanced = score >= 3;
+    const finalLevel = isAdvanced ? 'advanced' : 'initial';
+    
+    $('placement-result-icon').textContent = isAdvanced ? '🚀' : '🌱';
+    $('placement-result-title').textContent = isAdvanced ? 'Advanced' : 'Beginner';
+    $('placement-result-desc').textContent = isAdvanced 
+      ? `You scored ${score}/5. You're ready for the full German interface!` 
+      : `You scored ${score}/5. We'll start with the interface in your language.`;
+
+    $('placement-confirm').onclick = () => {
+      modal.classList.add('hidden');
+      $('placement-question-wrap').classList.remove('hidden');
+      $('placement-result').classList.add('hidden');
+
+      state.difficulty = finalLevel;
+      saveDifficulty(finalLevel);
+      const uiLang = finalLevel === 'advanced' ? 'de' : state.nativeLang;
+      applyLanguage(uiLang);
+      showMainApp();
+    };
+  };
+
+  $('placement-back').onclick = () => {
+    modal.classList.add('hidden');
+  };
+
+  renderQuestion();
 }
 
 /* ════════════════════════════════════════════

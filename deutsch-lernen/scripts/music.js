@@ -5,7 +5,7 @@
  */
 
 import { lookupWord } from './search.js';
-import { speak } from './speech.js';
+import { speak, stopSpeech } from './speech.js';
 
 // ── State ──
 let currentSong   = null;
@@ -17,6 +17,7 @@ let quizActive    = false;
 let quizWords     = [];
 let quizIndex     = 0;
 let appState      = null; // injected from app.js
+let isKaraokePlaying = false;
 
 // ── DOM shortcuts ──
 const $ = id => document.getElementById(id);
@@ -256,6 +257,7 @@ function openPlayer(song) {
 }
 
 function closePlayer() {
+  stopKaraoke();
   currentSong = null;
   $('music-player')?.classList.add('hidden');
   $('music-catalog')?.classList.remove('hidden');
@@ -432,7 +434,11 @@ function setToggleMode(mode) {
     if (btn) btn.setAttribute('aria-pressed', String(m === mode));
     btn?.classList.toggle('active', m === mode);
   });
-  if (currentSong) renderLyrics(currentSong, mode);
+  if (currentSong) {
+    const wasPlaying = isKaraokePlaying;
+    if (wasPlaying) stopKaraoke();
+    renderLyrics(currentSong, mode);
+  }
 }
 
 /* ════════════════════════════════════════════
@@ -479,12 +485,76 @@ function bindMusicEvents() {
     }
   });
 
-  // Pronounce button
+  // Pronounce button (Karaoke)
   $('music-pronounce-btn')?.addEventListener('click', () => {
     if (!currentSong) return;
-    const lines = currentSong.lyrics.german;
-    const text  = lines.map(l => l.line).join('. ');
-    speak(text, $('music-pronounce-btn'));
+    if (isKaraokePlaying) {
+      stopKaraoke();
+    } else {
+      playKaraoke();
+    }
+  });
+}
+
+function playKaraoke() {
+  if (!currentSong || !window.speechSynthesis) return;
+  isKaraokePlaying = true;
+  const btn = $('music-pronounce-btn');
+  if (btn) btn.classList.add('playing');
+
+  const lines = currentSong.lyrics.german.map(l => l.line);
+  let currentIndex = 0;
+
+  const speakNextLine = () => {
+    if (!isKaraokePlaying) return;
+    if (currentIndex >= lines.length) {
+      stopKaraoke();
+      return;
+    }
+
+    // Highlight line
+    document.querySelectorAll('.lyric-line--active, .lyric-pair--active').forEach(el => {
+      el.classList.remove('lyric-line--active', 'lyric-pair--active');
+    });
+
+    const lineEls = document.querySelectorAll(`[data-index="${currentIndex}"]`);
+    lineEls.forEach(el => {
+      if (el.classList.contains('lyric-pair')) el.classList.add('lyric-pair--active');
+      else el.classList.add('lyric-line--active');
+      
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+
+    const utterance = new SpeechSynthesisUtterance(lines[currentIndex]);
+    utterance.lang = 'de-DE';
+    
+    // Try to get speech.js preferences or default
+    utterance.rate = 0.9;
+    const voices = window.speechSynthesis.getVoices();
+    const voice = voices.find(v => v.lang === 'de-DE' && v.localService) || voices.find(v => v.lang === 'de-DE');
+    if (voice) utterance.voice = voice;
+
+    utterance.onend = () => {
+      currentIndex++;
+      speakNextLine();
+    };
+    utterance.onerror = () => stopKaraoke();
+
+    window.speechSynthesis.speak(utterance);
+  };
+
+  stopSpeech(); // cancel any ongoing speech
+  speakNextLine();
+}
+
+function stopKaraoke() {
+  isKaraokePlaying = false;
+  stopSpeech();
+  const btn = $('music-pronounce-btn');
+  if (btn) btn.classList.remove('playing');
+  
+  document.querySelectorAll('.lyric-line--active, .lyric-pair--active').forEach(el => {
+    el.classList.remove('lyric-line--active', 'lyric-pair--active');
   });
 }
 

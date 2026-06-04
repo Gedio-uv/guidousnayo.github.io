@@ -27,7 +27,7 @@
   font-size: 22px;
   font-weight: 800;
   letter-spacing: -0.02em;
-  background: linear-gradient(90deg, var(--c-gold), #FFE08A);
+  background: linear-gradient(90deg, var(--c-gold), #C4B5FD);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -140,7 +140,7 @@
   border-color: var(--c-gold);
   color: var(--c-gold);
   transform: scale(0.97);
-  box-shadow: 0 4px 16px rgba(255,203,71,0.2);
+  box-shadow: 0 4px 16px rgba(167,139,250,0.2);
 }
 .cat-pill.active span { color: var(--c-gold); }
 
@@ -186,7 +186,7 @@
 .cards-progress-fill {
   height: 100%;
   border-radius: var(--r-full);
-  background: linear-gradient(90deg, var(--c-gold), #FFE08A);
+  background: linear-gradient(90deg, var(--c-gold), #C4B5FD);
   transition: width 0.5s var(--ease-out);
 }
 
@@ -449,7 +449,7 @@
   background: var(--c-gold);
   color: #1A0E00;
   transform: scale(1.02);
-  box-shadow: 0 4px 20px rgba(255,203,71,0.35);
+  box-shadow: 0 4px 20px rgba(167,139,250,0.35);
 }
 
 /* ── Complete ── */
