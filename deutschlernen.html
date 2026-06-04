@@ -412,5 +412,87 @@
   </footer>
 
   <script src="shared-animations.js?v=2"></script>
+  <script>
+    // ── AI PARTICLES BACKGROUND ──
+    (function() {
+      const canvas = document.createElement('canvas');
+      canvas.id = 'aiParticles';
+      canvas.style.position = 'fixed';
+      canvas.style.top = '0';
+      canvas.style.left = '0';
+      canvas.style.width = '100vw';
+      canvas.style.height = '100vh';
+      canvas.style.zIndex = '-1';
+      canvas.style.pointerEvents = 'none';
+      document.body.prepend(canvas);
+
+      const ctx = canvas.getContext('2d');
+      let w, h;
+      
+      function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      const particles = [];
+      const particleCount = window.innerWidth < 800 ? 35 : 75;
+
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          r: Math.random() * 1.5 + 0.5,
+          vx: (Math.random() - 0.5) * 0.4,
+          vy: (Math.random() - 0.5) * 0.4,
+          hue: Math.random() * 80 + 210 // Blue to purple (210-290)
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, w, h);
+        
+        particles.forEach((p, i) => {
+          p.x += p.vx;
+          p.y += p.vy;
+          
+          if (p.x < 0) p.x = w;
+          if (p.x > w) p.x = 0;
+          if (p.y < 0) p.y = h;
+          if (p.y > h) p.y = 0;
+          
+          // Slowly shift colors for the AI vibe
+          p.hue += 0.2;
+          if (p.hue > 290) p.hue = 210;
+          
+          // Neural network connections
+          for (let j = i + 1; j < particles.length; j++) {
+            const p2 = particles[j];
+            const dx = p.x - p2.x;
+            const dy = p.y - p2.y;
+            const dist = dx * dx + dy * dy;
+            
+            if (dist < 18000) {
+              ctx.beginPath();
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.strokeStyle = `hsla(${p.hue}, 80%, 65%, ${0.12 - (dist / 18000) * 0.12})`;
+              ctx.lineWidth = 0.6;
+              ctx.stroke();
+            }
+          }
+          
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `hsla(${p.hue}, 90%, 75%, 0.5)`;
+          ctx.fill();
+        });
+        
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+  </script>
 </body>
 </html>
