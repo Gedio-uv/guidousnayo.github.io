@@ -224,17 +224,15 @@
       text-decoration: none; overflow: hidden; border-radius: 8px;
     }
 
-    .work-item:first-child { grid-column: 1 / -1; }
-
-    .work-item-img {
+    .work-item .work-item-img {
       position: relative; width: 100%;
-      aspect-ratio: 16/7; background: #1a1a2e;
+      aspect-ratio: 4/3; background: #1a1a2e;
       overflow: hidden;
     }
 
-    .work-item:not(:first-child) .work-item-img { aspect-ratio: 4/3; }
     .work-item:nth-child(2) .work-item-img { background: #0d0d0d; }
     .work-item:nth-child(3) .work-item-img { background: #f0f0f0; }
+    .work-item:nth-child(4) .work-item-img { background: #0a0a0a; }
 
     .work-item-img img {
       position: absolute; top: 0; left: 0;
@@ -476,6 +474,18 @@
           <div class="work-item-info">
             <div class="work-item-meta">Community Platform · Multiplatform · Freelance</div>
             <div class="work-item-title">Speaker — Privacy-first community platform</div>
+            <div class="work-item-cta">View case study →</div>
+          </div>
+        </div>
+      </a>
+
+      <a href="deutschlernen.html" class="work-item reveal">
+        <div class="work-item-img" style="display: flex; align-items: center; justify-content: center;">
+          <div style="font-size: 2.2rem; font-weight: 500; color: #fff; letter-spacing: -0.02em; position: relative; z-index: 1;">IA Projects</div>
+          <div class="work-item-overlay"></div>
+          <div class="work-item-info">
+            <div class="work-item-meta">Generative UI · Web Apps · LLMs</div>
+            <div class="work-item-title">AI-assisted product experiments</div>
             <div class="work-item-cta">View case study →</div>
           </div>
         </div>
