@@ -232,7 +232,18 @@
 
     .work-item:nth-child(2) .work-item-img { background: #0d0d0d; }
     .work-item:nth-child(3) .work-item-img { background: #f0f0f0; }
-    .work-item:nth-child(4) .work-item-img { background: #0a0a0a; }
+    
+    @keyframes aiPulse {
+      0% { background-color: #0a0a0a; }
+      33% { background-color: #0f0a24; }
+      66% { background-color: #05101a; }
+      100% { background-color: #0a0a0a; }
+    }
+    
+    .work-item:nth-child(4) .work-item-img { 
+      background: #0a0a0a; 
+      animation: aiPulse 12s ease-in-out infinite;
+    }
 
     .work-item-img img {
       position: absolute; top: 0; left: 0;
