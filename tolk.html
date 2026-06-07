@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tolk — Guido Usnayo Vidaurre</title>
+  <meta name="description" content="Tolk — a mobile-first German learning web app I designed and shipped. Word lookup, themed flashcards, and grammar reference, built with AI-assisted development.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #fafafa;
+      --white: #0a0a0a;
+      --gray: #999999;
+      --light-gray: #1f1f1f;
+      --accent: #7C3AED;
+      --accent-hover: #6d28d9;
+      --font: 'Inter', -apple-system, sans-serif;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      background: var(--white);
+      color: var(--black);
+      font-family: var(--font);
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 40px;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid transparent; transition: border-color 0.3s;
+    }
+    nav.scrolled { border-bottom-color: var(--light-gray); }
+    .nav-name { font-size: 0.875rem; font-weight: 400; color: var(--black); text-decoration: none; }
+    .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+    .nav-links a {
+      font-size: 0.8rem; color: var(--gray); text-decoration: none;
+      transition: color 0.2s; position: relative;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -2px; left: 0;
+      width: 0; height: 1px; background: var(--black);
+      transition: width 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .nav-links a:hover { color: var(--black); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links a.active { color: var(--black); font-weight: 500; }
+    .nav-links a.active::after { width: 100%; }
+    .nav-divider { width: 1px; height: 12px; background: var(--light-gray); }
+
+    .nav-mobile-toggle {
+      display: none; width: 24px; height: 24px;
+      background: none; border: none; cursor: pointer; position: relative; z-index: 101;
+    }
+    .nav-mobile-toggle span {
+      display: block; width: 100%; height: 1.5px; background: var(--black);
+      position: absolute; left: 0;
+      transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), opacity 0.3s;
+    }
+    .nav-mobile-toggle span:nth-child(1) { top: 8px; }
+    .nav-mobile-toggle span:nth-child(2) { bottom: 8px; }
+    body.nav-open .nav-mobile-toggle span:nth-child(1) { transform: translateY(3.5px) rotate(45deg); }
+    body.nav-open .nav-mobile-toggle span:nth-child(2) { transform: translateY(-3.5px) rotate(-45deg); }
+
+    @media (max-width: 860px) {
+      nav { padding: 16px 20px; }
+      .nav-mobile-toggle { display: block; }
+      body.nav-open nav { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+      .nav-name { position: relative; z-index: 101; }
+      .nav-links {
+        position: fixed; inset: 0; background: rgba(10,10,10,0.98);
+        flex-direction: column; justify-content: center; gap: 32px; font-size: 1.5rem;
+        opacity: 0; pointer-events: none; transition: opacity 0.4s cubic-bezier(0.16,1,0.3,1);
+        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      }
+      body.nav-open .nav-links { opacity: 1; pointer-events: auto; }
+      .nav-links a { font-size: 1.25rem; }
+      .nav-divider { width: 40px; height: 1px; }
+    }
+
+    /* HEADER */
+    .cs-header { padding: 120px 40px 48px; border-bottom: 1px solid var(--light-gray); }
+    .cs-back {
+      font-size: 0.75rem; color: var(--gray); text-decoration: none;
+      display: inline-block; margin-bottom: 18px; transition: color 0.2s;
+      opacity: 0; animation: fadeUp 0.5s ease forwards 0.05s;
+    }
+    .cs-back:hover { color: var(--black); }
+    .cs-label {
+      font-size: 0.7rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 16px; display: block;
+      opacity: 0; animation: fadeUp 0.5s ease forwards 0.1s;
+    }
+    .cs-title {
+      font-size: clamp(2.2rem, 4vw, 3.5rem); font-weight: 600;
+      letter-spacing: -0.03em; line-height: 1.05; color: var(--black); margin-bottom: 16px;
+      opacity: 0; animation: fadeUp 0.5s ease forwards 0.2s;
+    }
+    .cs-meta {
+      display: flex; gap: 48px; flex-wrap: wrap; margin-top: 40px;
+      opacity: 0; animation: fadeUp 0.5s ease forwards 0.4s;
+    }
+    .cs-meta-label {
+      font-size: 0.65rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--gray); margin-bottom: 4px;
+    }
+    .cs-meta-value { font-size: 0.85rem; color: var(--black); line-height: 1.4; }
+
+    .cs-actions { margin-top: 32px; opacity: 0; animation: fadeUp 0.5s ease forwards 0.5s; }
+    .cs-live-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--accent); color: #fff; padding: 14px 28px; border-radius: 100px;
+      font-size: 0.85rem; font-weight: 500; text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .cs-live-btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
+    .cs-live-btn .dot {
+      width: 7px; height: 7px; border-radius: 50%; background: #fff;
+      animation: livePulse 2s infinite;
+    }
+    @keyframes livePulse {
+      0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.55); }
+      70% { box-shadow: 0 0 0 8px rgba(255,255,255,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+    }
+
+    /* HERO IMAGE */
+    .cs-hero-img {
+      display: block; margin: 0 auto; width: 100%; max-width: 320px;
+      border-radius: 32px; border: 6px solid #222;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.5); box-sizing: border-box;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .cs-hero-img:hover { transform: scale(1.01); }
+
+    /* DECISION BLOCK */
+    .decision-split {
+      border-top: 1px solid var(--light-gray); padding-top: 64px; margin-bottom: 64px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+    }
+    .decision-split .decision-number {
+      font-size: 0.65rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--gray); margin-bottom: 12px; display: block;
+    }
+    .decision-split h3 {
+      font-size: clamp(1.4rem, 2.5vw, 1.8rem); font-weight: 600;
+      letter-spacing: -0.02em; color: var(--black); margin-bottom: 16px; line-height: 1.15;
+    }
+    .decision-split p { font-size: 1rem; line-height: 1.75; color: var(--gray); }
+    .decision-split .decision-img {
+      width: 100%; max-width: 280px; display: block; margin: 0 auto;
+      border-radius: 28px; border: 6px solid #222; box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+
+    @media (max-width: 860px) {
+      .decision-split { grid-template-columns: 1fr; gap: 32px; }
+      .cs-header { padding: 100px 20px 40px; }
+      .cs-meta { gap: 24px; flex-direction: column; }
+      .cs-cta { padding: 48px 20px; flex-direction: column; gap: 32px; text-align: center; }
+      footer { flex-direction: column; gap: 16px; align-items: flex-start; }
+    }
+
+    /* CONTENT */
+    .cs-content { max-width: 720px; margin: 0 auto; padding: 80px 40px; }
+    .cs-section { margin-bottom: 80px; }
+    .cs-section:last-child { margin-bottom: 0; }
+    .cs-section h2 {
+      font-size: 1.4rem; font-weight: 600; letter-spacing: -0.02em;
+      color: var(--black); margin-bottom: 24px; line-height: 1.2;
+    }
+    .cs-section p { font-size: 1.05rem; line-height: 1.7; color: var(--gray); margin-bottom: 20px; }
+    .cs-section p:last-child { margin-bottom: 0; }
+
+    .feature-list { list-style: none; margin-top: 32px; }
+    .feature-list li { margin-bottom: 24px; }
+    .feature-list h4 { font-size: 1.05rem; font-weight: 600; color: var(--black); margin-bottom: 8px; }
+    .feature-list h4 .emoji { margin-right: 8px; }
+    .feature-list p { margin-bottom: 0; font-size: 1rem; }
+
+    /* CTA */
+    .cs-cta {
+      padding: 64px 40px; background: #050505;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .cta-left h2 {
+      font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 600;
+      letter-spacing: -0.03em; color: #fff; line-height: 1.1; margin-bottom: 8px;
+    }
+    .cta-left p { font-size: 0.875rem; color: rgba(255,255,255,0.45); }
+    .btn-pill {
+      display: inline-flex; align-items: center; gap: 8px; background: var(--accent);
+      color: #fff; padding: 13px 26px; border-radius: 100px; font-size: 0.8rem;
+      font-weight: 500; text-decoration: none; white-space: nowrap;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-pill:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+    /* FOOTER */
+    footer {
+      padding: 28px 40px; border-top: 1px solid rgba(255,255,255,0.08);
+      background: #050505; display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-text { font-size: 0.75rem; color: rgba(255,255,255,0.3); }
+
+    /* REVEAL & PROGRESS */
+    .reveal {
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-stagger > * {
+      opacity: 0; transform: translateY(16px);
+      transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal-stagger.visible > *:nth-child(1) { opacity: 1; transform: none; transition-delay: 0s; }
+    .reveal-stagger.visible > *:nth-child(2) { opacity: 1; transform: none; transition-delay: 0.08s; }
+    .reveal-stagger.visible > *:nth-child(3) { opacity: 1; transform: none; transition-delay: 0.16s; }
+    .reveal-stagger.visible > *:nth-child(4) { opacity: 1; transform: none; transition-delay: 0.24s; }
+    .reveal-stagger.visible > *:nth-child(5) { opacity: 1; transform: none; transition-delay: 0.32s; }
+
+    .read-progress {
+      position: fixed; top: 0; left: 0; height: 2px; background: var(--accent);
+      z-index: 200; width: 0%; transition: width 0.1s linear;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="read-progress" id="readProgress"></div>
+
+  <nav id="nav">
+    <a href="index.html" class="nav-name">Guido Usnayo Vidaurre</a>
+    <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle menu"><span></span><span></span></button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="incode.html">Incode</a></li>
+      <li><a href="speaker.html">Speaker</a></li>
+      <li><a href="ytem.html">Ytem</a></li>
+      <li><a href="other.html">Other work</a></li>
+      <li><a href="motion.html">Motion</a></li>
+      <li><a href="ai-projects.html" class="active">AI Projects</a></li>
+      <li class="nav-divider"></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="https://www.linkedin.com/in/guido-usnayovidaurre/" target="_blank">LinkedIn ↗</a></li>
+    </ul>
+  </nav>
+
+  <header class="cs-header">
+    <a href="ai-projects.html" class="cs-back">← AI Projects</a>
+    <span class="cs-label">Self-initiated · AI-assisted · 2026</span>
+    <h1 class="cs-title">Tolk — a German learning tool I built because the existing ones didn't fit how I learn.</h1>
+
+    <div class="cs-meta">
+      <div class="cs-meta-item">
+        <div class="cs-meta-label">Role</div>
+        <div class="cs-meta-value">UX Designer + Builder</div>
+      </div>
+      <div class="cs-meta-item">
+        <div class="cs-meta-label">Built with</div>
+        <div class="cs-meta-value">Antigravity · Groq API · Unsplash API</div>
+      </div>
+      <div class="cs-meta-item">
+        <div class="cs-meta-label">Surface</div>
+        <div class="cs-meta-value">Mobile-first web app</div>
+      </div>
+      <div class="cs-meta-item">
+        <div class="cs-meta-label">Status</div>
+        <div class="cs-meta-value">Live · In active use</div>
+      </div>
+    </div>
+
+    <div class="cs-actions">
+      <a href="https://gedio-uv.github.io/deutsch-lernen/" target="_blank" rel="noopener" class="cs-live-btn"><span class="dot"></span>Open Tolk live ↗</a>
+    </div>
+  </header>
+
+  <img src="images/tolk_levels.png" alt="Tolk — choose your level screen" class="cs-hero-img">
+
+  <main class="cs-content">
+    <section class="cs-section reveal">
+      <h2>Context</h2>
+      <p>Living in Leipzig and studying German, I kept bouncing off the existing vocabulary apps — they were either too gamified or too rigid. None gave me what I actually needed: fast word lookup with visual context, grammar I could reference on the go, and a way to practice recognition without committing to a full lesson.</p>
+      <p>So I built one. Tolk (formerly DeutschLernen) is a mobile-first web app for German learners, designed around real daily use rather than engagement metrics.</p>
+    </section>
+
+    <section class="cs-section reveal">
+      <h2>The Problem</h2>
+      <p>Learning German as an adult living in Germany means needing answers fast — on the street, in a shop, reading a sign. Existing tools take too many taps to surface a simple answer, and none adapt to whether you're just starting out or already comfortable in the language.</p>
+    </section>
+
+    <section class="cs-section reveal">
+      <h2>One choice reshapes the whole app</h2>
+      <p>The first screen asks for your level, and that single decision changes the interface language across the entire product — no setting buried in a menu.</p>
+      <ul class="feature-list reveal-stagger">
+        <li>
+          <h4>Beginner (A1–B1)</h4>
+          <p>The interface speaks your native language, so the tool never becomes a second thing to decode.</p>
+        </li>
+        <li>
+          <h4>Advanced (B2–C2)</h4>
+          <p>The interface runs entirely in German, turning everyday use into passive immersion.</p>
+        </li>
+        <li>
+          <h4>Not sure?</h4>
+          <p>A five-minute placement test points you to the right starting level. It's all changeable later in Settings.</p>
+        </li>
+      </ul>
+    </section>
+  </main>
+
+  <!-- SPLIT 1 — SEARCH -->
+  <div style="max-width: 1000px; margin: 0 auto; padding: 0 40px;">
+    <div class="decision-split reveal">
+      <div class="decision-text">
+        <span class="decision-number">Surface 01 · Search</span>
+        <h3>Search that meets you in either language</h3>
+        <p>The search bar takes a word in German or in your own language and detects which one automatically — there's no mode to toggle. One result screen then answers the whole question, so the primary use case needs zero navigation.</p>
+      </div>
+      <img src="images/tolk_search.png" alt="Tolk search screen" class="decision-img">
+    </div>
+  </div>
+
+  <!-- SPLIT 2 — WORD RESULT -->
+  <div style="max-width: 1000px; margin: 0 auto; padding: 0 40px;">
+    <div class="decision-split reveal" style="direction: rtl;">
+      <div class="decision-text" style="direction: ltr;">
+        <span class="decision-number">Surface 02 · Word result</span>
+        <h3>One word, one screen</h3>
+        <p>A lookup returns the article and gender, IPA pronunciation with audio, the translation, synonyms, and example sentences — alongside a contextual image pulled from Unsplash that anchors the word to a real scene. Beispiele and Grammatik sit one tap away on the same result.</p>
+      </div>
+      <img src="images/tolk_word.png" alt="Tolk word result for schön" class="decision-img">
+    </div>
+  </div>
+
+  <!-- SPLIT 3 — CARDS -->
+  <div style="max-width: 1000px; margin: 0 auto; padding: 0 40px;">
+    <div class="decision-split reveal">
+      <div class="decision-text">
+        <span class="decision-number">Surface 03 · Flashcards</span>
+        <h3>Recognition over recall</h3>
+        <p>The card game drills vocabulary through visual recognition rather than translation, across ten everyday categories — Animals, Food, Colors, Nature, Home, Body, Transport, Emotions, Travel, and Work. You see the image, name the word, and flip to confirm. Low friction, high retention.</p>
+      </div>
+      <img src="images/tolk_cards.png" alt="Tolk flashcard categories" class="decision-img">
+    </div>
+  </div>
+
+  <!-- SPLIT 4 — GRAMMAR -->
+  <div style="max-width: 1000px; margin: 0 auto; padding: 0 40px;">
+    <div class="decision-split reveal" style="direction: rtl;">
+      <div class="decision-text" style="direction: ltr;">
+        <span class="decision-number">Surface 04 · Grammar</span>
+        <h3>Grammar you can scan, not study</h3>
+        <p>Grammar is built as a quick reference, not a course — four sections for cases, articles, verbs, and word order. The declension tables are colour-coded by case, and any form that changes from the nominative is highlighted in gold, so the underlying pattern is visible at a glance instead of memorised cold.</p>
+      </div>
+      <img src="images/tolk_grammar.png" alt="Tolk grammar reference tables" class="decision-img">
+    </div>
+  </div>
+
+  <main class="cs-content">
+    <section class="cs-section reveal">
+      <h2>Music — learning through lyrics</h2>
+      <p>Plenty of people listen to music while learning a language, but matching the sounds you hear to the actual words is hard. The Music tab is a YouTube player that shows the lyrics of your favourite songs in German, so you can see what you're hearing — and it works both ways, rendering lyrics in the device's native language too. It also surfaces German-language recommendations to learn from.</p>
+    </section>
+
+    <section class="cs-section reveal">
+      <h2>How I built it</h2>
+      <p><strong style="color:var(--black); font-weight:500;">UX first, AI second.</strong> My focus was entirely on the UX — the flows, hierarchy, and information architecture. I delegated UI execution to AI tooling within a system I defined, trusting the tool with the visual layer while owning the structure. That's exactly how I approach AI-assisted design in product work.</p>
+      <p><strong style="color:var(--black); font-weight:500;">Built for speed.</strong> Groq powers instant lookups, definitions, and example generation; the Unsplash API surfaces the contextual imagery; Antigravity handled UI generation and front-end assembly. The first working version came together in a single focused build, and it's grown new modes since.</p>
+    </section>
+  </main>
+
+  <!-- CTA -->
+  <section class="cs-cta">
+    <div class="cta-left">
+      <h2>Interested in<br><em style="font-weight:300; font-style:italic">working together?</em></h2>
+      <p>I'm currently open to Senior Product Designer opportunities in fintech, B2B SaaS, and digital identity.</p>
+    </div>
+    <a href="mailto:guido.usnayo@icloud.com" class="btn-pill">Get in touch →</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-text">© 2026 Guido Usnayo Vidaurre</span>
+    <span class="footer-text">Leipzig · Available across Germany and Europe</span>
+    <span class="footer-text">guido.usnayo@icloud.com</span>
+  </footer>
+
+  <script src="shared-animations.js?v=2"></script>
+  <script>
+    // ── AI PARTICLES BACKGROUND ──
+    (function() {
+      const canvas = document.createElement('canvas');
+      canvas.id = 'aiParticles';
+      canvas.style.position = 'fixed';
+      canvas.style.top = '0'; canvas.style.left = '0';
+      canvas.style.width = '100vw'; canvas.style.height = '100vh';
+      canvas.style.zIndex = '-1'; canvas.style.pointerEvents = 'none';
+      document.body.prepend(canvas);
+      const ctx = canvas.getContext('2d');
+      let w, h;
+      function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+      window.addEventListener('resize', resize); resize();
+      const particles = [];
+      const particleCount = window.innerWidth < 800 ? 35 : 75;
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * w, y: Math.random() * h,
+          r: Math.random() * 1.5 + 0.5,
+          vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4,
+          hue: Math.random() * 60 + 250
+        });
+      }
+      function draw() {
+        ctx.clearRect(0, 0, w, h);
+        particles.forEach((p, i) => {
+          p.x += p.vx; p.y += p.vy;
+          if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
+          if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
+          p.hue += 0.2; if (p.hue > 310) p.hue = 250;
+          for (let j = i + 1; j < particles.length; j++) {
+            const p2 = particles[j];
+            const dx = p.x - p2.x, dy = p.y - p2.y;
+            const dist = dx * dx + dy * dy;
+            if (dist < 18000) {
+              ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y);
+              ctx.strokeStyle = `hsla(${p.hue}, 80%, 70%, ${0.12 - (dist / 18000) * 0.12})`;
+              ctx.lineWidth = 0.6; ctx.stroke();
+            }
+          }
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `hsla(${p.hue}, 90%, 78%, 0.5)`; ctx.fill();
+        });
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    // ── Reveal fallback (idempotent with shared-animations.js) ──
+    (function() {
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+      }, { threshold: 0.08 });
+      document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => obs.observe(el));
+    })();
+  </script>
+</body>
+</html>

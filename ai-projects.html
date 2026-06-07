@@ -182,20 +182,22 @@
       position: relative; z-index: 2;
     }
 
-    /* Tolk branded visual (echoes German flag palette) */
-    .tolk-visual { background: radial-gradient(125% 125% at 80% 8%, #2a1010 0%, #15110a 52%, #0d0b08 100%); }
+    /* Tolk branded visual — cool indigo/cyan, distinct from Spark's warm violet/pink */
+    .tolk-visual { background: radial-gradient(125% 125% at 78% 8%, #14306b 0%, #0e1f4a 50%, #08122e 100%); }
     .tolk-visual::after {
       content: ''; position: absolute; bottom: -40px; left: -30px;
       width: 160px; height: 160px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(245,197,24,0.30) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(34,211,238,0.34) 0%, transparent 70%);
       filter: blur(8px);
     }
     .tolk-wordmark {
-      font-weight: 700; font-size: clamp(2.2rem, 4.5vw, 3.2rem); letter-spacing: -0.03em;
-      background: linear-gradient(92deg, #F5C518 0%, #E23636 100%);
+      font-weight: 700; font-size: clamp(2.2rem, 4.5vw, 3.2rem); letter-spacing: -0.02em;
+      background: linear-gradient(92deg, #818CF8 0%, #22D3EE 100%);
       -webkit-background-clip: text; background-clip: text; color: transparent;
       position: relative; z-index: 2;
+      display: inline-flex; align-items: center; gap: 10px;
     }
+    .tolk-wordmark .globe { -webkit-text-fill-color: initial; font-size: 0.78em; }
 
     .project-info { padding: 24px 26px 28px; }
     .project-meta {
@@ -306,7 +308,7 @@
       <a href="tolk.html" class="project-card reveal">
         <div class="project-visual tolk-visual">
           <span class="status-pill live">Live</span>
-          <span class="tolk-wordmark">Tolk</span>
+          <span class="tolk-wordmark"><span class="globe">🌍</span>Tolk</span>
         </div>
         <div class="project-info">
           <span class="project-meta">German Learning · Web App · Live</span>
@@ -319,7 +321,7 @@
       <!-- SPARK -->
       <a href="spark.html" class="project-card reveal">
         <div class="project-visual spark-visual">
-          <span class="status-pill">In development</span>
+          <span class="status-pill live">Live</span>
           <span class="spark-wordmark">Spark</span>
         </div>
         <div class="project-info">

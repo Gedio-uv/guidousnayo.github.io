@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spark — Guido Usnayo Vidaurre</title>
+  <meta name="description" content="Spark — a social conversation game with a built-in language-learning layer. Full product ownership, built with AI-assisted development.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #fafafa;
+      --white: #0a0a0a;
+      --gray: #999999;
+      --light-gray: #1f1f1f;
+      --accent: #7C3AED;
+      --accent-hover: #6d28d9;
+      --pink: #EC4899;
+      --font: 'Inter', -apple-system, sans-serif;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      background: var(--white);
+      color: var(--black);
+      font-family: var(--font);
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 40px;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid transparent; transition: border-color 0.3s;
+    }
+    nav.scrolled { border-bottom-color: var(--light-gray); }
+    .nav-name { font-size: 0.875rem; font-weight: 400; color: var(--black); text-decoration: none; }
+    .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+    .nav-links a {
+      font-size: 0.8rem; color: var(--gray); text-decoration: none;
+      transition: color 0.2s; position: relative;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -2px; left: 0;
+      width: 0; height: 1px; background: var(--black);
+      transition: width 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .nav-links a:hover { color: var(--black); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links a.active { color: var(--black); font-weight: 500; }
+    .nav-links a.active::after { width: 100%; }
+    .nav-divider { width: 1px; height: 12px; background: var(--light-gray); }
+
+    .nav-mobile-toggle {
+      display: none; width: 24px; height: 24px;
+      background: none; border: none; cursor: pointer; position: relative; z-index: 101;
+    }
+    .nav-mobile-toggle span {
+      display: block; width: 100%; height: 1.5px; background: var(--black);
+      position: absolute; left: 0;
+      transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), opacity 0.3s;
+    }
+    .nav-mobile-toggle span:nth-child(1) { top: 8px; }
+    .nav-mobile-toggle span:nth-child(2) { bottom: 8px; }
+    body.nav-open .nav-mobile-toggle span:nth-child(1) { transform: translateY(3.5px) rotate(45deg); }
+    body.nav-open .nav-mobile-toggle span:nth-child(2) { transform: translateY(-3.5px) rotate(-45deg); }
+
+    @media (max-width: 860px) {
+      nav { padding: 16px 20px; }
+      .nav-mobile-toggle { display: block; }
+      body.nav-open nav { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+      .nav-name { position: relative; z-index: 101; }
+      .nav-links {
+        position: fixed; inset: 0; background: rgba(10,10,10,0.98);
+        flex-direction: column; justify-content: center; gap: 32px; font-size: 1.5rem;
+        opacity: 0; pointer-events: none; transition: opacity 0.4s cubic-bezier(0.16,1,0.3,1);
+        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      }
+      body.nav-open .nav-links { opacity: 1; pointer-events: auto; }
+      .nav-links a { font-size: 1.25rem; }
+      .nav-divider { width: 40px; height: 1px; }
+    }
+
+    /* HEADER */
+    .cs-header { padding: 120px 40px 48px; border-bottom: 1px solid var(--light-gray); }
+    .cs-back {
+      font-size: 0.75rem; color: var(--gray); text-decoration: none;
+      display: inline-block; margin-bottom: 18px; transition: color 0.2s;
+      opacity: 0; animation: fadeUp 0.5s ease forwards 0.05s;
+    }
+    .cs-back:hover { color: var(--black); }
+    .cs-label {
+      font-size: 0.7rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--pink); margin-bottom: 18px; display: block;
+      opacity: 0; animation: fadeUp 0.5s ease forwards 0.1s;
+    }
+    .cs-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.4rem, 4.4vw, 3.6rem); font-weight: 800;
+      letter-spacing: -0.02em; line-height: 1.04; margin-bottom: 16px;
+      background: linear-gradient(95deg, #C4B5FD 0%, #A78BFA 45%, #EC4899 100%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      opacity: 0; animation: fadeUp 0.5s ease forwards 0.2s;
+    }
+    .cs-meta {
+      display: flex; gap: 48px; flex-wrap: wrap; margin-top: 40px;
+      opacity: 0; animation: fadeUp 0.5s ease forwards 0.4s;
+    }
+    .cs-meta-label {
+      font-size: 0.65rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--gray); margin-bottom: 4px;
+    }
+    .cs-meta-value { font-size: 0.85rem; color: var(--black); line-height: 1.4; }
+
+    .cs-actions { margin-top: 32px; opacity: 0; animation: fadeUp 0.5s ease forwards 0.5s; }
+    .cs-live-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: linear-gradient(95deg, var(--accent), var(--pink));
+      color: #fff; padding: 14px 28px; border-radius: 100px;
+      font-size: 0.85rem; font-weight: 500; text-decoration: none;
+      transition: filter 0.2s, transform 0.15s;
+    }
+    .cs-live-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+    .cs-live-btn .dot {
+      width: 7px; height: 7px; border-radius: 50%; background: #fff;
+      animation: livePulse 2s infinite;
+    }
+    @keyframes livePulse {
+      0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.55); }
+      70% { box-shadow: 0 0 0 8px rgba(255,255,255,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+    }
+
+    /* HERO IMAGE */
+    .cs-hero-img {
+      display: block; margin: 0 auto; width: 100%; max-width: 320px;
+      border-radius: 32px; border: 6px solid #221b3a;
+      box-shadow: 0 30px 60px rgba(124,58,237,0.25); box-sizing: border-box;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .cs-hero-img:hover { transform: scale(1.01); }
+
+    /* DECISION BLOCK */
+    .decision-split {
+      border-top: 1px solid var(--light-gray); padding-top: 64px; margin-bottom: 64px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+    }
+    .decision-split .decision-number {
+      font-size: 0.65rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--gray); margin-bottom: 12px; display: block;
+    }
+    .decision-split h3 {
+      font-size: clamp(1.4rem, 2.5vw, 1.8rem); font-weight: 600;
+      letter-spacing: -0.02em; color: var(--black); margin-bottom: 16px; line-height: 1.15;
+    }
+    .decision-split p { font-size: 1rem; line-height: 1.75; color: var(--gray); }
+    .decision-split .decision-img {
+      width: 100%; max-width: 280px; display: block; margin: 0 auto;
+      border-radius: 28px; border: 6px solid #221b3a; box-shadow: 0 20px 40px rgba(124,58,237,0.22);
+    }
+
+    @media (max-width: 860px) {
+      .decision-split { grid-template-columns: 1fr; gap: 32px; }
+      .cs-header { padding: 100px 20px 40px; }
+      .cs-meta { gap: 24px; flex-direction: column; }
+      .cs-cta { padding: 48px 20px; flex-direction: column; gap: 32px; text-align: center; }
+      footer { flex-direction: column; gap: 16px; align-items: flex-start; }
+    }
+
+    /* CONTENT */
+    .cs-content { max-width: 720px; margin: 0 auto; padding: 80px 40px; }
+    .cs-section { margin-bottom: 80px; }
+    .cs-section:last-child { margin-bottom: 0; }
+    .cs-section h2 {
+      font-size: 1.4rem; font-weight: 600; letter-spacing: -0.02em;
+      color: var(--black); margin-bottom: 24px; line-height: 1.2;
+    }
+    .cs-section p { font-size: 1.05rem; line-height: 1.7; color: var(--gray); margin-bottom: 20px; }
+    .cs-section p:last-child { margin-bottom: 0; }
+    .cs-section strong { color: var(--black); font-weight: 500; }
+
+    .feature-list { list-style: none; margin-top: 32px; }
+    .feature-list li { margin-bottom: 24px; }
+    .feature-list h4 { font-size: 1.05rem; font-weight: 600; color: var(--black); margin-bottom: 8px; }
+    .feature-list p { margin-bottom: 0; font-size: 1rem; }
+
+    /* CTA */
+    .cs-cta {
+      padding: 64px 40px; background: #050505;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .cta-left h2 {
+      font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 600;
+      letter-spacing: -0.03em; color: #fff; line-height: 1.1; margin-bottom: 8px;
+    }
+    .cta-left p { font-size: 0.875rem; color: rgba(255,255,255,0.45); }
+    .btn-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: linear-gradient(95deg, var(--accent), var(--pink));
+      color: #fff; padding: 13px 26px; border-radius: 100px; font-size: 0.8rem;
+      font-weight: 500; text-decoration: none; white-space: nowrap;
+      transition: filter 0.2s, transform 0.15s;
+    }
+    .btn-pill:hover { filter: brightness(1.08); transform: translateY(-1px); }
+
+    /* FOOTER */
+    footer {
+      padding: 28px 40px; border-top: 1px solid rgba(255,255,255,0.08);
+      background: #050505; display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-text { font-size: 0.75rem; color: rgba(255,255,255,0.3); }
+
+    /* REVEAL & PROGRESS */
+    .reveal {
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-stagger > * {
+      opacity: 0; transform: translateY(16px);
+      transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal-stagger.visible > *:nth-child(1) { opacity: 1; transform: none; transition-delay: 0s; }
+    .reveal-stagger.visible > *:nth-child(2) { opacity: 1; transform: none; transition-delay: 0.08s; }
+    .reveal-stagger.visible > *:nth-child(3) { opacity: 1; transform: none; transition-delay: 0.16s; }
+
+    .read-progress {
+      position: fixed; top: 0; left: 0; height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--pink));
+      z-index: 200; width: 0%; transition: width 0.1s linear;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="read-progress" id="readProgress"></div>
+
+  <nav id="nav">
+    <a href="index.html" class="nav-name">Guido Usnayo Vidaurre</a>
+    <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle menu"><span></span><span></span></button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="incode.html">Incode</a></li>
+      <li><a href="speaker.html">Speaker</a></li>
+      <li><a href="ytem.html">Ytem</a></li>
+      <li><a href="other.html">Other work</a></li>
+      <li><a href="motion.html">Motion</a></li>
+      <li><a href="ai-projects.html" class="active">AI Projects</a></li>
+      <li class="nav-divider"></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="https://www.linkedin.com/in/guido-usnayovidaurre/" target="_blank">LinkedIn ↗</a></li>
+    </ul>
+  </nav>
+
+  <header class="cs-header">
+    <a href="ai-projects.html" class="cs-back">← AI Projects</a>
+    <span class="cs-label">Self-initiated · In development · 2026</span>
+    <h1 class="cs-title">Spark — a conversation game that turns language practice into play.</h1>
+
+    <div class="cs-meta">
+      <div class="cs-meta-item">
+        <div class="cs-meta-label">Role</div>
+        <div class="cs-meta-value">Full product ownership</div>
+      </div>
+      <div class="cs-meta-item">
+        <div class="cs-meta-label">Built with</div>
+        <div class="cs-meta-value">Cursor · Claude · Vanilla JS</div>
+      </div>
+      <div class="cs-meta-item">
+        <div class="cs-meta-label">Surface</div>
+        <div class="cs-meta-value">Mobile-first web app · iOS planned</div>
+      </div>
+      <div class="cs-meta-item">
+        <div class="cs-meta-label">Status</div>
+        <div class="cs-meta-value">Live · In development</div>
+      </div>
+    </div>
+
+    <div class="cs-actions">
+      <a href="https://gedio-uv.github.io/spark/" target="_blank" rel="noopener" class="cs-live-btn"><span class="dot"></span>Play Spark live ↗</a>
+    </div>
+  </header>
+
+  <img src="images/spark_home.png" alt="Spark — how do you want to play" class="cs-hero-img">
+
+  <main class="cs-content">
+    <section class="cs-section reveal">
+      <h2>Context</h2>
+      <p>Spark started from a real situation: playing icebreaker card games in multilingual settings — language classes, expat groups, international friend circles. The games were good fun, but nothing combined genuine social play with structured language practice. So I started building it.</p>
+    </section>
+
+    <section class="cs-section reveal">
+      <h2>The core idea</h2>
+      <p>The mechanic is deliberately simple: one device shared by a group, a question on screen, read aloud, and free conversation from there. At its base, it's a question game.</p>
+      <p>The twist is the entry choice. You can <strong>just play</strong> in your own language, or switch on <strong>learn a language</strong> mode and practise a target language through the same questions — turning a social game into low-pressure immersion.</p>
+    </section>
+  </main>
+
+  <!-- SPLIT 1 — SETUP -->
+  <div style="max-width: 1000px; margin: 0 auto; padding: 0 40px;">
+    <div class="decision-split reveal">
+      <div class="decision-text">
+        <span class="decision-number">Surface 01 · Session setup</span>
+        <h3>Set the table before you play</h3>
+        <p>Before a session you choose the language to learn, your level, the categories in play, and an optional timer. Level drives progressive immersion: <strong>Basic</strong> shows questions in your own language, <strong>Intermediate</strong> in the target language with a translation below, and <strong>Advanced</strong> in full immersion. Six categories carry 150 questions each, with a freemium split — General and Would You Rather are free, the rest unlock as premium packs.</p>
+      </div>
+      <img src="images/spark_setup.png" alt="Spark session setup screen" class="decision-img">
+    </div>
+  </div>
+
+  <!-- SPLIT 2 — THE CARD -->
+  <div style="max-width: 1000px; margin: 0 auto; padding: 0 40px;">
+    <div class="decision-split reveal" style="direction: rtl;">
+      <div class="decision-text" style="direction: ltr;">
+        <span class="decision-number">Surface 02 · The card</span>
+        <h3>One question at a time</h3>
+        <p>In play, each card shows a single question — here in German with the English translation beneath — and you swipe for the next. The session timer runs as a dissolving glow around the screen rather than a hard countdown, and a quiet swipe-down marks a question as weak, so the content set sharpens over time. Category and level stay in view, with a simple 1 / 150 to track the deck.</p>
+      </div>
+      <img src="images/spark_question.png" alt="Spark in-game question card" class="decision-img">
+    </div>
+  </div>
+
+  <main class="cs-content">
+    <section class="cs-section reveal">
+      <h2>Content &amp; rules</h2>
+      <ul class="feature-list reveal-stagger">
+        <li>
+          <h4>Six categories, 150 questions each</h4>
+          <p>General, Would You Rather, Personal Growth, Kids &amp; Family, Couples, and Spicy — multi-selectable for a single session.</p>
+        </li>
+        <li>
+          <h4>A safety rule built into selection</h4>
+          <p>Kids &amp; Family can't be combined with adult categories, so a family session can't surface content meant for a different room.</p>
+        </li>
+        <li>
+          <h4>Freemium, not paywalled</h4>
+          <p>The free tier carries a full game; deeper themes are optional category packs at $1.99–$3.99.</p>
+        </li>
+      </ul>
+    </section>
+
+    <section class="cs-section reveal">
+      <h2>How I built it</h2>
+      <p><strong>Full product ownership.</strong> Concept, UX architecture, user flow, visual identity, content strategy, and the monetization model are all mine. The whole product was shaped in conversation with Claude on claude.ai before a line of code, then built with Cursor and Claude as the coding agent.</p>
+      <p><strong>Lo-fi on purpose.</strong> Phase 1 is a vanilla HTML, CSS, and JavaScript web app on GitHub Pages — chosen to validate the idea with zero setup before committing to native. Phase 3 targets iOS via React Native and Expo. The look leans premium and game-like — deep violet with pink accents, Syne for display — closer to a physical card game than a quiz app.</p>
+    </section>
+  </main>
+
+  <!-- CTA -->
+  <section class="cs-cta">
+    <div class="cta-left">
+      <h2>Interested in<br><em style="font-weight:300; font-style:italic">working together?</em></h2>
+      <p>I'm currently open to Senior Product Designer opportunities in fintech, B2B SaaS, and digital identity.</p>
+    </div>
+    <a href="mailto:guido.usnayo@icloud.com" class="btn-pill">Get in touch →</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-text">© 2026 Guido Usnayo Vidaurre</span>
+    <span class="footer-text">Leipzig · Available across Germany and Europe</span>
+    <span class="footer-text">guido.usnayo@icloud.com</span>
+  </footer>
+
+  <script src="shared-animations.js?v=2"></script>
+  <script>
+    // ── AI PARTICLES BACKGROUND (violet → magenta) ──
+    (function() {
+      const canvas = document.createElement('canvas');
+      canvas.id = 'aiParticles';
+      canvas.style.position = 'fixed';
+      canvas.style.top = '0'; canvas.style.left = '0';
+      canvas.style.width = '100vw'; canvas.style.height = '100vh';
+      canvas.style.zIndex = '-1'; canvas.style.pointerEvents = 'none';
+      document.body.prepend(canvas);
+      const ctx = canvas.getContext('2d');
+      let w, h;
+      function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+      window.addEventListener('resize', resize); resize();
+      const particles = [];
+      const particleCount = window.innerWidth < 800 ? 35 : 75;
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * w, y: Math.random() * h,
+          r: Math.random() * 1.5 + 0.5,
+          vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4,
+          hue: Math.random() * 60 + 270
+        });
+      }
+      function draw() {
+        ctx.clearRect(0, 0, w, h);
+        particles.forEach((p, i) => {
+          p.x += p.vx; p.y += p.vy;
+          if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
+          if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
+          p.hue += 0.2; if (p.hue > 330) p.hue = 270;
+          for (let j = i + 1; j < particles.length; j++) {
+            const p2 = particles[j];
+            const dx = p.x - p2.x, dy = p.y - p2.y;
+            const dist = dx * dx + dy * dy;
+            if (dist < 18000) {
+              ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y);
+              ctx.strokeStyle = `hsla(${p.hue}, 85%, 72%, ${0.12 - (dist / 18000) * 0.12})`;
+              ctx.lineWidth = 0.6; ctx.stroke();
+            }
+          }
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `hsla(${p.hue}, 90%, 78%, 0.5)`; ctx.fill();
+        });
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    // ── Reveal fallback (idempotent with shared-animations.js) ──
+    (function() {
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+      }, { threshold: 0.08 });
+      document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => obs.observe(el));
+    })();
+  </script>
+</body>
+</html>
