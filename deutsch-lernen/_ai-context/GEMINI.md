@@ -88,7 +88,10 @@ When a user searches for a verb, `app.js` renders a dynamic conjugation table in
 3. ALL new CSS goes in existing /styles/ files.
 4. Follow existing naming conventions: BEM-like classes, camelCase JS.
 5. All user-facing text must be translatable via `i18n.js`.
-6. Mobile-first: test at 390px width.
+6. **Responsive Layout**: Mobile-first design. 
+   - Uses `--bp-tablet` (768px) and `--bp-laptop` (1024px).
+   - Reading views are constrained by `--max-w-reading` (720px).
+   - Specific wide views (Search two-pane, Conjugation grid, Games grid) expand using CSS Grid.
 7. Dark theme only — background always near #08080E.
 
 ## Key URLs

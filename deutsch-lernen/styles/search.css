@@ -644,3 +644,58 @@
   font-weight: 500;
   color: var(--c-text);
 }
+
+.conjugation-table-wrapper {
+  display: none;
+}
+.conjugation-table-wrapper.active {
+  display: block;
+}
+.conjugation-table-title {
+  display: none;
+}
+
+/* ─── RESPONSIVE LAYOUT ─── */
+@media (min-width: 768px) {
+  .search-suggestions {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* Two-Pane Search Result */
+  .result-body {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 32px;
+    align-items: start;
+  }
+  .result-header {
+    position: sticky;
+    top: 90px;
+  }
+  
+  /* Verb Conjugation Grid */
+  .tense-selector {
+    display: none !important;
+  }
+  .conjugation-tables-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .conjugation-table-wrapper {
+    display: block !important;
+  }
+  .conjugation-table-title {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--c-text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+}

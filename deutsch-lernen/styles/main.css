@@ -57,6 +57,12 @@
   /* Layout */
   --nav-height: 78px;
   --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  /* Breakpoints & Widths */
+  --bp-tablet: 768px;
+  --bp-laptop: 1024px;
+  --max-w-reading: 720px;
+  --max-w-wide: 1040px;
 }
 
 /* ─── RESET ─── */
@@ -363,6 +369,14 @@ svg { display: block; }
 .view::-webkit-scrollbar-track { background: transparent; }
 .view::-webkit-scrollbar-thumb { background: var(--c-border); border-radius: 4px; }
 
+/* ─── GLOBAL SHELL ─── */
+@media (min-width: 768px) {
+  .view {
+    max-width: var(--max-w-reading);
+    margin: 0 auto;
+  }
+}
+
 /* ─── BOTTOM NAV ─── */
 .nav-bar {
   position: fixed;
@@ -371,14 +385,20 @@ svg { display: block; }
   right: 0;
   height: calc(var(--nav-height) + var(--safe-bottom));
   padding-bottom: var(--safe-bottom);
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-around;
   background: rgba(8, 8, 14, 0.85);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-top: 1px solid var(--c-border);
   z-index: 50;
+}
+.nav-bar__inner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-around;
+  width: 100%;
+  max-width: var(--max-w-reading);
+  margin: 0 auto;
+  height: 100%;
 }
 
 .nav-item {
