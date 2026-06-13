@@ -70,7 +70,7 @@
 /* ── Profile Stats ── */
 .profile-stats {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
 }
 .stat-card {
@@ -412,11 +412,7 @@
 }
 
 /* ─── RESPONSIVE LAYOUT ─── */
-@media (min-width: 768px) {
-  .profile-stats {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
+/* Removed redundant profile-stats media query */
 
 @media (min-width: 1024px) {
   .settings-container {
