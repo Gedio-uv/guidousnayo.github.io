@@ -258,7 +258,7 @@ Determine if it is German or ${nativeLangName}. Return ONLY a valid JSON object 
     { "german": "A third German sentence", "native": "Translation" }
   ],
   "grammarNotes": "Brief grammar note in ${nativeLangName}",
-  "imageQuery": "1-3 word English query for image search (simple nouns only)",
+  "imageQuery": "If noun: 1-3 word English keyword. If verb: a short, concrete visual description in English of the first example sentence",
   "principalParts": {
     "infinitive": "infinitive form",
     "praeteritum": "3rd person singular präteritum",
@@ -298,7 +298,7 @@ Return ONLY a valid JSON object with a "cards" array (no markdown):
       "article": "der/die/das or - for non-nouns",
       "plural": "plural form or -",
       "nativeTranslation": "translation in ${nativeLangName}",
-      "imageQuery": "simple English noun for image search (1-2 words)"
+      "imageQuery": "If noun: simple English noun. If verb: short visual description of the action"
     }
   ]
 }
@@ -307,7 +307,7 @@ Rules:
 - Use common learnable words for the category
 - Nouns must have correct article (der/die/das)
 - Verbs/adjectives use article "-"
-- imageQuery must be simple English nouns
+- imageQuery: use nouns for nouns, use descriptive visual scenes for verbs
 - Vary difficulty from basic to intermediate
 - Return ONLY the JSON object with the cards array`;
 }
