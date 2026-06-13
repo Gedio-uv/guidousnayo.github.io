@@ -16,7 +16,19 @@
   gap: 16px;
 }
 
-/* ── Hero ── */
+/* ── Hero / Profile Header ── */
+.profile-header {
+  padding: 16px 0 8px;
+}
+.profile-title {
+  font-family: var(--f-heading);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--c-text);
+  margin: 0;
+}
+
+/* ── Settings Hero ── */
 .settings-hero {
   display: flex;
   flex-direction: column;
@@ -426,7 +438,9 @@
   .settings-container > div[style*="display: none"] {
     display: none !important;
   }
-  /* Advanced settings might need to span full width if it's placed after */
+  /* Profile header and progress card should span full width */
+  .profile-header,
+  .settings-card--progress,
   .settings-card:last-child {
     grid-column: 1 / -1;
   }
