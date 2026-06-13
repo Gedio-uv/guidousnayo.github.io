@@ -70,7 +70,7 @@
 /* ── Profile Stats ── */
 .profile-stats {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 12px;
 }
 .stat-card {
@@ -409,4 +409,29 @@
   flex-direction: column;
   gap: 12px;
   animation: fadeIn 0.2s ease both;
+}
+
+/* ─── RESPONSIVE LAYOUT ─── */
+@media (min-width: 768px) {
+  .profile-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .settings-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+  /* The hidden inputs block should not affect grid */
+  .settings-container > div[style*="display:none"],
+  .settings-container > div[style*="display: none"] {
+    display: none !important;
+  }
+  /* Advanced settings might need to span full width if it's placed after */
+  .settings-card:last-child {
+    grid-column: 1 / -1;
+  }
 }

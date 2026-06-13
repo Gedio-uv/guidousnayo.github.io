@@ -436,16 +436,7 @@
 .result-card__btn:hover { background: var(--c-surface-2); color: var(--c-gold); border-color: var(--c-gold-dim); transform: scale(1.05); }
 .result-card__btn:active { transform: scale(0.95); }
 
-/* ─── RESPONSIVE LAYOUT ─── */
-@media (min-width: 768px) {
-  .games-grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  }
-  .cards-game {
-    max-width: 520px;
-    margin: 0 auto;
-  }
-}
+
 
 .card-flip-manual-btn {
   flex: 1;
@@ -667,4 +658,21 @@
 .music-quiz__option:hover {
   background: var(--c-bg-3);
   border-color: var(--c-gold);
+}
+
+/* ─── RESPONSIVE LAYOUT ─── */
+@media (min-width: 768px) {
+  .games-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .cards-game {
+    max-width: 520px;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 1024px) {
+  .games-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
 }

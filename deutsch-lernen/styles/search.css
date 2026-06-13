@@ -342,11 +342,20 @@
 }
 
 /* ── Result Body ── */
-.result-body {
-  padding: 0 20px 100px;
+.result-pane {
+  display: contents;
+}
+.result-body-left,
+.result-body-right {
   display: flex;
   flex-direction: column;
   gap: 0;
+}
+.result-body-left {
+  padding: 0 20px;
+}
+.result-body-right {
+  padding: 0 20px 100px;
 }
 
 .result-header {
@@ -665,24 +674,35 @@
 
 @media (min-width: 1024px) {
   /* Two-Pane Search Result */
-  .result-body {
+  .search-result {
     display: grid;
-    grid-template-columns: 1fr 1.5fr;
-    gap: 32px;
+    grid-template-columns: 0.85fr 1.05fr;
+    gap: 28px;
     align-items: start;
+    padding-top: 16px;
+  }
+  .result-pane {
+    display: block;
+  }
+  .result-body-left,
+  .result-body-right {
+    padding: 0;
+  }
+  .result-image-container {
+    border-radius: var(--r-md);
+    height: 240px;
+    margin-bottom: 20px;
   }
   .result-header {
-    position: sticky;
-    top: 90px;
+    margin-bottom: 16px;
+    padding-top: 0;
   }
-  
-  /* Verb Conjugation Grid */
   .tense-selector {
     display: none !important;
   }
   .conjugation-tables-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 16px;
   }
   .conjugation-table-wrapper {

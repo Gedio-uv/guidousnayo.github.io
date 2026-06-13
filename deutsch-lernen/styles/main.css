@@ -372,7 +372,7 @@ svg { display: block; }
 /* ─── GLOBAL SHELL ─── */
 @media (min-width: 768px) {
   .view {
-    max-width: var(--max-w-reading);
+    max-width: var(--max-w-wide);
     margin: 0 auto;
   }
 }
@@ -396,7 +396,7 @@ svg { display: block; }
   align-items: flex-start;
   justify-content: space-around;
   width: 100%;
-  max-width: var(--max-w-reading);
+  max-width: var(--max-w-wide);
   margin: 0 auto;
   height: 100%;
 }

@@ -192,55 +192,61 @@
         </div>
 
         <div id="search-result" class="search-result hidden" aria-live="polite">
-          <div class="result-image-container">
-            <img id="result-image" class="result-image" src="" alt="" />
-            <div class="result-image-overlay"></div>
-            <div class="result-image-placeholder" id="result-image-placeholder" aria-hidden="true">
-              <span class="result-image-placeholder__icon">🖼️</span>
-              <span class="result-image-placeholder__label" id="result-image-placeholder-label">Loading…</span>
+          <div class="result-pane result-pane--left">
+            <div class="result-image-container">
+              <img id="result-image" class="result-image" src="" alt="" />
+              <div class="result-image-overlay"></div>
+              <div class="result-image-placeholder" id="result-image-placeholder" aria-hidden="true">
+                <span class="result-image-placeholder__icon">🖼️</span>
+                <span class="result-image-placeholder__label" id="result-image-placeholder-label">Loading…</span>
+              </div>
+            </div>
+            <div class="result-body-left">
+              <div class="result-header">
+                <div class="result-word-row">
+                  <div class="result-word-group">
+                    <span id="result-article" class="result-article"></span>
+                    <h2 id="result-word" class="result-word"></h2>
+                    <span id="result-plural" class="result-plural"></span>
+                  </div>
+                  <button id="result-listen" class="listen-btn" aria-label="Listen to pronunciation">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <path d="M11 5 6 9H2v6h4l5 4V5z"/>
+                      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                    </svg>
+                  </button>
+                </div>
+                <div class="result-meta">
+                  <span id="result-pos" class="result-pos-badge"></span>
+                  <span id="result-ipa" class="result-ipa"></span>
+                </div>
+                <p id="result-translation" class="result-translation"></p>
+              </div>
             </div>
           </div>
-          <div class="result-body">
-            <div class="result-header">
-              <div class="result-word-row">
-                <div class="result-word-group">
-                  <span id="result-article" class="result-article"></span>
-                  <h2 id="result-word" class="result-word"></h2>
-                  <span id="result-plural" class="result-plural"></span>
+          <div class="result-pane result-pane--right">
+            <div class="result-body-right">
+              <div class="result-synonyms-section">
+                <h3 class="result-section-label" id="synonyms-label">Synonyms</h3>
+                <div id="result-synonyms" class="result-synonyms" role="list"></div>
+              </div>
+              <div class="result-tabs">
+                <div class="tabs-nav" role="tablist" aria-label="Word details">
+                  <button class="tab-btn active" data-tab="examples" role="tab" id="tab-btn-examples" aria-selected="true" aria-controls="tab-panel-examples">
+                    <span id="tab-examples-label">Examples</span>
+                  </button>
+                  <button class="tab-btn" data-tab="grammar" role="tab" id="tab-btn-grammar" aria-selected="false" aria-controls="tab-panel-grammar">
+                    <span id="tab-grammar-label">Grammar</span>
+                  </button>
                 </div>
-                <button id="result-listen" class="listen-btn" aria-label="Listen to pronunciation">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                    <path d="M11 5 6 9H2v6h4l5 4V5z"/>
-                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
-                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
-                  </svg>
-                </button>
-              </div>
-              <div class="result-meta">
-                <span id="result-pos" class="result-pos-badge"></span>
-                <span id="result-ipa" class="result-ipa"></span>
-              </div>
-              <p id="result-translation" class="result-translation"></p>
-            </div>
-            <div class="result-synonyms-section">
-              <h3 class="result-section-label" id="synonyms-label">Synonyms</h3>
-              <div id="result-synonyms" class="result-synonyms" role="list"></div>
-            </div>
-            <div class="result-tabs">
-              <div class="tabs-nav" role="tablist" aria-label="Word details">
-                <button class="tab-btn active" data-tab="examples" role="tab" id="tab-btn-examples" aria-selected="true" aria-controls="tab-panel-examples">
-                  <span id="tab-examples-label">Examples</span>
-                </button>
-                <button class="tab-btn" data-tab="grammar" role="tab" id="tab-btn-grammar" aria-selected="false" aria-controls="tab-panel-grammar">
-                  <span id="tab-grammar-label">Grammar</span>
-                </button>
-              </div>
-              <div class="tabs-content">
-                <div class="tab-panel active" id="tab-panel-examples" role="tabpanel" aria-labelledby="tab-btn-examples">
-                  <ul id="examples-list" class="examples-list"></ul>
-                </div>
-                <div class="tab-panel" id="tab-panel-grammar" role="tabpanel" aria-labelledby="tab-btn-grammar">
-                  <div id="grammar-info" class="grammar-info"></div>
+                <div class="tabs-content">
+                  <div class="tab-panel active" id="tab-panel-examples" role="tabpanel" aria-labelledby="tab-btn-examples">
+                    <ul id="examples-list" class="examples-list"></ul>
+                  </div>
+                  <div class="tab-panel" id="tab-panel-grammar" role="tabpanel" aria-labelledby="tab-btn-grammar">
+                    <div id="grammar-info" class="grammar-info"></div>
+                  </div>
                 </div>
               </div>
             </div>
