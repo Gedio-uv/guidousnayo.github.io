@@ -114,18 +114,9 @@ async function fetchPollinations(query, pos) {
  * Action words get a human-subject prompt that AI understands well.
  */
 function buildPollinationsPrompt(query, pos) {
-  switch (pos) {
-    case 'verb':
-      return `person actively ${query}ing, dynamic photo, natural light, cinematic, sharp focus, no text`;
-    case 'adverb':
-      return `expressive scene showing someone doing something ${query}ly, photorealistic, no text`;
-    case 'adjective':
-      return `striking photo that captures the feeling of being ${query}, vibrant colors, no text`;
-    case 'preposition':
-      return `simple diagram or photo showing spatial concept of ${query}, clean background, no text`;
-    default:
-      return `${query}, clean professional photography, natural light, sharp focus, no text`;
-  }
+  // Our Gemini prompt already generates a concrete visual description for verbs/adjectives.
+  // We just need to add stylistic keywords to ensure a high-quality, text-free image.
+  return `${query}, photorealistic, dynamic photography, natural light, cinematic, sharp focus, highly detailed, no text, no watermarks`;
 }
 
 // ─────────────────────────────────────────────
