@@ -679,6 +679,12 @@ function syncSettingsUI() {
     toggleInitial.setAttribute('aria-pressed', String(!isAdvanced));
     toggleAdvanced.setAttribute('aria-pressed', String(isAdvanced));
   }
+
+  // Native Lang selector
+  const nativeLangSelect = $('native-lang-select');
+  if (nativeLangSelect) {
+    nativeLangSelect.value = state.nativeLang;
+  }
 }
 
 /* ════════════════════════════════════════════
@@ -803,6 +809,26 @@ function bindGlobalEvents() {
       });
     });
   });
+
+  // ── Settings: Native language select ──
+  const nativeLangSelect = $('native-lang-select');
+  if (nativeLangSelect) {
+    nativeLangSelect.addEventListener('change', (e) => {
+      const newLang = e.target.value;
+      state.nativeLang = newLang;
+      saveNativeLang(newLang);
+      
+      const uiLang = state.difficulty === 'advanced' ? 'de' : newLang;
+      applyLanguage(uiLang);
+      
+      // Update flashcard config
+      updateFlashcardConfig({
+        lang:        uiLang,
+        geminiKey:   state.geminiKey,
+        unsplashKey: state.unsplashKey,
+      });
+    });
+  }
 
   // ── Settings: Show/hide API keys ──
   document.querySelectorAll('.settings-eye-btn').forEach(btn => {

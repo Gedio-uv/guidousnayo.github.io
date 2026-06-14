@@ -506,6 +506,22 @@
               </button>
             </div>
           </div>
+
+          <div class="settings-card">
+            <h3 class="settings-card__title" id="settings-lang-title">
+              <span aria-hidden="true">🌐</span> <span id="settings-lang-label">App Language</span>
+            </h3>
+            <div class="settings-field">
+              <select id="native-lang-select" class="search-bar__input" style="width: 100%; padding: 12px; background: var(--c-surface-2); border: 1px solid var(--c-border); color: white; border-radius: 8px; cursor: pointer; font-size: 14px;">
+                <option value="es">Español</option>
+                <option value="en">English</option>
+                <option value="pt">Português</option>
+                <option value="fr">Français</option>
+                <option value="it">Italiano</option>
+                <option value="zh">中文 (Simplified)</option>
+              </select>
+            </div>
+          </div>
           <!-- Hidden inputs kept for JS settings logic — not shown to users -->
           <div style="display:none" aria-hidden="true">
             <input id="gemini-key" type="password" autocomplete="off" />
