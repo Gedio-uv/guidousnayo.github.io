@@ -51,24 +51,66 @@ export function initGames() {
 
 function getWords(count = 5) {
   const hist = getProgress().searchHistory || [];
-  // Use history, fallback to defaults if empty
+  
+  // A large pool of default words so games are never repetitive
   const defaultWords = [
-    { word: 'Hund', nativeTranslation: 'Dog' },
-    { word: 'Katze', nativeTranslation: 'Cat' },
-    { word: 'Haus', nativeTranslation: 'House' },
-    { word: 'Wasser', nativeTranslation: 'Water' },
-    { word: 'Apfel', nativeTranslation: 'Apple' },
-    { word: 'Brot', nativeTranslation: 'Bread' },
-    { word: 'Käse', nativeTranslation: 'Cheese' },
-    { word: 'Milch', nativeTranslation: 'Milk' }
+    { word: 'Hund', nativeTranslation: 'Dog' }, { word: 'Katze', nativeTranslation: 'Cat' },
+    { word: 'Haus', nativeTranslation: 'House' }, { word: 'Wasser', nativeTranslation: 'Water' },
+    { word: 'Apfel', nativeTranslation: 'Apple' }, { word: 'Brot', nativeTranslation: 'Bread' },
+    { word: 'Käse', nativeTranslation: 'Cheese' }, { word: 'Milch', nativeTranslation: 'Milk' },
+    { word: 'Buch', nativeTranslation: 'Book' }, { word: 'Tisch', nativeTranslation: 'Table' },
+    { word: 'Stuhl', nativeTranslation: 'Chair' }, { word: 'Fenster', nativeTranslation: 'Window' },
+    { word: 'Tür', nativeTranslation: 'Door' }, { word: 'Auto', nativeTranslation: 'Car' },
+    { word: 'Fahrrad', nativeTranslation: 'Bicycle' }, { word: 'Zug', nativeTranslation: 'Train' },
+    { word: 'Flugzeug', nativeTranslation: 'Airplane' }, { word: 'Baum', nativeTranslation: 'Tree' },
+    { word: 'Blume', nativeTranslation: 'Flower' }, { word: 'Sonne', nativeTranslation: 'Sun' },
+    { word: 'Mond', nativeTranslation: 'Moon' }, { word: 'Stern', nativeTranslation: 'Star' },
+    { word: 'Stadt', nativeTranslation: 'City' }, { word: 'Straße', nativeTranslation: 'Street' },
+    { word: 'Schule', nativeTranslation: 'School' }, { word: 'Arbeit', nativeTranslation: 'Work' },
+    { word: 'Freund', nativeTranslation: 'Friend' }, { word: 'Familie', nativeTranslation: 'Family' },
+    { word: 'Mutter', nativeTranslation: 'Mother' }, { word: 'Vater', nativeTranslation: 'Father' },
+    { word: 'Kind', nativeTranslation: 'Child' }, { word: 'Geld', nativeTranslation: 'Money' },
+    { word: 'Zeit', nativeTranslation: 'Time' }, { word: 'Uhr', nativeTranslation: 'Clock/Watch' },
+    { word: 'Essen', nativeTranslation: 'Food' }, { word: 'Trinken', nativeTranslation: 'Drink' },
+    { word: 'Fleisch', nativeTranslation: 'Meat' }, { word: 'Gemüse', nativeTranslation: 'Vegetable' },
+    { word: 'Obst', nativeTranslation: 'Fruit' }, { word: 'Kaffee', nativeTranslation: 'Coffee' },
+    { word: 'Tee', nativeTranslation: 'Tea' }, { word: 'Bier', nativeTranslation: 'Beer' },
+    { word: 'Wein', nativeTranslation: 'Wine' }, { word: 'Schuh', nativeTranslation: 'Shoe' },
+    { word: 'Hemd', nativeTranslation: 'Shirt' }, { word: 'Hose', nativeTranslation: 'Pants' },
+    { word: 'Kleid', nativeTranslation: 'Dress' }, { word: 'Mantel', nativeTranslation: 'Coat' },
+    { word: 'Hut', nativeTranslation: 'Hat' }, { word: 'Tasche', nativeTranslation: 'Bag' },
+    { word: 'Brille', nativeTranslation: 'Glasses' }, { word: 'Kopf', nativeTranslation: 'Head' },
+    { word: 'Hand', nativeTranslation: 'Hand' }, { word: 'Fuß', nativeTranslation: 'Foot' },
+    { word: 'Auge', nativeTranslation: 'Eye' }, { word: 'Ohr', nativeTranslation: 'Ear' }
   ];
-  let words = hist.length > 3 ? [...hist] : [...hist, ...defaultWords];
-  return words.sort(() => 0.5 - Math.random()).slice(0, count);
+
+  // Combine history and defaults, ensuring variety
+  let allWords = [...hist, ...defaultWords];
+
+  // Clean words: strip leading articles (der, die, das, ein, eine) so games don't include them
+  allWords = allWords.map(w => {
+    let cleanWord = w.word.replace(/^(der|die|das|ein|eine)\s+/i, '').trim();
+    return { ...w, word: cleanWord };
+  });
+
+  // Deduplicate by word
+  const seen = new Set();
+  const uniqueWords = [];
+  for (const w of allWords) {
+    const lower = w.word.toLowerCase();
+    if (!seen.has(lower)) {
+      seen.add(lower);
+      uniqueWords.push(w);
+    }
+  }
+
+  // Return requested count, randomized
+  return uniqueWords.sort(() => 0.5 - Math.random()).slice(0, count);
 }
 
 // ================= QUIZ =================
 function startQuiz() {
-  const words = getWords(5);
+  const words = getWords(50);
   let currentQ = 0;
   let score = 0;
   
